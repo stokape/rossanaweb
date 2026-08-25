@@ -165,6 +165,8 @@ export interface Database {
           compare_at_price: number | null;
           seo_title: string | null;
           seo_description: string | null;
+          tags: string[];
+          on_offer: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -196,6 +198,7 @@ export interface Database {
           compare_at_price?: number | null;
           seo_title?: string | null;
           seo_description?: string | null;
+          tags?: string[];
           created_at?: string;
           updated_at?: string;
         };
@@ -761,6 +764,8 @@ export interface Database {
           compare_at_price: number | null;
           seo_title: string | null;
           seo_description: string | null;
+          tags: string[];
+          on_offer: boolean;
           created_at: string;
           updated_at: string;
         };

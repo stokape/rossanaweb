@@ -1,6 +1,25 @@
-import { ComingSoon } from "@/components/shop/ComingSoon";
+import type { Metadata } from "next";
+import { CatalogView } from "@/components/shop/catalog/CatalogView";
 
-// Catálogo completo (filtros, orden, paginación) — Fase 5, pendiente.
-export default function ProductosPage() {
-  return <ComingSoon title="Catálogo" note="El catálogo completo llega en la próxima fase." />;
+export const metadata: Metadata = {
+  title: "Productos",
+  description: "Explora toda la bisutería y accesorios de Rossana.",
+};
+
+interface ProductosPageProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+// Catálogo completo (Sección 19): filtros, orden, paginación.
+export default async function ProductosPage({ searchParams }: ProductosPageProps) {
+  const resolvedSearchParams = await searchParams;
+
+  return (
+    <CatalogView
+      basePath="/productos"
+      title="Todos los productos"
+      breadcrumb={[{ label: "Inicio", href: "/" }, { label: "Productos" }]}
+      searchParams={resolvedSearchParams}
+    />
+  );
 }

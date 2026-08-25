@@ -24,20 +24,47 @@ async function main() {
   await client.connect();
   console.log("Conectado a:", process.env.DB_HOST);
 
+  // Registro de migraciones ya aplicadas — evita reintentar `create table`
+  // sobre tablas que ya existen cuando se agregan migraciones nuevas.
+  await client.query(`
+    create table if not exists public._applied_migrations (
+      filename text primary key,
+      applied_at timestamptz not null default now()
+    )
+  `);
+  const { rows: appliedRows } = await client.query(
+    "select filename from public._applied_migrations",
+  );
+  const applied = new Set(appliedRows.map((r) => r.filename));
+
   const files = readdirSync(migrationsDir).filter((f) => f.endsWith(".sql")).sort();
+  let appliedCount = 0;
   for (const file of files) {
+    if (applied.has(file)) {
+      console.log(`⏭  ${file} (ya aplicada)`);
+      continue;
+    }
     const sql = readFileSync(join(migrationsDir, file), "utf8");
     console.log(`→ Aplicando ${file} ...`);
     try {
       await client.query(sql);
+      await client.query(
+        "insert into public._applied_migrations (filename) values ($1)",
+        [file],
+      );
       console.log(`  OK`);
+      appliedCount++;
     } catch (err) {
       console.error(`  ERROR en ${file}:`, err.message);
       throw err;
     }
   }
 
-  console.log("→ Aplicando seed.sql ...");
+  if (appliedCount === 0) {
+    console.log("\n(no había migraciones nuevas por aplicar)");
+  }
+
+  console.log("→ Aplicando seed.sql (idempotente, usa on conflict do nothing) ...");
   const seedSql = readFileSync(seedFile, "utf8");
   await client.query(seedSql);
   console.log("  OK");
