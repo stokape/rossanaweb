@@ -105,7 +105,22 @@ export interface Database {
         Row: { profile_id: string; role_id: string; store_id: string };
         Insert: { profile_id: string; role_id: string; store_id: string };
         Update: Partial<Database["public"]["Tables"]["profile_roles"]["Insert"]>;
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "profile_roles_profile_id_fkey";
+            columns: ["profile_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "profile_roles_role_id_fkey";
+            columns: ["role_id"];
+            isOneToOne: false;
+            referencedRelation: "roles";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       categories: {
         Row: {
