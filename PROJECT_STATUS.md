@@ -16,11 +16,11 @@ Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 | 7 | Carrito | COMPLETADO | `/carrito`: imagen/nombre/cantidad/precio/subtotal por línea, editar cantidad, eliminar, resumen (subtotal/envío pendiente hasta checkout/total), "Finalizar compra" y "Seguir comprando". Estado vacío con CTA. Como el carrito vive en `localStorage` (Client Component), se ajustó el estado previo a la hidratación para mostrar un skeleton en vez de una pantalla en blanco (Sección 76) — verificado que el skeleton aparece en el HTML del servidor. |
 | 8 | Checkout invitado | COMPLETADO | `/checkout`: sin pantalla "¿tienes cuenta?", directo al formulario (datos + entrega + regalo opcional), validado con zod tanto en cliente como en el server action (`submitCheckout`, Sección 72). Costo de envío por zona (`shipping_zones`, fallback "a coordinar" si no hay ninguna configurada). Redirige a `/carrito` si el carrito está vacío. |
 | 9 | Yape + comprobante + OCR | COMPLETADO | `/pedido/[id]/pago`: QR/número/titular/instrucciones desde `site_settings`, subida de comprobante (valida MIME/tamaño), OCR con Tesseract.js en el navegador (nunca bloquea si falla, Sección 30/32), duplicados marcados automáticamente por trigger. `/pedido/[id]/confirmacion` con los estados de la Sección 33-34. **Probado de punta a punta contra la BD real**: crear pedido → reservar stock → subir comprobante → "pago por validar" → `confirm_payment` (autenticado como owner) → stock consolidado, movimiento `sale`, auditoría — todo verificado con valores reales y limpiado después. |
-| 10 | Pedidos | PENDIENTE | Panel admin donde Rossana ve y confirma pedidos — siguiente fase natural, ya que `confirm_payment` está probado y funcionando. |
-| 11 | Admin simplificado | PENDIENTE | |
-| 12 | Materiales | PENDIENTE | Modelo de datos y trigger de costo promedio listos. |
-| 13 | Fabricación | PENDIENTE | Función `register_production_run` lista y probada solo por revisión de código (no contra BD real aún). |
-| 14 | Costos/precios | PENDIENTE | Fórmulas de la Sección 56 a implementar en UI; columnas ya existen en `products`. |
+| 10 | Pedidos | COMPLETADO | `/admin/pedidos` (filtros Todos/Por revisar/Preparando/Enviados/Entregados) y `/admin/pedidos/[id]` con "Validar Yape": comprobante (URL firmada, el bucket es privado), N.º de operación/monto detectado, alerta de duplicado, "Confirmar pago" y "No pude validarlo" con confirmación explícita (Sección 87). Se agregó la función `reject_payment` (no existía). **Probado de punta a punta contra la BD real, autenticado como el usuario owner real**: lista filtrada, detalle con joins anidados (pedido→pago→comprobante), `reject_payment` y el conteo del dashboard — todo verificado con datos reales y limpiado después. |
+| 11 | Admin simplificado | COMPLETADO | Layout protegido (`/admin/(protected)`) con navegación de 5 módulos + Configuración aparte, saludo por hora del día, cards "Pagos por revisar / Pedidos por preparar / Con poco stock", ventas y pedidos de hoy. Login simple (correo/contraseña). Verificado que un usuario sin sesión es redirigido (307) desde `/admin` y `/admin/pedidos`, y que `/admin/login` es accesible. |
+| 12 | Materiales | PENDIENTE | Ruta `/admin/materiales` existe como stub. Modelo de datos y trigger de costo promedio ya probados en Fase 2. |
+| 13 | Fabricación | PENDIENTE | Ruta `/admin/fabricar` existe como stub. Función `register_production_run` lista pero aún no probada contra BD real. |
+| 14 | Costos/precios | PENDIENTE | Ruta `/admin/productos` (con el cálculo de costo/precio) existe como stub. Fórmulas de la Sección 56 a implementar en UI; columnas ya existen en `products`. |
 | 15 | SEO | PENDIENTE | |
 | 16 | Seguridad | EN DESARROLLO | RLS + vista `storefront_products` sin columnas de costo + funciones "puerta angosta" para invitados ya diseñadas. Falta rate limiting, headers, auditoría de uploads. |
 | 17 | QA | PENDIENTE | |
@@ -51,5 +51,6 @@ Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 
 - `product_images` RLS bloqueaba todo a `anon` (Fase 6) — ver migración `20260826000003`.
 - `create_guest_order()` fallaba siempre con "column reference id is ambiguous" (Fase 8) — ver migración `20260826000004`.
+- Los tipos de TypeScript escritos a mano tenían `Relationships: []` en todas las tablas (Fase 10): rompía cualquier `select()` con joins anidados (`orders → order_items`, `payments → payment_receipts`, etc.), necesarios para el panel admin. Se corrigió agregando las relaciones reales en `src/types/database.ts`.
 
-Ambos se detectaron insertando datos reales y probando contra la base de datos en vivo, nunca solo leyendo el código.
+Los tres se detectaron construyendo y probando contra la base de datos en vivo (incluyendo sesiones autenticadas reales), nunca solo leyendo el código.

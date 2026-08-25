@@ -568,7 +568,15 @@ export interface Database {
           subtotal: number;
         };
         Update: Partial<Database["public"]["Tables"]["order_items"]["Insert"]>;
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       payments: {
         Row: {
@@ -596,7 +604,15 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["payments"]["Insert"]>;
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "payments_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       payment_receipts: {
         Row: {
@@ -630,7 +646,15 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["payment_receipts"]["Insert"]>;
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "payment_receipts_payment_id_fkey";
+            columns: ["payment_id"];
+            isOneToOne: false;
+            referencedRelation: "payments";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       favorites: {
         Row: { id: string; customer_id: string; product_id: string; created_at: string };
@@ -815,6 +839,10 @@ export interface Database {
       };
       confirm_payment: {
         Args: { p_payment_id: string; p_confirmed_by: string };
+        Returns: undefined;
+      };
+      reject_payment: {
+        Args: { p_payment_id: string; p_rejected_by: string; p_reason?: string | null };
         Returns: undefined;
       };
     };
