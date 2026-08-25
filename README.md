@@ -2,9 +2,15 @@
 
 E-commerce real y administrable: tienda pública + panel del emprendedor
 + inventario de productos y materiales + costeo automático + pedidos
-con pago manual por Yape. Ver `ARCHITECTURE.md` (arquitectura, árbol de
-páginas, modelo de datos) y `PROJECT_STATUS.md` (avance por fase y
-bloqueos activos).
+con pago manual por Yape.
+
+Documentos relacionados:
+
+- `ARCHITECTURE.md` — arquitectura, árbol de páginas, modelo de datos.
+- `PROJECT_STATUS.md` — avance por fase, bugs reales encontrados y corregidos, bloqueos activos.
+- `QA_CHECKLIST.md` — qué está verificado en vivo vs. revisado por código.
+- `MANUAL_EMPRENDEDOR.md` — guía de uso del panel para Rossana, sin lenguaje técnico.
+- `DEPLOY.md` — pasos para poner la tienda en producción (incluye lo que solo el usuario puede hacer: cuentas, DNS).
 
 ## Stack
 
@@ -108,13 +114,38 @@ npm run lint      # ESLint
 npm run build     # build de producción (incluye chequeo de tipos)
 ```
 
+## SEO
+
+`sitemap.xml` y `robots.txt` se generan dinámicamente (Next.js metadata
+routes, `src/app/sitemap.ts` / `src/app/robots.ts`) a partir de lo
+realmente publicado — nunca una lista fija de URLs. Datos estructurados
+JSON-LD: `Organization` + `WebSite` (global), `BreadcrumbList` +
+`Product` + `Offer` (ficha de producto) — sin reviews ni ratings
+falsos (Sección 66).
+
+## Seguridad
+
+- RLS en todas las tablas (ver arriba). Verificado en vivo repetidas
+  veces durante el desarrollo — ver `PROJECT_STATUS.md` para el detalle
+  de los 4 bugs de RLS/tipos encontrados y corregidos.
+- Cabeceras de seguridad (`X-Frame-Options`, CSP, `Referrer-Policy`,
+  `Permissions-Policy`) en `next.config.ts`.
+- Rate limiting best-effort en el checkout (`src/lib/rate-limit.ts`) —
+  limitación de memoria-por-instancia documentada ahí mismo; para
+  protección real a escala, migrar a un contador compartido (p. ej.
+  Upstash Redis).
+- Auditoría (`audit_logs`): confirmar/rechazar pago, cambiar precio,
+  cambiar configuración de Yape, eliminar producto.
+
 ## Despliegue
 
 Objetivo de costo fijo inicial S/0 (Sección 19): Vercel (plan
 gratuito) + Supabase (plan gratuito), mientras el consumo se mantenga
 dentro de esos planes. Dominio inicial: `ventas.stoka.pe`, vía
 `NEXT_PUBLIC_SITE_URL` — migrar a dominio propio no requiere tocar
-código, solo esa variable y el DNS.
+código, solo esa variable y el DNS. Pasos detallados, incluyendo lo que
+solo el usuario puede hacer (crear cuentas, DNS, variables de entorno):
+ver `DEPLOY.md`.
 
 ## Backup
 
@@ -123,9 +154,25 @@ plan gratuito, exportar periódicamente con
 `npx supabase db dump -f backup.sql` y guardar el archivo fuera del
 repositorio (nunca versionarlo: puede contener datos de clientes).
 
+## Dependencias principales
+
+`next`, `react`, `react-dom`, `@supabase/supabase-js`, `@supabase/ssr`,
+`zod`, `react-hook-form`, `@hookform/resolvers`, `clsx`,
+`tailwind-merge`, `lucide-react`, `date-fns`, `server-only`,
+`tesseract.js` (OCR), Tailwind CSS v4. Dev-only: `pg` (scripts de
+migración).
+
 ## Limitaciones conocidas / pendientes
 
-Ver `PROJECT_STATUS.md` — sección "Bloqueos reales activos" y tabla de
-fases. En resumen: falta proyecto Supabase real, logo oficial, fotos de
-producto reales y datos operativos (Yape/WhatsApp) para poder avanzar
-de la Fase 3 en adelante con datos reales en vez de placeholders.
+- No hay UI de "ajuste manual de stock" (el stock solo se mueve por
+  compra/fabricación/venta/reserva — cubre el flujo normal, pero no un
+  ajuste manual por pérdida/rotura). Se puede agregar después sin
+  cambiar el esquema (`inventory_movements` ya tiene el tipo
+  `adjustment`).
+- El rate limiting es best-effort en memoria (ver sección Seguridad) —
+  no es una defensa robusta contra abuso a gran escala.
+- OCR nunca probado contra una foto real de Yape en un navegador (ver
+  `QA_CHECKLIST.md`) — el fallback manual sí está garantizado.
+- Falta: logo oficial, fotos de producto reales, Yape/WhatsApp reales,
+  cuenta de Vercel y DNS del dominio — todo depende de acciones del
+  usuario, documentadas en `DEPLOY.md`.

@@ -1,6 +1,6 @@
 # PROJECT_STATUS — Rossana, Bisutería y Más
 
-Última actualización: 2026-08-25
+Última actualización: 2026-08-26
 
 Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 
@@ -27,12 +27,16 @@ Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 | 17 | QA | COMPLETADO | Ver `QA_CHECKLIST.md` — recorrido de las Secciones 80-83 y 94, con resultado de cada ítem y qué se verificó en vivo vs. por revisión de código. |
 | 18 | Producción | EN DESARROLLO | Build de producción limpio y verificado repetidamente. Ver `DEPLOY.md` para los pasos de despliegue — requiere acciones que solo el usuario puede hacer (cuenta de Vercel, DNS del dominio), documentadas ahí. |
 
-## Bloqueos reales activos
+## Bloqueos reales activos (requieren acción del usuario — ver `DEPLOY.md`)
 
-1. **Logo oficial**: no hay archivos de logo (`logo-primary`, `logo-light-background`, `logo-dark/red-background`, `logo-mobile`, `isotipo`, `favicon`) en el repo. Sección 5 prohíbe recrear el logo en HTML. El usuario confirmó que los subirá en breve.
-2. **Fotografías reales de producto**: no hay ninguna en el repo. Sección 23 prohíbe inventar productos como definitivos.
-3. **Datos operativos del negocio**: número y titular Yape, QR, número de WhatsApp — configurables desde `/admin`, pero se necesita al menos un valor real antes de salir a producción.
-4. **Dominio/hosting**: confirmar acceso a `ventas.stoka.pe` (DNS) y a la cuenta de despliegue (Vercel u otro) para las Fases 17-18.
+1. **Logo oficial**: no hay archivos de logo (`logo-primary`, `logo-light-background`, `logo-dark/red-background`, `logo-mobile`, `isotipo`, `favicon`) en el repo. Sección 5 prohíbe recrear el logo en HTML. Carpeta lista en `public/brand/` con instrucciones.
+2. **Fotografías reales de producto**: no hay ninguna en el repo. Sección 23 prohíbe inventar productos como definitivos. Se suben desde `/admin/productos` (ya funcional).
+3. **Datos operativos reales**: Yape/WhatsApp reales — la pantalla para cargarlos ya existe y funciona (`/admin/configuracion`), solo falta que el usuario ingrese sus datos reales.
+4. **Cuenta de Vercel + DNS del dominio**: para el despliegue final — pasos exactos en `DEPLOY.md`.
+
+Ninguno de estos bloquea código: todo lo que se puede construir sin
+ellos ya está construido y probado. Son, literalmente, las únicas
+tareas que le quedan al usuario.
 
 ## Resuelto
 
@@ -56,3 +60,60 @@ Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 - `inventory_movements` no tenía policy de INSERT para staff (Fase 12): registrar una compra de material fallaba siempre porque el trigger que actualiza el costo promedio inserta ahí también, y esa tabla solo tenía policy de lectura. El stock se quedaba en 0 silenciosamente hasta que se revertía la transacción completa. Se detectó registrando dos compras reales y viendo que el costo promedio no se actualizaba — ver migración `20260826000006`.
 
 Los cuatro se detectaron construyendo y probando contra la base de datos en vivo (incluyendo sesiones autenticadas reales), nunca solo leyendo el código.
+
+## Criterios de aceptación finales (Sección 94)
+
+`[x]` construido y probado · `[~]` construido, no verificado visualmente en navegador (ver `QA_CHECKLIST.md`) · `[ ]` pendiente de una acción del usuario
+
+- [~] Identidad Rossana correcta — wordmark temporal, falta el logo oficial del usuario
+- [x] Rossana Red correcto (`#C00008`, un solo token en todo el sistema)
+- [ ] Logo correcto — pendiente de que el usuario suba los archivos
+- [~] Responsive (mobile-first en todo el CSS, no verificado visualmente en los 10 anchos de la Sección 11)
+- [x] Home
+- [x] Catálogo
+- [x] Categorías
+- [x] Búsqueda
+- [x] Filtros
+- [x] Producto
+- [ ] Fotografías — pendiente de que el usuario cargue productos reales
+- [~] 360° (implementado y activo con 8+ fotos; gesto no probado en navegador real)
+- [x] Carrito
+- [x] Comprar ahora
+- [x] Checkout invitado
+- [x] Registro opcional (cuenta de cliente no obligatoria en ningún punto del flujo)
+- [x] Yape manual
+- [x] QR configurable
+- [x] Upload comprobante
+- [~] OCR (integrado, nunca probado contra una foto real de Yape)
+- [x] Fallback manual
+- [x] Duplicados
+- [x] Validación manual Yape
+- [x] Pedidos
+- [x] Reserva stock
+- [x] Admin simplificado
+- [x] Productos administrables
+- [x] Materiales administrables
+- [x] Compras de materiales
+- [x] Costo promedio
+- [x] Componentes por producto
+- [x] Fabricación
+- [x] Stock terminado
+- [x] Costo automático
+- [x] % ganancia
+- [x] IGV configurable
+- [x] Precio sugerido
+- [x] Precio manual
+- [x] Rentabilidad
+- [x] SEO
+- [x] Sitemap
+- [x] Structured Data
+- [x] RLS
+- [x] Auditoría
+- [x] QA (ver `QA_CHECKLIST.md`)
+- [x] Build producción (verificado repetidas veces, en verde)
+
+**Lectura honesta de esta lista**: todo lo que depende de código, base
+de datos o lógica de negocio está construido y con pruebas reales
+contra Supabase. Lo que falta son, exclusivamente, cosas que
+literalmente nadie más que el usuario puede proveer (sus fotos, su
+logo, sus cuentas de servicios externos) — ver `DEPLOY.md`.
