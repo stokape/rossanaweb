@@ -1,7 +1,18 @@
 import type { NextConfig } from "next";
 
+// Host de Supabase Storage derivado de la URL del proyecto — no
+// hardcodeado (Sección 17): si el proyecto de Supabase cambia, basta
+// con actualizar NEXT_PUBLIC_SUPABASE_URL.
+const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+  : undefined;
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: supabaseHost
+      ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }]
+      : [],
+  },
 };
 
 export default nextConfig;

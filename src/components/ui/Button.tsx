@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import type { ButtonHTMLAttributes } from "react";
+import Link from "next/link";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 
 type Variant = "primary" | "secondary" | "tertiary" | "gold";
 type Size = "default" | "sm";
@@ -9,6 +10,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
   loading?: boolean;
+  href?: undefined;
+}
+
+interface LinkButtonProps
+  extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href">,
+    Pick<ButtonProps, "variant" | "size"> {
+  href: string;
 }
 
 const base =
@@ -32,21 +40,36 @@ const sizes: Record<Size, string> = {
   sm: "h-10 px-4 text-sm",
 };
 
-export function Button({
-  variant = "primary",
-  size = "default",
-  loading = false,
-  disabled,
-  className,
-  children,
-  ...props
-}: ButtonProps) {
+export function Button(props: ButtonProps | LinkButtonProps) {
+  if ("href" in props && props.href) {
+    const { href, variant = "primary", size = "default", className, children, ...anchorProps } = props;
+    return (
+      <Link
+        href={href}
+        className={cn(base, variants[variant], sizes[size], className)}
+        {...anchorProps}
+      >
+        {children}
+      </Link>
+    );
+  }
+
+  const {
+    variant = "primary",
+    size = "default",
+    loading = false,
+    disabled,
+    className,
+    children,
+    ...buttonProps
+  } = props as ButtonProps;
+
   return (
     <button
       className={cn(base, variants[variant], sizes[size], className)}
       disabled={disabled || loading}
       aria-busy={loading}
-      {...props}
+      {...buttonProps}
     >
       {loading && <Loader2 className="size-4 animate-spin" aria-hidden />}
       {children}

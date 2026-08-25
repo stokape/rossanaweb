@@ -10,10 +10,10 @@ Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 | 1 | Design System | EN DESARROLLO | Tokens de color/tipografía/radios en `src/app/globals.css`. Componentes base (`Button`, `Input`, `Card`, `Badge`) creados. Falta: logo real (BLOQUEADO, ver abajo), resto de componentes (header, footer, product card). |
 | 2 | Base de datos | COMPLETADO | Esquema completo (26 tablas + vista `storefront_products`) aplicado y verificado contra el proyecto Supabase real (`cnzbifvnhuqiasgvtskn`) el 2026-08-25 vía `scripts/run-migrations.mjs`. `pg_cron` activo. Tipos TypeScript escritos a mano en `src/types/database.ts` (la generación automática requiere Docker, no disponible en esta máquina). |
 | 3 | Auth + RLS | COMPLETADO | Clientes Supabase (`browser`/`server`/`admin`) y `src/proxy.ts` listos. RLS aplicada y **verificada en vivo**: `anon` no puede leer `products` directamente (0 filas) pero sí `storefront_products` sin ninguna columna de costo — probado insertando y borrando un producto de prueba. Usuario `owner` (`stoka.peru@gmail.com`) creado y verificado con `scripts/create-admin-user.mjs`. Falta construir las pantallas de login/recuperación de `/admin` (parte de la Fase 11). |
-| 4 | Home | PENDIENTE | |
-| 5 | Catálogo | PENDIENTE | |
+| 4 | Home | EN DESARROLLO | Estructura completa (Sección 13): barra promo, header sticky con búsqueda/cuenta/favoritos/carrito, hero con copy literal del prompt, categorías, favoritos/nuevos ingresos/ofertas (leyendo `storefront_products`, con estado vacío honesto — hoy no hay productos reales cargados), beneficios, redes, footer. Todo data-driven desde `site_settings`/`categories`/`storefront_products`, nada hardcodeado. Falta: logo real (hoy hay un wordmark de texto marcado como temporal), fotos de categoría/producto reales, y páginas stub (`/productos`, `/carrito`, `/cuenta*`) que se completan en sus fases correspondientes. |
+| 5 | Catálogo | PENDIENTE | Ruta `/productos` existe como stub ("en construcción"). |
 | 6 | Producto + 360° | PENDIENTE | |
-| 7 | Carrito | PENDIENTE | Decisión de arquitectura: carrito de invitado en cliente (localStorage), `carts`/`cart_items` en BD solo para cuentas registradas — ver `ARCHITECTURE.md`. |
+| 7 | Carrito | PENDIENTE | Ruta `/carrito` existe como stub. Decisión de arquitectura: carrito de invitado en cliente (localStorage), `carts`/`cart_items` en BD solo para cuentas registradas — ver `ARCHITECTURE.md`. |
 | 8 | Checkout invitado | PENDIENTE | RPC `create_guest_order` ya implementada en BD. |
 | 9 | Yape + comprobante + OCR | PENDIENTE | Bucket `receipts` y RPC `submit_payment_receipt` listos en BD. Proveedor OCR MVP: Tesseract.js (gratuito). |
 | 10 | Pedidos | PENDIENTE | |
