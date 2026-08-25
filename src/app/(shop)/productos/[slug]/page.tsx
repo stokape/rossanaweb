@@ -6,6 +6,7 @@ import { ProductInfoPanel } from "@/components/shop/product/ProductInfoPanel";
 import { ProductActions } from "@/components/shop/product/ProductActions";
 import { ProductPolicyInfo } from "@/components/shop/product/ProductPolicyInfo";
 import { ProductGridSection } from "@/components/shop/home/ProductGridSection";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getProductBySlug, getRelatedProducts } from "@/lib/queries/product-detail";
 import { getSiteSettings } from "@/lib/queries/site";
 
@@ -13,14 +14,34 @@ interface ProductPageProps {
   params: Promise<{ slug: string }>;
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return { title: "Producto no encontrado" };
 
+  const title = product.seoTitle ?? product.name;
+  const description = product.seoDescription ?? product.shortDescription ?? undefined;
+  const image = product.galleryImages[0]?.url;
+
   return {
-    title: product.seoTitle ?? product.name,
-    description: product.seoDescription ?? product.shortDescription ?? undefined,
+    title,
+    description,
+    alternates: { canonical: `${SITE_URL}/productos/${product.slug}` },
+    openGraph: {
+      title,
+      description,
+      url: `${SITE_URL}/productos/${product.slug}`,
+      type: "website",
+      images: image ? [{ url: image }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: image ? [image] : undefined,
+    },
   };
 }
 
@@ -31,19 +52,52 @@ export default async function ProductPage({ params }: ProductPageProps) {
   if (!product) notFound();
 
   const related = await getRelatedProducts(product.categorySlug, product.id);
+  const productUrl = `${SITE_URL}/productos/${product.slug}`;
+
+  const breadcrumbItems = [
+    { label: "Inicio", href: "/" },
+    { label: "Productos", href: "/productos" },
+    ...(product.categoryName
+      ? [{ label: product.categoryName, href: `/categorias/${product.categorySlug}` }]
+      : []),
+    { label: product.name },
+  ];
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-8">
-      <Breadcrumb
-        items={[
-          { label: "Inicio", href: "/" },
-          { label: "Productos", href: "/productos" },
-          ...(product.categoryName
-            ? [{ label: product.categoryName, href: `/categorias/${product.categorySlug}` }]
-            : []),
-          { label: product.name },
-        ]}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: breadcrumbItems.map((item, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: item.label,
+            ...(item.href ? { item: `${SITE_URL}${item.href}` } : {}),
+          })),
+        }}
       />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.name,
+          sku: product.sku,
+          description: product.shortDescription ?? product.description ?? undefined,
+          image: product.galleryImages.map((img) => img.url),
+          offers: {
+            "@type": "Offer",
+            url: productUrl,
+            priceCurrency: "PEN",
+            price: product.price.toFixed(2),
+            availability:
+              product.stockAvailable > 0
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+          },
+        }}
+      />
+      <Breadcrumb items={breadcrumbItems} />
 
       <div className="mt-6 grid grid-cols-1 gap-10 md:grid-cols-[55%_1fr]">
         <ProductGallery

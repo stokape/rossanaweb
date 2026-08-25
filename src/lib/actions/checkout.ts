@@ -1,9 +1,11 @@
 "use server";
 
+import { headers } from "next/headers";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { ROSSANA_STORE_ID } from "@/lib/queries/site";
 import { getShippingCost } from "@/lib/queries/shipping";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const checkoutSchema = z.object({
   firstName: z.string().trim().min(1, "Ingresa tus nombres"),
@@ -45,6 +47,18 @@ interface CheckoutResult {
  * cliente. El precio/nombre de cada producto lo vuelve a leer
  * `create_guest_order` desde la base de datos, nunca del payload. */
 export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResult> {
+  // Rate limit best-effort (Sección 72) — ver limitación documentada
+  // en src/lib/rate-limit.ts. Máximo 5 pedidos por IP cada 10 minutos.
+  const headerList = await headers();
+  const ip = headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const rateLimit = checkRateLimit(`checkout:${ip}`, 5, 600);
+  if (!rateLimit.allowed) {
+    return {
+      ok: false,
+      error: "Hiciste demasiados pedidos en poco tiempo. Espera unos minutos e inténtalo de nuevo.",
+    };
+  }
+
   const parsed = checkoutSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Revisa los datos ingresados." };

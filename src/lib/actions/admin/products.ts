@@ -105,6 +105,8 @@ const updateSchema = z.object({
   taxRate: z.number().min(0).max(1),
   price: z.number().min(0),
   compareAtPrice: z.number().min(0).nullable().optional(),
+  seoTitle: z.string().trim().optional(),
+  seoDescription: z.string().trim().optional(),
 });
 
 export type UpdateProductInput = z.infer<typeof updateSchema>;
@@ -128,6 +130,14 @@ export async function updateProductAction(
   ]);
 
   const supabase = await createClient();
+
+  // Precio anterior, para auditoría si cambia (Sección 84).
+  const { data: before } = await supabase
+    .from("products")
+    .select("price")
+    .eq("id", productId)
+    .maybeSingle();
+
   const { error } = await supabase
     .from("products")
     .update({
@@ -149,6 +159,8 @@ export async function updateProductAction(
       tax_rate: data.taxRate,
       price: data.price,
       compare_at_price: data.compareAtPrice || null,
+      seo_title: data.seoTitle || null,
+      seo_description: data.seoDescription || null,
     })
     .eq("id", productId)
     .eq("store_id", ROSSANA_STORE_ID);
@@ -156,6 +168,21 @@ export async function updateProductAction(
   if (error) {
     console.error("updateProductAction error:", error);
     return { ok: false, error: "No pudimos guardar los cambios. Inténtalo nuevamente." };
+  }
+
+  if (before && Number(before.price) !== data.price) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    await supabase.from("audit_logs").insert({
+      store_id: ROSSANA_STORE_ID,
+      actor_id: user?.id ?? null,
+      action: "update_price",
+      entity_type: "product",
+      entity_id: productId,
+      old_value: { price: Number(before.price) },
+      new_value: { price: data.price },
+    });
   }
 
   revalidatePath("/admin/productos");
@@ -181,6 +208,46 @@ export async function setProductStatusAction(
   revalidatePath("/admin/productos");
   revalidatePath(`/admin/productos/${productId}/editar`);
   revalidatePath("/productos");
+  return { ok: true };
+}
+
+/** Eliminar producto (Sección 84 — acción sensible, queda auditada).
+ * Si el producto ya tiene pedidos asociados, la base de datos rechaza
+ * el borrado (integridad referencial) y se sugiere archivarlo en su
+ * lugar — nunca se pierde el historial de una venta real. */
+export async function deleteProductAction(productId: string, productName: string): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { error } = await supabase
+    .from("products")
+    .delete()
+    .eq("id", productId)
+    .eq("store_id", ROSSANA_STORE_ID);
+
+  if (error) {
+    if (error.code === "23503") {
+      return {
+        ok: false,
+        error: "Este producto ya tiene pedidos asociados — no se puede eliminar. Puedes archivarlo en su lugar.",
+      };
+    }
+    console.error("deleteProductAction error:", error);
+    return { ok: false, error: "No pudimos eliminar el producto. Inténtalo nuevamente." };
+  }
+
+  await supabase.from("audit_logs").insert({
+    store_id: ROSSANA_STORE_ID,
+    actor_id: user?.id ?? null,
+    action: "delete_product",
+    entity_type: "product",
+    entity_id: productId,
+    old_value: { name: productName },
+  });
+
+  revalidatePath("/admin/productos");
   return { ok: true };
 }
 

@@ -41,6 +41,8 @@ export interface AdminProductDetail {
   taxRate: number;
   price: number;
   compareAtPrice: number | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
   components: AdminProductComponent[];
   images: AdminProductImage[];
 }
@@ -91,6 +93,8 @@ export async function getAdminProductDetail(id: string): Promise<AdminProductDet
     taxRate: Number(product.tax_rate),
     price: Number(product.price),
     compareAtPrice: product.compare_at_price != null ? Number(product.compare_at_price) : null,
+    seoTitle: product.seo_title,
+    seoDescription: product.seo_description,
     components: (components ?? [])
       .filter((c) => c.materials)
       .map((c) => ({

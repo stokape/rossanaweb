@@ -10,6 +10,7 @@ import { PricingCalculator } from "@/components/admin/products/PricingCalculator
 import { ComponentsEditor } from "@/components/admin/products/ComponentsEditor";
 import { PhotoUploader } from "@/components/admin/products/PhotoUploader";
 import {
+  deleteProductAction,
   setProductStatusAction,
   updateProductAction,
   type UpdateProductInput,
@@ -51,10 +52,14 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
     taxRate: product.taxRate,
     price: product.price,
     compareAtPrice: product.compareAtPrice,
+    seoTitle: product.seoTitle ?? "",
+    seoDescription: product.seoDescription ?? "",
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const materialsCost = product.components.reduce(
     (sum, c) => sum + c.quantityRequired * c.averageUnitCost,
@@ -88,6 +93,8 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
       taxRate: fields.taxRate,
       price: fields.price,
       compareAtPrice: fields.compareAtPrice,
+      seoTitle: fields.seoTitle,
+      seoDescription: fields.seoDescription,
     };
 
     const result = await updateProductAction(product.id, input);
@@ -105,6 +112,20 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
     const nextStatus = product.status === "published" ? "draft" : "published";
     await setProductStatusAction(product.id, nextStatus);
     router.refresh();
+  }
+
+  async function handleDelete() {
+    setDeleting(true);
+    setError(null);
+    const result = await deleteProductAction(product.id, product.name);
+    setDeleting(false);
+
+    if (!result.ok) {
+      setError(result.error ?? "No pudimos eliminar el producto.");
+      setConfirmingDelete(false);
+      return;
+    }
+    router.push("/admin/productos");
   }
 
   return (
@@ -196,6 +217,25 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
       </Card>
 
       <Card className="flex flex-col gap-4 p-5">
+        <h2 className="text-sm font-semibold text-rossana-charcoal">Cómo aparece en buscadores</h2>
+        <p className="-mt-2 text-xs text-rossana-charcoal/50">
+          Si lo dejas vacío, usamos el nombre y la descripción corta automáticamente.
+        </p>
+        <Input
+          label="Título para buscadores (opcional)"
+          value={fields.seoTitle}
+          onChange={(e) => setFields((f) => ({ ...f, seoTitle: e.target.value }))}
+          placeholder={fields.name}
+        />
+        <Input
+          label="Descripción para buscadores (opcional)"
+          value={fields.seoDescription}
+          onChange={(e) => setFields((f) => ({ ...f, seoDescription: e.target.value }))}
+          placeholder={fields.shortDescription}
+        />
+      </Card>
+
+      <Card className="flex flex-col gap-4 p-5">
         <h2 className="text-sm font-semibold text-rossana-charcoal">Fotos</h2>
         <PhotoUploader productId={product.id} images={product.images} imageType="gallery" label="Galería" />
         <PhotoUploader
@@ -237,9 +277,31 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
       {error && <p className="text-sm text-danger">{error}</p>}
       {saved && <p className="text-sm text-success">Cambios guardados.</p>}
 
-      <Button variant="primary" onClick={handleSave} loading={saving} className="w-full sm:w-auto">
-        GUARDAR CAMBIOS
-      </Button>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button variant="primary" onClick={handleSave} loading={saving} className="w-full sm:w-auto">
+          GUARDAR CAMBIOS
+        </Button>
+
+        {confirmingDelete ? (
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-rossana-charcoal">¿Eliminar este producto?</span>
+            <Button variant="secondary" size="sm" onClick={() => setConfirmingDelete(false)}>
+              Cancelar
+            </Button>
+            <Button variant="primary" size="sm" loading={deleting} onClick={handleDelete}>
+              Sí, eliminar
+            </Button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setConfirmingDelete(true)}
+            className="text-sm font-medium text-danger hover:underline"
+          >
+            Eliminar producto
+          </button>
+        )}
+      </div>
     </div>
   );
 }
