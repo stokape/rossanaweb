@@ -1,6 +1,6 @@
 # PROJECT_STATUS — Rossana, Bisutería y Más
 
-Última actualización: 2026-08-24
+Última actualización: 2026-08-25
 
 Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 
@@ -8,8 +8,8 @@ Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 |---|---|---|---|
 | 0 | Auditoría / planificación | COMPLETADO | Ver `ARCHITECTURE.md`. Repo vacío al iniciar: sin código previo, sin assets. |
 | 1 | Design System | EN DESARROLLO | Tokens de color/tipografía/radios en `src/app/globals.css`. Componentes base (`Button`, `Input`, `Card`, `Badge`) creados. Falta: logo real (BLOQUEADO, ver abajo), resto de componentes (header, footer, product card). |
-| 2 | Base de datos | EN DESARROLLO | Esquema completo + RLS + funciones transaccionales escritas en `supabase/migrations/`. Falta: proyecto Supabase real para aplicar y probar las migraciones (BLOQUEADO). |
-| 3 | Auth + RLS | EN DESARROLLO | Clientes Supabase (`browser`/`server`/`admin`) y `middleware.ts` listos. RLS diseñada en migración 008. Falta probar contra proyecto real. |
+| 2 | Base de datos | COMPLETADO | Esquema completo (26 tablas + vista `storefront_products`) aplicado y verificado contra el proyecto Supabase real (`cnzbifvnhuqiasgvtskn`) el 2026-08-25 vía `scripts/run-migrations.mjs`. `pg_cron` activo. Tipos TypeScript escritos a mano en `src/types/database.ts` (la generación automática requiere Docker, no disponible en esta máquina). |
+| 3 | Auth + RLS | EN DESARROLLO | Clientes Supabase (`browser`/`server`/`admin`) y `src/proxy.ts` listos. RLS aplicada y **verificada en vivo**: `anon` no puede leer `products` directamente (0 filas) pero sí `storefront_products` sin ninguna columna de costo — probado insertando y borrando un producto de prueba. Falta: crear el primer usuario en Supabase Auth y asignarle el rol `owner` (instrucciones en `supabase/seed.sql`). |
 | 4 | Home | PENDIENTE | |
 | 5 | Catálogo | PENDIENTE | |
 | 6 | Producto + 360° | PENDIENTE | |
@@ -28,11 +28,15 @@ Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 
 ## Bloqueos reales activos
 
-1. **Proyecto Supabase**: no existe todavía un proyecto real conectado. Sin URL/keys no se pueden aplicar migraciones ni probar nada end-to-end.
-2. **Logo oficial**: no hay archivos de logo (`logo-primary`, `logo-light-background`, `logo-dark/red-background`, `logo-mobile`, `isotipo`, `favicon`) en el repo. Sección 5 prohíbe recrear el logo en HTML.
-3. **Fotografías reales de producto**: no hay ninguna en el repo. Sección 23 prohíbe inventar productos como definitivos.
+1. **Logo oficial**: no hay archivos de logo (`logo-primary`, `logo-light-background`, `logo-dark/red-background`, `logo-mobile`, `isotipo`, `favicon`) en el repo. Sección 5 prohíbe recrear el logo en HTML. El usuario confirmó que los subirá en breve.
+2. **Fotografías reales de producto**: no hay ninguna en el repo. Sección 23 prohíbe inventar productos como definitivos.
+3. **Usuario admin real**: falta crear el primer usuario en Supabase Auth (email/contraseña de Rossana) y asignarle el rol `owner` para poder probar el login del panel.
 4. **Datos operativos del negocio**: número y titular Yape, QR, número de WhatsApp — configurables desde `/admin`, pero se necesita al menos un valor real antes de salir a producción.
 5. **Dominio/hosting**: confirmar acceso a `ventas.stoka.pe` (DNS) y a la cuenta de despliegue (Vercel u otro) para las Fases 17-18.
+
+## Resuelto
+
+- ~~Proyecto Supabase~~ → conectado (`cnzbifvnhuqiasgvtskn`, región `us-east-2`), migraciones y seed aplicados el 2026-08-25.
 
 ## Decisiones de arquitectura registradas
 

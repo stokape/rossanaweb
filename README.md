@@ -41,22 +41,35 @@ El esquema completo vive en `supabase/migrations/`, en orden:
 9. `20260824000009_storefront_view.sql` — vista pública sin columnas de costo + funciones de acceso de invitado
 10. `20260824000010_storage_buckets.sql` — buckets de imágenes/comprobantes y sus policies
 
-Aplicar con la Supabase CLI:
+**Ya aplicado** contra el proyecto de producción (`cnzbifvnhuqiasgvtskn`,
+2026-08-25). Para aplicarlo contra otro proyecto (o reaplicar tras
+agregar una migración nueva), usar el script incluido — la Supabase CLI
+(`supabase db push` / `gen types`) requiere Docker Desktop, no siempre
+disponible:
 
 ```bash
-npx supabase link --project-ref <PROJECT_REF>
-npx supabase db push
-npx supabase db seed   # o: psql < supabase/seed.sql
+DB_HOST='aws-0-<region>.pooler.supabase.com' \
+DB_USER='postgres.<project-ref>' \
+DB_PASSWORD='<tu contraseña de BD>' \
+node scripts/run-migrations.mjs
 ```
+
+El host/usuario salen de **Settings → Database → Connection string
+→ Session pooler** en el dashboard de Supabase. El script aplica todos
+los archivos de `supabase/migrations/` en orden y luego `supabase/seed.sql`
+(usa `insert ... on conflict do nothing`, así que reaplicar el seed es
+seguro).
 
 Después de crear el primer usuario en Supabase Auth, asignarle el rol
 `owner` siguiendo las instrucciones al final de `supabase/seed.sql`.
 
-Regenerar los tipos de TypeScript del esquema real (reemplaza el
-placeholder en `src/types/database.ts`):
+Los tipos de TypeScript (`src/types/database.ts`) están escritos a mano
+a partir de las migraciones, porque `supabase gen types` también
+requiere Docker en esta máquina. Si se instala Docker Desktop, se puede
+regenerar y comparar con:
 
 ```bash
-npx supabase gen types typescript --project-id <PROJECT_REF> > src/types/database.ts
+npx supabase gen types typescript --db-url "postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres" > src/types/database.ts
 ```
 
 ### RLS — regla crítica de costos
