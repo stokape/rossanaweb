@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+/*
+ * ROSSANA — BISUTERÍA Y MÁS
+ * Design Tokens
+ *
+ * Fuente de verdad del sistema visual. No sobreescribir estos valores
+ * por componente — ver PROMPT_MAESTRO sección 3/4.
+ */
+:root {
+  /* Marca — color principal */
+  --rossana-red: #c00008;
+  --rossana-red-dark: #850006; /* solo hover / profundidad / sombras cromáticas */
+
+  /* Marca — acentos */
+  --rossana-gold: #d4af37;
+  --rossana-gold-light: #ffd766;
+
+  /* Neutros */
+  --rossana-ivory: #fff7e8;
+  --rossana-white: #ffffff;
+  --rossana-charcoal: #211a18;
+  --rossana-bg-secondary: #fffdf8;
+  --rossana-border: #e8e1d9;
+
+  /* Estados funcionales (no reemplazan la marca) */
+  --state-success: #1e7a34;
+  --state-warning: #b8860b;
+  --state-danger: #c00008;
+
+  /* Superficie */
+  --background: var(--rossana-white);
+  --foreground: var(--rossana-charcoal);
+
+  /* Radios */
+  --radius-card: 18px;
+  --radius-button: 12px;
+  --radius-input: 11px;
+  --radius-modal: 20px;
+  --radius-badge: 9999px;
+
+  /* Sombra suave */
+  --shadow-soft: 0 4px 20px rgba(33, 26, 24, 0.08);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-rossana-red: var(--rossana-red);
+  --color-rossana-red-dark: var(--rossana-red-dark);
+  --color-rossana-gold: var(--rossana-gold);
+  --color-rossana-gold-light: var(--rossana-gold-light);
+  --color-rossana-ivory: var(--rossana-ivory);
+  --color-rossana-white: var(--rossana-white);
+  --color-rossana-charcoal: var(--rossana-charcoal);
+  --color-rossana-bg-secondary: var(--rossana-bg-secondary);
+  --color-rossana-border: var(--rossana-border);
+
+  --color-success: var(--state-success);
+  --color-warning: var(--state-warning);
+  --color-danger: var(--state-danger);
+
+  --radius-card: var(--radius-card);
+  --radius-button: var(--radius-button);
+  --radius-input: var(--radius-input);
+  --radius-modal: var(--radius-modal);
+  --radius-badge: var(--radius-badge);
+
+  --shadow-soft: var(--shadow-soft);
+
+  --font-sans: var(--font-montserrat);
+  --font-display: var(--font-playfair);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Tamaño mínimo de texto crítico (labels, precios, botones) */
+.text-critical-min {
+  font-size: 14px;
+}
