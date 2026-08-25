@@ -9,3 +9,15 @@ export function cn(...inputs: ClassValue[]) {
 export function formatSoles(amount: number) {
   return `S/ ${amount.toFixed(2)}`;
 }
+
+/** Slug URL-friendly a partir de un nombre (Sección 67: /productos/pulsera-cuarzo-azul, nunca ?id=). */
+export function slugify(text: string) {
+  return text
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "") // quitar tildes (marcas diacríticas tras NFD)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
