@@ -4,8 +4,10 @@ import type { HeroBanner } from "@/lib/queries/banners";
 
 /** Hero (Sección 14). Copy literal del prompt maestro. Con fotos
  * reales cargadas: cubren todo el fondo del hero, con un degradado
- * rojo Rossana encima (para que el texto se lea bien y el rojo siga
- * dominando visualmente, Sección 4). Sin fotos todavía: fondo rojo
+ * rojo Rossana suave y muy localizado detrás del texto (solo para que
+ * se lea bien) que se disuelve rápido a transparente — el resto de la
+ * foto se ve nítida, sin lavado rojo encima (pedido directo de
+ * Rossana: "no se ven los productos"). Sin fotos todavía: fondo rojo
  * sólido + motivo decorativo — nunca un producto inventado (Sección 23). */
 export function Hero({ banners }: { banners: HeroBanner[] }) {
   const hasPhotos = banners.length > 0;
@@ -17,7 +19,7 @@ export function Hero({ banners }: { banners: HeroBanner[] }) {
           <HeroCarousel banners={banners} fill />
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-r from-rossana-red via-rossana-red/75 to-rossana-red/40"
+            className="absolute inset-0 bg-gradient-to-r from-rossana-red/65 via-rossana-red/5 to-transparent"
           />
         </>
       )}
