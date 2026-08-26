@@ -45,10 +45,10 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
       data-scrolled={scrolled}
       className="header-brand-bg sticky top-0 z-40 border-b border-rossana-gold/20"
     >
-      <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 py-3 md:px-8 md:py-4">
+      <div className="header-primary-row mx-auto flex max-w-[1440px] items-center gap-4 px-4 py-3 md:px-8 md:py-4">
         <button
           type="button"
-          className="-ml-2 flex size-11 items-center justify-center text-rossana-ivory hover:text-rossana-gold xl:hidden"
+          className="header-link -ml-2 flex size-11 items-center justify-center xl:hidden"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
@@ -65,33 +65,33 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
           role="search"
           className="mx-4 hidden h-11 max-w-md flex-1 items-center rounded-input border border-rossana-ivory/25 bg-rossana-warm-white/10 px-4 md:flex"
         >
-          <Search className="size-4 text-rossana-ivory/70 shrink-0" aria-hidden />
+          <Search className="size-4 shrink-0 text-rossana-soft-text" aria-hidden />
           <input
             type="search"
             name="buscar"
             placeholder="Buscar productos..."
-            className="ml-2 flex-1 bg-transparent text-sm text-rossana-ivory outline-none placeholder:text-rossana-ivory/50"
+            className="ml-2 flex-1 bg-transparent text-sm text-rossana-soft-text outline-none placeholder:text-rossana-soft-text/70"
           />
         </form>
 
         <nav className="ml-auto flex items-center gap-1 md:gap-2">
           <Link
             href="/cuenta"
-            className="hidden size-11 items-center justify-center text-rossana-ivory hover:text-rossana-gold sm:inline-flex"
+            className="header-link hidden size-11 items-center justify-center sm:inline-flex"
             aria-label="Mi cuenta"
           >
             <User className="size-5 md:size-6" />
           </Link>
           <Link
             href="/cuenta/favoritos"
-            className="hidden size-11 items-center justify-center text-rossana-ivory hover:text-rossana-gold sm:inline-flex"
+            className="header-link hidden size-11 items-center justify-center sm:inline-flex"
             aria-label="Favoritos"
           >
             <Heart className="size-5 md:size-6" />
           </Link>
           <Link
             href="/carrito"
-            className="relative flex size-11 items-center justify-center text-rossana-ivory hover:text-rossana-gold"
+            className="header-link relative flex size-11 items-center justify-center"
             aria-label={`Carrito${totalCount > 0 ? `, ${totalCount} productos` : ""}`}
           >
             <ShoppingBag className="size-5 md:size-6" />
@@ -104,18 +104,19 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
         </nav>
       </div>
 
-      <nav className="hidden border-t border-rossana-gold/20 xl:block" aria-label="Navegación principal">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-4 px-8 py-2.5 text-[13px] font-medium 2xl:gap-6 2xl:text-sm">
+      <nav className="header-desktop-nav hidden border-t border-rossana-gold/25 xl:block" aria-label="Navegación principal">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-4 px-8 py-3 text-[13px] font-semibold tracking-[0.01em] 2xl:gap-6 2xl:text-sm">
           {navLinks.map((link) => {
             const active = pathname === link.href.split("?")[0];
             return (
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={active ? "page" : undefined}
                 className={
                   active
-                    ? "border-b border-rossana-gold pb-1 font-semibold text-rossana-gold transition-colors"
-                    : "border-b border-transparent pb-1 text-rossana-ivory transition-colors hover:border-rossana-gold/60 hover:text-rossana-gold"
+                    ? "header-link border-b-2 border-rossana-gold pb-1"
+                    : "header-link border-b-2 border-transparent pb-1 transition-colors hover:border-rossana-gold/70"
                 }
               >
                 {link.label}

@@ -159,6 +159,27 @@ summary {
   -webkit-backdrop-filter: blur(10px);
 }
 
+.header-primary-row {
+  background: linear-gradient(to bottom, rgba(101, 0, 8, 0.12), rgba(101, 0, 8, 0.28));
+}
+
+.header-desktop-nav {
+  background: rgba(101, 0, 8, 0.72);
+  box-shadow: inset 0 1px rgba(212, 175, 55, 0.18);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.header-link {
+  color: var(--rossana-soft-text);
+  text-shadow: 0 1px 2px rgba(35, 0, 4, 0.6);
+}
+
+.header-link:hover,
+.header-link[aria-current="page"] {
+  color: var(--rossana-gold);
+}
+
 .section-shell {
   width: 100%;
   max-width: 1440px;
