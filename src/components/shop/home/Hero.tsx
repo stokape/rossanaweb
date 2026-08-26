@@ -4,13 +4,14 @@ import type { HeroBanner } from "@/lib/queries/banners";
 
 /** Hero (Sección 14). Copy literal del prompt maestro. El lado derecho
  * muestra fotos reales subidas desde /admin/configuracion en cuanto
- * existan; mientras tanto usa un motivo decorativo — nunca un
- * producto inventado (Sección 23). */
+ * existan (también en móvil, arriba del texto) — mientras tanto usa un
+ * motivo decorativo (solo en escritorio) — nunca un producto inventado
+ * (Sección 23). */
 export function Hero({ banners }: { banners: HeroBanner[] }) {
   return (
     <section className="relative overflow-hidden bg-rossana-red">
-      <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-10 px-6 py-16 md:min-h-[560px] md:grid-cols-2 md:px-12 md:py-0">
-        <div className="flex flex-col items-start gap-5 text-white">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-8 px-6 py-12 md:min-h-[560px] md:grid-cols-2 md:gap-10 md:px-12 md:py-0">
+        <div className="order-2 flex flex-col items-start gap-5 text-white md:order-none">
           <span className="text-sm font-semibold tracking-[0.2em] text-rossana-gold-light">
             NUEVA COLECCIÓN
           </span>
@@ -30,7 +31,7 @@ export function Hero({ banners }: { banners: HeroBanner[] }) {
         </div>
 
         {banners.length > 0 ? (
-          <div className="hidden md:block">
+          <div className="order-1 md:order-none">
             <HeroCarousel banners={banners} />
           </div>
         ) : (
