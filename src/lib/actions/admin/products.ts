@@ -414,3 +414,125 @@ export async function updateStockAction(productId: string, newStockOnHand: numbe
   revalidatePath("/productos");
   return { ok: true };
 }
+
+export interface ProductImportRow {
+  name: string;
+  categoryName?: string;
+  price: number;
+  compareAtPrice?: number | null;
+  color?: string;
+  material?: string;
+  stock?: number;
+  shortDescription?: string;
+  description?: string;
+  featured?: boolean;
+}
+
+export interface ProductImportResultRow {
+  row: number;
+  name: string;
+  ok: boolean;
+  error?: string;
+}
+
+export interface BulkImportResult {
+  ok: boolean;
+  error?: string;
+  created: number;
+  results: ProductImportResultRow[];
+}
+
+const MAX_IMPORT_ROWS = 200;
+
+/**
+ * Importa varios productos de una sola vez desde un CSV (Sección 42:
+ * "de qué otra forma puedo cargar productos que no sea uno a uno").
+ * Cada fila válida se crea igual que "Nuevo producto" — como borrador,
+ * sin fotos — para que Rossana las agregue después desde la ficha de
+ * cada producto antes de publicarlo. Filas inválidas se omiten sin
+ * tumbar el resto de la importación (Sección 88: nunca todo-o-nada
+ * cuando se puede avisar fila por fila).
+ */
+export async function bulkImportProductsAction(rows: ProductImportRow[]): Promise<BulkImportResult> {
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return { ok: false, error: "No hay filas para importar.", created: 0, results: [] };
+  }
+  if (rows.length > MAX_IMPORT_ROWS) {
+    return {
+      ok: false,
+      error: `Como máximo se pueden importar ${MAX_IMPORT_ROWS} productos de una vez.`,
+      created: 0,
+      results: [],
+    };
+  }
+
+  const supabase = await createClient();
+
+  const { data: categories } = await supabase
+    .from("categories")
+    .select("id, name")
+    .eq("store_id", ROSSANA_STORE_ID);
+  const categoryByName = new Map(
+    (categories ?? []).map((c) => [c.name.trim().toLowerCase(), c.id]),
+  );
+
+  const results: ProductImportResultRow[] = [];
+  let created = 0;
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    const rowNumber = i + 2; // fila 1 es el encabezado del CSV
+    const name = row.name?.trim();
+
+    if (!name) {
+      results.push({ row: rowNumber, name: "(sin nombre)", ok: false, error: "Falta el nombre." });
+      continue;
+    }
+    if (!Number.isFinite(row.price) || row.price < 0) {
+      results.push({ row: rowNumber, name, ok: false, error: "El precio no es válido." });
+      continue;
+    }
+
+    const categoryId = row.categoryName
+      ? (categoryByName.get(row.categoryName.trim().toLowerCase()) ?? null)
+      : null;
+
+    const [slug, sku] = await Promise.all([uniqueSlug(name), uniqueSku(name.slice(0, 3))]);
+
+    const compareAtPrice =
+      row.compareAtPrice != null && row.compareAtPrice > row.price ? row.compareAtPrice : null;
+
+    const { error } = await supabase.from("products").insert({
+      store_id: ROSSANA_STORE_ID,
+      name,
+      slug,
+      sku,
+      category_id: categoryId,
+      status: "draft",
+      price: row.price,
+      compare_at_price: compareAtPrice,
+      color: row.color?.trim() || null,
+      material: row.material?.trim() || null,
+      stock_on_hand: Number.isFinite(row.stock) && row.stock! >= 0 ? Math.floor(row.stock!) : 0,
+      short_description: row.shortDescription?.trim() || null,
+      description: row.description?.trim() || null,
+      featured: row.featured ?? false,
+    });
+
+    if (error) {
+      console.error("bulkImportProductsAction row error:", error);
+      results.push({ row: rowNumber, name, ok: false, error: "No se pudo crear este producto." });
+      continue;
+    }
+
+    created += 1;
+    results.push({ row: rowNumber, name, ok: true });
+  }
+
+  if (created > 0) {
+    revalidatePath("/admin/productos");
+    revalidatePath("/productos");
+  }
+
+  return { ok: created > 0, created, results };
+}

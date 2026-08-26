@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Plus, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AdminProductCard } from "@/components/admin/products/AdminProductCard";
 import { getAdminProducts } from "@/lib/queries/admin/products";
@@ -9,13 +9,18 @@ export default async function AdminProductosPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-2xl font-semibold text-rossana-charcoal md:text-3xl">
           Mis productos
         </h1>
-        <Button href="/admin/productos/nuevo" variant="primary" size="sm">
-          <Plus className="size-4" /> AGREGAR PRODUCTO
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button href="/admin/productos/importar" variant="secondary" size="sm">
+            <UploadCloud className="size-4" /> IMPORTAR VARIOS
+          </Button>
+          <Button href="/admin/productos/nuevo" variant="primary" size="sm">
+            <Plus className="size-4" /> AGREGAR PRODUCTO
+          </Button>
+        </div>
       </div>
 
       {products.length === 0 ? (
