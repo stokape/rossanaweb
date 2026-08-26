@@ -16,9 +16,11 @@ export function CategoriesSection({ categories }: { categories: CategorySummary[
           Descubre piezas pensadas para cada momento.
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-6">
+      <div className="flex flex-wrap justify-center gap-5 sm:gap-6">
         {categories.map((category) => (
-          <CategoryCard key={category.id} category={category} />
+          <div key={category.id} className="w-28 sm:w-32 md:w-36">
+            <CategoryCard category={category} />
+          </div>
         ))}
       </div>
     </section>
