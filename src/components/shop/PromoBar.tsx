@@ -6,12 +6,16 @@ interface PromoBarProps {
  * `site_settings.promo_bar_messages` — nunca hardcodeados, para no
  * afirmar servicios que Rossana no haya confirmado operativamente. */
 export function PromoBar({ messages }: PromoBarProps) {
-  if (messages.length === 0) return null;
+  const visibleMessages = messages.filter(
+    (message) => !/env[ií]os?\s+a\s+todo\s+el\s+per[uú]/i.test(message),
+  );
+
+  if (visibleMessages.length === 0) return null;
 
   return (
     <div className="bg-rossana-red text-rossana-warm-white">
       <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-6 px-4 py-2 text-xs font-medium tracking-wide md:text-sm">
-        {messages.map((msg, i) => (
+        {visibleMessages.map((msg, i) => (
           <span key={i} className="whitespace-nowrap">
             {msg}
           </span>

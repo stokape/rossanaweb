@@ -100,8 +100,8 @@ export async function CatalogView({
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-[240px_1fr]">
-        <aside className="hidden md:block">
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
+        <aside className="hidden rounded-card border border-rossana-border bg-rossana-warm-white p-5 lg:block">
           <FiltersPanel
             basePath={basePath}
             categories={categories}
@@ -123,7 +123,7 @@ export async function CatalogView({
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-6">
+            <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 md:gap-6">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

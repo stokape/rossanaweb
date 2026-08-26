@@ -40,7 +40,7 @@
   --state-danger: #c00008;
 
   /* Superficie */
-  --background: var(--rossana-warm-white);
+  --background: var(--rossana-ivory);
   --foreground: var(--rossana-charcoal);
 
   /* Radios */
@@ -58,26 +58,6 @@
      etc.) — sin esto, en tema oscuro esos popups seguían saliendo con
      fondo blanco del sistema, con texto claro encima = ilegible. */
   color-scheme: light;
-}
-
-/*
- * Tema oscuro (activado con [data-theme="dark"] en <html>, vía el
- * selector de tema — ver ThemeToggle.tsx). Es una inversión literal de
- * las superficies neutras (marfil/blanco cálido ⇄ carbón), con un
- * matiz borgoña en vez del carbón-marrón anterior para que combine con
- * el fondo de seda roja del tema oscuro. El rojo, el borgoña, los
- * dorados y el texto suave de marca NO cambian — deben seguir siendo
- * reconocibles siempre, en cualquier tema.
- */
-:root[data-theme="dark"] {
-  --rossana-ivory: #3a1418;
-  --rossana-warm-white: #2b0f12;
-  --rossana-charcoal: #f7ede0;
-  --rossana-border: #522028;
-
-  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.45);
-
-  color-scheme: dark;
 }
 
 @theme inline {
@@ -116,22 +96,32 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Fondo de seda roja (Sección 4: el rojo Rossana debe dominar) — solo
- * en tema oscuro, pedido directo de Rossana. El degradado oscuro
- * encima es para que el rojo no se vea demasiado brillante junto a las
- * tarjetas/secciones oscuras del resto de la página, no para ocultar
- * la tela. En tema claro el fondo sigue siendo el de siempre. */
-:root[data-theme="dark"] body {
-  background-image: linear-gradient(rgba(10, 4, 3, 0.45), rgba(10, 4, 3, 0.45)),
-    url("/brand/fondo-rossana-satin.webp");
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
-@media (min-width: 768px) {
-  :root[data-theme="dark"] body {
-    background-attachment: fixed;
+button,
+a,
+input,
+select,
+textarea,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--rossana-gold);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
 
@@ -167,4 +157,15 @@ body {
   background-color: rgba(101, 0, 8, 0.96);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+.section-shell {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 768px) {
+  .section-shell { padding-inline: 2rem; }
 }

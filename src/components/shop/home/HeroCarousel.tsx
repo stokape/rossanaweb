@@ -61,7 +61,7 @@ export function HeroCarousel({ banners, fill = false }: HeroCarouselProps) {
               aria-label={`Ver foto ${i + 1}`}
               aria-current={i === index}
               className={`size-2 rounded-full transition-colors ${
-                i === index ? "bg-white" : "bg-white/40"
+                i === index ? "bg-rossana-ivory" : "bg-rossana-ivory/40"
               }`}
             />
           ))}

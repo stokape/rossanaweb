@@ -16,11 +16,11 @@ export function ProductCard({ product }: { product: ProductSummary }) {
     : 0;
 
   return (
-    <Card className="group relative flex flex-col overflow-hidden p-3 transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
+    <Card className="group relative flex flex-col overflow-hidden p-3 transition-all duration-200 hover:-translate-y-[3px] hover:border-rossana-gold/35 hover:shadow-md">
       <button
         type="button"
         aria-label="Agregar a favoritos"
-        className="absolute right-4 top-4 z-10 rounded-badge bg-rossana-warm-white/90 p-2 text-rossana-charcoal/60 hover:text-rossana-red"
+        className="absolute right-4 top-4 z-10 flex size-11 items-center justify-center rounded-badge bg-rossana-warm-white/90 text-rossana-charcoal/60 shadow-sm hover:text-rossana-red"
       >
         <Heart className="size-4" />
       </button>

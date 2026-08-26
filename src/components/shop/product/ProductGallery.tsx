@@ -110,7 +110,7 @@ export function ProductGallery({ productName, galleryImages, spinImages }: Produ
         >
           <button
             type="button"
-            className="absolute right-4 top-4 text-white"
+            className="absolute right-4 top-4 text-rossana-ivory"
             aria-label="Cerrar"
             onClick={() => setZoomOpen(false)}
           >

@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { Logo } from "@/components/shop/Logo";
-import { ThemeToggle } from "@/components/shop/ThemeToggle";
 import { useCart } from "@/lib/cart/CartProvider";
 import type { CategorySummary } from "@/lib/queries/catalog";
 
@@ -49,7 +48,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
       <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 py-3 md:px-8 md:py-4">
         <button
           type="button"
-          className="md:hidden p-2 -ml-2 text-rossana-ivory"
+          className="-ml-2 flex size-11 items-center justify-center text-rossana-ivory hover:text-rossana-gold xl:hidden"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
@@ -63,7 +62,8 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
 
         <form
           action="/productos"
-          className="hidden md:flex flex-1 items-center rounded-input border border-rossana-ivory/25 bg-rossana-warm-white/10 px-4 h-11 mx-4 max-w-md"
+          role="search"
+          className="mx-4 hidden h-11 max-w-md flex-1 items-center rounded-input border border-rossana-ivory/25 bg-rossana-warm-white/10 px-4 md:flex"
         >
           <Search className="size-4 text-rossana-ivory/70 shrink-0" aria-hidden />
           <input
@@ -75,24 +75,23 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
         </form>
 
         <nav className="ml-auto flex items-center gap-1 md:gap-2">
-          <ThemeToggle />
           <Link
             href="/cuenta"
-            className="p-2 text-rossana-ivory hover:text-rossana-gold"
+            className="hidden size-11 items-center justify-center text-rossana-ivory hover:text-rossana-gold sm:inline-flex"
             aria-label="Mi cuenta"
           >
             <User className="size-5 md:size-6" />
           </Link>
           <Link
             href="/cuenta/favoritos"
-            className="p-2 text-rossana-ivory hover:text-rossana-gold hidden sm:inline-flex"
+            className="hidden size-11 items-center justify-center text-rossana-ivory hover:text-rossana-gold sm:inline-flex"
             aria-label="Favoritos"
           >
             <Heart className="size-5 md:size-6" />
           </Link>
           <Link
             href="/carrito"
-            className="relative p-2 text-rossana-ivory hover:text-rossana-gold"
+            className="relative flex size-11 items-center justify-center text-rossana-ivory hover:text-rossana-gold"
             aria-label={`Carrito${totalCount > 0 ? `, ${totalCount} productos` : ""}`}
           >
             <ShoppingBag className="size-5 md:size-6" />
@@ -105,8 +104,8 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
         </nav>
       </div>
 
-      <nav className="hidden md:block border-t border-rossana-gold/20">
-        <div className="mx-auto flex max-w-[1440px] gap-6 px-8 py-2.5 text-sm font-medium">
+      <nav className="hidden border-t border-rossana-gold/20 xl:block" aria-label="Navegación principal">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-4 px-8 py-2.5 text-[13px] font-medium 2xl:gap-6 2xl:text-sm">
           {navLinks.map((link) => {
             const active = pathname === link.href.split("?")[0];
             return (
@@ -115,8 +114,8 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
                 href={link.href}
                 className={
                   active
-                    ? "font-semibold text-rossana-gold transition-colors"
-                    : "text-rossana-ivory hover:text-rossana-gold transition-colors"
+                    ? "border-b border-rossana-gold pb-1 font-semibold text-rossana-gold transition-colors"
+                    : "border-b border-transparent pb-1 text-rossana-ivory transition-colors hover:border-rossana-gold/60 hover:text-rossana-gold"
                 }
               >
                 {link.label}
@@ -127,8 +126,8 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden border-t border-rossana-border bg-rossana-warm-white px-4 py-4">
-          <form action="/productos" className="flex items-center rounded-input border border-rossana-border px-4 h-12 mb-4">
+        <div className="border-t border-rossana-gold/20 bg-rossana-warm-white px-4 py-4 shadow-soft xl:hidden">
+          <form action="/productos" role="search" className="mb-4 flex h-12 items-center rounded-input border border-rossana-border px-4">
             <Search className="size-4 text-rossana-charcoal/50 shrink-0" aria-hidden />
             <input
               type="search"
@@ -142,7 +141,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block py-3 text-base font-medium text-rossana-charcoal"
+                  className="block rounded-input px-2 py-3 text-base font-medium text-rossana-charcoal hover:bg-rossana-ivory hover:text-rossana-red"
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.label}

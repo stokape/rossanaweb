@@ -6,7 +6,7 @@ export function CategoryCard({ category }: { category: CategorySummary }) {
   return (
     <Link
       href={`/categorias/${category.slug}`}
-      className="group flex flex-col items-center gap-3 text-center"
+      className="group flex flex-col items-center gap-3 rounded-card text-center"
     >
       <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-card border border-rossana-border bg-rossana-ivory">
         {category.imageUrl ? (
@@ -14,7 +14,7 @@ export function CategoryCard({ category }: { category: CategorySummary }) {
             src={category.imageUrl}
             alt={category.name}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 33vw, 16vw"
           />
         ) : (
