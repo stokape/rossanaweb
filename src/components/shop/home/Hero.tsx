@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/Button";
+import { HeroCarousel } from "@/components/shop/home/HeroCarousel";
+import type { HeroBanner } from "@/lib/queries/banners";
 
-/** Hero (Sección 14). Copy literal del prompt maestro. Sin fotografía
- * real todavía (Sección 23 prohíbe inventar productos como
- * definitivos): el lado derecho usa un motivo decorativo, no un
- * producto falso. */
-export function Hero() {
+/** Hero (Sección 14). Copy literal del prompt maestro. El lado derecho
+ * muestra fotos reales subidas desde /admin/configuracion en cuanto
+ * existan; mientras tanto usa un motivo decorativo — nunca un
+ * producto inventado (Sección 23). */
+export function Hero({ banners }: { banners: HeroBanner[] }) {
   return (
     <section className="relative overflow-hidden bg-rossana-red">
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-10 px-6 py-16 md:min-h-[560px] md:grid-cols-2 md:px-12 md:py-0">
@@ -27,16 +29,22 @@ export function Hero() {
           </div>
         </div>
 
-        <div
-          aria-hidden
-          className="relative hidden aspect-square items-center justify-center md:flex"
-        >
-          <div className="absolute inset-8 rounded-full border border-rossana-gold-light/30" />
-          <div className="absolute inset-16 rounded-full border border-rossana-gold-light/20" />
-          <span className="font-display text-3xl italic text-rossana-gold-light">
-            Rossana
-          </span>
-        </div>
+        {banners.length > 0 ? (
+          <div className="hidden md:block">
+            <HeroCarousel banners={banners} />
+          </div>
+        ) : (
+          <div
+            aria-hidden
+            className="relative hidden aspect-square items-center justify-center md:flex"
+          >
+            <div className="absolute inset-8 rounded-full border border-rossana-gold-light/30" />
+            <div className="absolute inset-16 rounded-full border border-rossana-gold-light/20" />
+            <span className="font-display text-3xl italic text-rossana-gold-light">
+              Rossana
+            </span>
+          </div>
+        )}
       </div>
     </section>
   );

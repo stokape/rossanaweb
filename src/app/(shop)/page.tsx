@@ -10,6 +10,7 @@ import {
   getOffers,
 } from "@/lib/queries/catalog";
 import { getSiteSettings } from "@/lib/queries/site";
+import { getHeroBanners } from "@/lib/queries/banners";
 
 // Sin metadata propia: hereda el título/descripción "default" del
 // layout raíz tal cual (sin aplicar el template "%s | Rossana"), que
@@ -18,17 +19,18 @@ import { getSiteSettings } from "@/lib/queries/site";
 // Nuevos ingresos → Ofertas → Beneficios → Redes (barra promo, header
 // y footer ya los pone el layout de (shop)).
 export default async function HomePage() {
-  const [categories, featured, newArrivals, offers, settings] = await Promise.all([
+  const [categories, featured, newArrivals, offers, settings, heroBanners] = await Promise.all([
     getActiveCategories(),
     getFeaturedProducts(),
     getNewArrivals(),
     getOffers(),
     getSiteSettings(),
+    getHeroBanners(),
   ]);
 
   return (
     <>
-      <Hero />
+      <Hero banners={heroBanners} />
 
       <CategoriesSection categories={categories} />
 
