@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/shop/home/Hero";
 import { CategoriesSection } from "@/components/shop/home/CategoriesSection";
 import { ProductGridSection } from "@/components/shop/home/ProductGridSection";
 import { BenefitsSection } from "@/components/shop/home/BenefitsSection";
 import { SocialSection } from "@/components/shop/home/SocialSection";
+import { FAQSection } from "@/components/shop/home/FAQSection";
 import {
   getCategoriesWithProducts,
   getFeaturedProducts,
@@ -12,12 +14,29 @@ import {
 import { getSiteSettings } from "@/lib/queries/site";
 import { getHeroBanners } from "@/lib/queries/banners";
 
-// Sin metadata propia: hereda el título/descripción "default" del
-// layout raíz tal cual (sin aplicar el template "%s | Rossana"), que
-// es exactamente lo que debe verse en la Home.
+// Metadata propia de la Home (Sección 66/SEO): título sin el template
+// "%s | Rossana" del layout raíz (aquí sí queremos el nombre completo
+// primero) y una descripción real basada en lo que se vende hoy
+// (pulseras artesanales hechas a mano, pago por Yape).
+export const metadata: Metadata = {
+  title: "Rossana — Bisutería y Más | Pulseras artesanales en Perú",
+  description:
+    "Pulseras artesanales hechas a mano, con materiales seleccionados y empaque listo para regalar. Compra como invitado y paga fácil por Yape.",
+  keywords: [
+    "pulseras artesanales",
+    "bisutería",
+    "accesorios de moda",
+    "pulseras hechas a mano",
+    "joyería bisutería Perú",
+    "regalos para mujer",
+    "pulseras Perú",
+  ],
+  alternates: { canonical: "/" },
+};
+
 // Orden de la Home según Sección 13: Hero → Categorías → Destacados →
-// Nuevos ingresos → Ofertas → Beneficios → Redes (barra promo, header
-// y footer ya los pone el layout de (shop)).
+// Nuevos ingresos → Ofertas → Beneficios → Redes → Preguntas frecuentes
+// (barra promo, header y footer ya los pone el layout de (shop)).
 export default async function HomePage() {
   const [categories, featured, newArrivals, offers, settings, heroBanners] = await Promise.all([
     getCategoriesWithProducts(),
@@ -64,6 +83,8 @@ export default async function HomePage() {
       <BenefitsSection />
 
       <SocialSection socialLinks={settings.socialLinks} />
+
+      <FAQSection />
     </>
   );
 }

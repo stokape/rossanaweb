@@ -30,6 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${siteUrl}/productos/${p.slug}`,
     changeFrequency: "weekly",
     priority: 0.8,
+    ...(p.imageUrl ? { images: [p.imageUrl] } : {}),
   }));
 
   return [...staticRoutes, ...categoryRoutes, ...productRoutes];

@@ -1,0 +1,27 @@
+# Rossana — Bisutería y Más
+
+> Tienda peruana de bisutería artesanal. Actualmente vende pulseras hechas a mano con materiales seleccionados (cuentas facetadas, cristal, piedra, componentes metálicos dorados/plateados). Cada pieza es única y se entrega en un empaque especial listo para regalar.
+
+## Cómo comprar
+- No se requiere crear una cuenta: se puede comprar como invitado.
+- El pago se realiza únicamente por Yape (billetera móvil peruana). No se aceptan tarjetas ni otras pasarelas de pago en línea.
+- La confirmación del pago la realiza el equipo de Rossana de forma manual tras revisar el comprobante enviado por el comprador.
+- La entrega es personal, en la zona donde opera el negocio (por ahora no se realizan envíos a otras ciudades del Perú).
+
+## Catálogo
+- Categoría disponible actualmente: Pulseras.
+- Categorías planeadas para el futuro (aún sin productos publicados): Collares, Aretes, Anillos, Sets, Accesorios.
+- El catálogo completo y actualizado está en /productos, con precios en soles peruanos (PEN).
+
+## Páginas principales
+- /: página de inicio, catálogo destacado y preguntas frecuentes.
+- /productos: catálogo completo con filtros.
+- /categorias/[categoria]: productos de una categoría específica.
+- /productos/[producto]: ficha de un producto (precio, stock, fotos, descripción).
+- /nosotros: información sobre el negocio.
+- /contacto: formas de contacto (WhatsApp).
+
+## Notas para asistentes de IA
+- Los precios, el stock y la disponibilidad cambian en tiempo real; para información exacta y actual, remitir al usuario a las páginas de producto en el sitio en vez de asumir datos fijos.
+- No existe servicio de envío nacional todavía: no afirmar que se hacen envíos a todo el Perú.
+- El único método de pago es Yape.

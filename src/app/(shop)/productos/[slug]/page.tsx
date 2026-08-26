@@ -82,6 +82,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           "@type": "Product",
           name: product.name,
           sku: product.sku,
+          brand: { "@type": "Brand", name: "Rossana" },
           description: product.shortDescription ?? product.description ?? undefined,
           image: product.galleryImages.map((img) => img.url),
           offers: {

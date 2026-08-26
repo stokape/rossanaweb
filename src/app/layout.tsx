@@ -25,6 +25,29 @@ export const metadata: Metadata = {
   },
   description:
     "Bisutería y accesorios que complementan tu esencia. Elegancia que brilla contigo.",
+  keywords: [
+    "bisutería",
+    "pulseras artesanales",
+    "accesorios de moda",
+    "joyería bisutería Perú",
+    "pulseras hechas a mano",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "es_PE",
+    siteName: "Rossana — Bisutería y Más",
+    title: "Rossana — Bisutería y Más",
+    description:
+      "Bisutería y accesorios que complementan tu esencia. Elegancia que brilla contigo.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rossana — Bisutería y Más",
+    description:
+      "Bisutería y accesorios que complementan tu esencia. Elegancia que brilla contigo.",
+    images: ["/og-image.png"],
+  },
 };
 
 // Aplica el tema guardado ANTES del primer paint (evita el parpadeo
