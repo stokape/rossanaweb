@@ -161,7 +161,7 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
             <select
               value={fields.categoryId}
               onChange={(e) => setFields((f) => ({ ...f, categoryId: e.target.value }))}
-              className="h-12 w-full rounded-input border border-rossana-border px-4 text-base"
+              className="h-12 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-4 text-base"
             >
               <option value="">Sin categoría</option>
               {categories.map((c) => (
@@ -184,7 +184,7 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
             value={fields.description}
             onChange={(e) => setFields((f) => ({ ...f, description: e.target.value }))}
             rows={4}
-            className="w-full rounded-input border border-rossana-border p-4 text-base"
+            className="w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal p-4 text-base"
           />
         </div>
 

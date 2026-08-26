@@ -63,7 +63,7 @@ export function AddMaterialModal({ onClose }: { onClose: () => void }) {
             <select
               value={unit}
               onChange={(e) => setUnit(e.target.value as MaterialUnit)}
-              className="h-12 w-full rounded-input border border-rossana-border px-4 text-base"
+              className="h-12 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-4 text-base"
             >
               {UNIT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>

@@ -73,7 +73,7 @@ export function ProduceForm({ products }: ProduceFormProps) {
         <select
           value={productId}
           onChange={(e) => setProductId(e.target.value)}
-          className="h-12 w-full rounded-input border border-rossana-border px-4 text-base"
+          className="h-12 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-4 text-base"
         >
           {products.map((p) => (
             <option key={p.id} value={p.id}>
@@ -87,7 +87,7 @@ export function ProduceForm({ products }: ProduceFormProps) {
         <label className="mb-1.5 block text-sm font-medium text-rossana-charcoal">
           ¿Cuántos hiciste?
         </label>
-        <div className="flex items-center rounded-input border border-rossana-border w-fit">
+        <div className="flex items-center rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal w-fit">
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}

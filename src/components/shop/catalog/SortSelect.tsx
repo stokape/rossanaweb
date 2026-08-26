@@ -16,7 +16,7 @@ export function SortSelect({ basePath }: { basePath: string }) {
 
   return (
     <select
-      className="h-11 rounded-input border border-rossana-border px-3 text-sm"
+      className="h-11 rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-3 text-sm"
       value={searchParams.get("orden") ?? "destacados"}
       onChange={(e) => {
         const params = new URLSearchParams(searchParams.toString());

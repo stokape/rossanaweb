@@ -91,7 +91,7 @@ export function ComponentsEditor({ productId, components, materials }: Component
           <select
             value={materialId}
             onChange={(e) => setMaterialId(e.target.value)}
-            className="h-12 w-full rounded-input border border-rossana-border px-4 text-base"
+            className="h-12 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-4 text-base"
           >
             {materials.map((m) => (
               <option key={m.id} value={m.id}>

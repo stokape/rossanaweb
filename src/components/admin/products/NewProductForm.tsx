@@ -50,7 +50,7 @@ export function NewProductForm({ categories }: { categories: CategorySummary[] }
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="h-12 w-full rounded-input border border-rossana-border px-4 text-base"
+            className="h-12 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-4 text-base"
           >
             <option value="">Sin categoría</option>
             {categories.map((c) => (
