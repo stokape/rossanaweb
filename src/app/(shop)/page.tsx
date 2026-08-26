@@ -4,7 +4,7 @@ import { ProductGridSection } from "@/components/shop/home/ProductGridSection";
 import { BenefitsSection } from "@/components/shop/home/BenefitsSection";
 import { SocialSection } from "@/components/shop/home/SocialSection";
 import {
-  getActiveCategories,
+  getCategoriesWithProducts,
   getFeaturedProducts,
   getNewArrivals,
   getOffers,
@@ -20,7 +20,7 @@ import { getHeroBanners } from "@/lib/queries/banners";
 // y footer ya los pone el layout de (shop)).
 export default async function HomePage() {
   const [categories, featured, newArrivals, offers, settings, heroBanners] = await Promise.all([
-    getActiveCategories(),
+    getCategoriesWithProducts(),
     getFeaturedProducts(),
     getNewArrivals(),
     getOffers(),
@@ -34,13 +34,15 @@ export default async function HomePage() {
 
       <CategoriesSection categories={categories} />
 
-      <ProductGridSection
-        title="Favoritos de Rossana"
-        products={featured}
-        viewAllHref="/productos?destacados=1"
-        emptyMessage="Muy pronto vas a encontrar aquí los favoritos de Rossana."
-        tone="ivory"
-      />
+      {featured.length > 0 && (
+        <ProductGridSection
+          title="Favoritos de Rossana"
+          products={featured}
+          viewAllHref="/productos?destacados=1"
+          emptyMessage=""
+          tone="ivory"
+        />
+      )}
 
       <ProductGridSection
         title="Nuevos ingresos"

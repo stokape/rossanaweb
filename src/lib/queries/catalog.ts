@@ -63,6 +63,35 @@ export async function getActiveCategories(): Promise<CategorySummary[]> {
   }));
 }
 
+/** Categorías activas que además ya tienen al menos un producto
+ * publicado — para la sección "Encuentra tu estilo" del Home, que no
+ * debe mostrar categorías todavía vacías (Sección 15/88: nunca
+ * aparentar más catálogo del que realmente existe). El resto de usos
+ * (nav del header, filtros, selector del admin) siguen usando
+ * `getActiveCategories()` sin este filtro, porque ahí sí tiene sentido
+ * ver una categoría antes de cargarle productos. */
+export async function getCategoriesWithProducts(): Promise<CategorySummary[]> {
+  const supabase = await createClient();
+
+  const [{ data: categories, error: catError }, { data: products, error: prodError }] = await Promise.all([
+    supabase
+      .from("categories")
+      .select("id, name, slug, image_url")
+      .eq("store_id", ROSSANA_STORE_ID)
+      .eq("active", true)
+      .order("display_order", { ascending: true }),
+    supabase.from("storefront_products").select("category_id").eq("store_id", ROSSANA_STORE_ID),
+  ]);
+
+  if (catError || prodError || !categories || !products) return [];
+
+  const categoryIdsWithProducts = new Set(products.map((p) => p.category_id).filter(Boolean));
+
+  return categories
+    .filter((c) => categoryIdsWithProducts.has(c.id))
+    .map((c) => ({ id: c.id, name: c.name, slug: c.slug, imageUrl: c.image_url }));
+}
+
 export async function getCategoryBySlug(slug: string): Promise<CategorySummary | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
