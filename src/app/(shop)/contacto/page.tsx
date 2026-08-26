@@ -27,7 +27,7 @@ export default async function ContactoPage() {
           href={whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center gap-2 rounded-button bg-rossana-red px-6 py-3 font-semibold text-white hover:bg-rossana-red-dark"
+          className="mt-8 inline-flex items-center gap-2 rounded-button bg-rossana-red px-6 py-3 font-semibold text-rossana-warm-white hover:bg-rossana-burgundy"
         >
           <MessageCircle className="size-5" /> Escribir por WhatsApp
         </a>

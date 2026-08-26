@@ -50,7 +50,7 @@ export default function CarritoPage() {
       </h1>
 
       <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[1fr_340px]">
-        <div className="rounded-card border border-rossana-border bg-rossana-white px-5">
+        <div className="rounded-card border border-rossana-border bg-rossana-warm-white px-5">
           {items.map((item) => (
             <CartItemRow key={item.productId} item={item} />
           ))}

@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-rossana-ivory px-4">
       <form
         onSubmit={handleSubmit}
-        className="flex w-full max-w-sm flex-col gap-5 rounded-card border border-rossana-border bg-rossana-white p-8 shadow-soft"
+        className="flex w-full max-w-sm flex-col gap-5 rounded-card border border-rossana-border bg-rossana-warm-white p-8 shadow-soft"
       >
         <div className="flex flex-col items-center text-center">
           <Logo className="h-10 w-auto" priority />

@@ -27,12 +27,12 @@ const base =
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-rossana-red text-white hover:bg-rossana-red-dark active:bg-rossana-red-dark",
+    "bg-rossana-red text-rossana-warm-white hover:bg-rossana-burgundy active:bg-rossana-burgundy",
   secondary:
-    "bg-transparent border border-rossana-red text-rossana-red hover:bg-rossana-red/5",
+    "bg-transparent border border-rossana-red text-rossana-red hover:bg-rossana-red hover:text-rossana-warm-white",
   tertiary:
     "bg-transparent text-rossana-red hover:underline underline-offset-4 px-2",
-  gold: "bg-rossana-gold text-rossana-charcoal hover:bg-rossana-gold-light",
+  gold: "bg-rossana-gold text-rossana-charcoal hover:bg-rossana-champagne hover:text-rossana-burgundy",
 };
 
 const sizes: Record<Size, string> = {

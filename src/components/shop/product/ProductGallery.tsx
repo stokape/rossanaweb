@@ -40,7 +40,7 @@ export function ProductGallery({ productName, galleryImages, spinImages }: Produ
             type="button"
             onClick={() => setMode("gallery")}
             className={`rounded-badge px-3 py-1.5 text-xs font-semibold ${
-              mode === "gallery" ? "bg-rossana-red text-white" : "bg-rossana-ivory text-rossana-charcoal"
+              mode === "gallery" ? "bg-rossana-red text-rossana-warm-white" : "bg-rossana-ivory text-rossana-charcoal"
             }`}
           >
             Fotos
@@ -49,7 +49,7 @@ export function ProductGallery({ productName, galleryImages, spinImages }: Produ
             type="button"
             onClick={() => setMode("360")}
             className={`rounded-badge px-3 py-1.5 text-xs font-semibold ${
-              mode === "360" ? "bg-rossana-red text-white" : "bg-rossana-ivory text-rossana-charcoal"
+              mode === "360" ? "bg-rossana-red text-rossana-warm-white" : "bg-rossana-ivory text-rossana-charcoal"
             }`}
           >
             Vista 360°
@@ -77,7 +77,7 @@ export function ProductGallery({ productName, galleryImages, spinImages }: Produ
                 priority
               />
             )}
-            <span className="absolute bottom-3 right-3 flex size-9 items-center justify-center rounded-full bg-rossana-white/90 text-rossana-charcoal opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="absolute bottom-3 right-3 flex size-9 items-center justify-center rounded-full bg-rossana-warm-white/90 text-rossana-charcoal opacity-0 transition-opacity group-hover:opacity-100">
               <ZoomIn className="size-4" />
             </span>
           </button>

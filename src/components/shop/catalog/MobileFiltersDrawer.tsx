@@ -33,7 +33,7 @@ export function MobileFiltersDrawer(props: MobileFiltersDrawerProps) {
             onClick={() => setOpen(false)}
             aria-hidden
           />
-          <div className="flex w-[85%] max-w-sm flex-col bg-rossana-white p-5 shadow-soft">
+          <div className="flex w-[85%] max-w-sm flex-col bg-rossana-warm-white p-5 shadow-soft">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-rossana-charcoal">Filtros</h2>
               <button

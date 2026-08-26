@@ -25,7 +25,7 @@ export function SocialSection({ socialLinks }: SocialSectionProps) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={platform}
-              className="flex items-center gap-2 rounded-badge bg-rossana-white px-4 py-2 text-sm font-medium capitalize text-rossana-red shadow-soft hover:text-rossana-red-dark"
+              className="flex items-center gap-2 rounded-badge bg-rossana-warm-white px-4 py-2 text-sm font-medium capitalize text-rossana-red shadow-soft hover:text-rossana-burgundy"
             >
               <Globe className="size-4" />
               {platform}

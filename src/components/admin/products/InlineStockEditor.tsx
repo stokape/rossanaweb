@@ -73,7 +73,7 @@ export function InlineStockEditor({
             handleSave();
           }
         }}
-        className={`w-16 rounded-[6px] border bg-rossana-white px-2 py-0.5 text-sm font-semibold text-rossana-charcoal ${
+        className={`w-16 rounded-[6px] border bg-rossana-warm-white px-2 py-0.5 text-sm font-semibold text-rossana-charcoal ${
           lowStock ? "border-warning" : "border-rossana-border"
         }`}
       />
@@ -83,7 +83,7 @@ export function InlineStockEditor({
           type="button"
           onClick={handleSave}
           disabled={saving}
-          className="rounded-[6px] bg-rossana-red px-2 py-1 text-xs font-semibold text-white disabled:opacity-50"
+          className="rounded-[6px] bg-rossana-red px-2 py-1 text-xs font-semibold text-rossana-warm-white disabled:opacity-50"
         >
           {saving ? "Guardando…" : "Guardar"}
         </button>

@@ -65,7 +65,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
   const linkClass = (href: string) =>
     `flex items-center gap-3 rounded-button px-4 py-3 text-base font-medium transition-colors ${
       isActive(href)
-        ? "bg-rossana-red text-white"
+        ? "bg-rossana-red text-rossana-warm-white"
         : "text-rossana-charcoal hover:bg-rossana-ivory"
     }`;
 
@@ -117,7 +117,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
   return (
     <>
       {/* Header móvil */}
-      <div className="flex items-center justify-between border-b border-rossana-border bg-rossana-white px-4 py-3 md:hidden">
+      <div className="flex items-center justify-between border-b border-rossana-border bg-rossana-warm-white px-4 py-3 md:hidden">
         <Logo className="h-7 w-auto" />
         <button
           type="button"
@@ -132,7 +132,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
       {menuOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           <div className="flex-1 bg-black/30" onClick={() => setMenuOpen(false)} aria-hidden />
-          <div className="flex w-72 flex-col gap-6 bg-rossana-white p-5">
+          <div className="flex w-72 flex-col gap-6 bg-rossana-warm-white p-5">
             <div className="flex items-center justify-between">
               <Logo className="h-7 w-auto" />
               <button
@@ -151,7 +151,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
       )}
 
       {/* Sidebar desktop */}
-      <aside className="hidden w-64 shrink-0 flex-col gap-6 border-r border-rossana-border bg-rossana-white p-5 md:flex">
+      <aside className="hidden w-64 shrink-0 flex-col gap-6 border-r border-rossana-border bg-rossana-warm-white p-5 md:flex">
         <Logo className="h-7 w-auto" />
         {fullName && <p className="-mt-3 text-sm text-rossana-charcoal/60">Hola, {fullName}</p>}
         {navContent}

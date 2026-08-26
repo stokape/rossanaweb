@@ -4,7 +4,7 @@ import type { HTMLAttributes } from "react";
 type Tone = "red" | "gold" | "success" | "warning" | "danger" | "neutral";
 
 const tones: Record<Tone, string> = {
-  red: "bg-rossana-red text-white",
+  red: "bg-rossana-red text-rossana-warm-white",
   gold: "bg-rossana-gold text-rossana-charcoal",
   success: "bg-success/10 text-success",
   warning: "bg-warning/10 text-warning",

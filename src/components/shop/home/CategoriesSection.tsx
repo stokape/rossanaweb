@@ -10,7 +10,9 @@ export function CategoriesSection({ categories }: { categories: CategorySummary[
   return (
     <section className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 md:py-16">
       <div className="mb-8 text-center">
-        <span className="text-xs font-semibold tracking-[0.2em] text-rossana-gold">
+        {/* Rojo, no dorado: el sistema de diseño oficial exige no usar
+            dorado pequeño sobre fondos claros por contraste insuficiente. */}
+        <span className="text-xs font-semibold tracking-[0.2em] text-rossana-red">
           NUESTRAS COLECCIONES
         </span>
         <h2 className="mt-1 font-display text-2xl font-semibold text-rossana-charcoal md:text-3xl">

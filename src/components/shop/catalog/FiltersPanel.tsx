@@ -61,7 +61,7 @@ export function FiltersPanel({
         <div>
           <h3 className="mb-2 text-sm font-semibold text-rossana-charcoal">Categoría</h3>
           <select
-            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-3 text-sm"
+            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-warm-white text-rossana-charcoal px-3 text-sm"
             value={searchParams.get("categoria") ?? ""}
             onChange={handleSelect("categoria")}
           >
@@ -85,7 +85,7 @@ export function FiltersPanel({
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
             onBlur={applyPriceRange}
-            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-3 text-sm"
+            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-warm-white text-rossana-charcoal px-3 text-sm"
           />
           <span className="text-rossana-charcoal/40">–</span>
           <input
@@ -95,7 +95,7 @@ export function FiltersPanel({
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
             onBlur={applyPriceRange}
-            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-3 text-sm"
+            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-warm-white text-rossana-charcoal px-3 text-sm"
           />
         </div>
       </div>
@@ -104,7 +104,7 @@ export function FiltersPanel({
         <div>
           <h3 className="mb-2 text-sm font-semibold text-rossana-charcoal">Color</h3>
           <select
-            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-3 text-sm"
+            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-warm-white text-rossana-charcoal px-3 text-sm"
             value={searchParams.get("color") ?? ""}
             onChange={handleSelect("color")}
           >
@@ -122,7 +122,7 @@ export function FiltersPanel({
         <div>
           <h3 className="mb-2 text-sm font-semibold text-rossana-charcoal">Material</h3>
           <select
-            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-3 text-sm"
+            className="h-11 w-full rounded-input border border-rossana-border bg-rossana-warm-white text-rossana-charcoal px-3 text-sm"
             value={searchParams.get("material") ?? ""}
             onChange={handleSelect("material")}
           >

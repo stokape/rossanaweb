@@ -8,19 +8,30 @@
  * por componente — ver PROMPT_MAESTRO sección 3/4.
  */
 :root {
-  /* Marca — color principal */
+  /* Marca — color principal. Reconocible de inmediato, pero NUNCA
+   * fondo de toda la web (Sección "OBJETIVO VISUAL" del sistema de
+   * diseño oficial): hero, banners, etiquetas, botones y detalles. */
   --rossana-red: #c00008;
-  --rossana-red-dark: #850006; /* solo hover / profundidad / sombras cromáticas */
+  /* Fondos oscuros complementarios (footer, franja de beneficios,
+   * newsletter, hover de rojo) — brand-fijo, NO se invierte en tema
+   * oscuro (igual que rojo/dorado/champagne/soft-text). */
+  --rossana-burgundy: #650008;
 
-  /* Marca — acentos */
+  /* Marca — acentos dorados. El dorado debe sentirse especial: nunca
+   * grandes superficies, solo títulos, iconos, bordes finos, botones
+   * principales sobre fondos oscuros. */
   --rossana-gold: #d4af37;
-  --rossana-gold-light: #ffd766;
+  --rossana-champagne: #e6c66a; /* variante luminosa: hover, detalles finos, indicadores */
 
-  /* Neutros */
-  --rossana-ivory: #fff7e8;
-  --rossana-white: #ffffff;
-  --rossana-charcoal: #211a18;
-  --rossana-bg-secondary: #fffdf8;
+  /* Texto secundario sobre fondos rojo/borgoña (p.ej. párrafos del
+   * Hero) — brand-fijo, no se invierte en tema oscuro. */
+  --rossana-soft-text: #f4e5d0;
+
+  /* Neutros cálidos — el "descanso visual" donde las fotos de
+   * producto son las protagonistas (55-65% de la interfaz). */
+  --rossana-ivory: #fff5e6;
+  --rossana-warm-white: #fff9f2;
+  --rossana-charcoal: #1a1a1a;
   --rossana-border: #e8e1d9;
 
   /* Estados funcionales (no reemplazan la marca) */
@@ -29,7 +40,7 @@
   --state-danger: #c00008;
 
   /* Superficie */
-  --background: var(--rossana-white);
+  --background: var(--rossana-warm-white);
   --foreground: var(--rossana-charcoal);
 
   /* Radios */
@@ -52,16 +63,17 @@
 /*
  * Tema oscuro (activado con [data-theme="dark"] en <html>, vía el
  * selector de tema — ver ThemeToggle.tsx). Es una inversión literal de
- * las superficies neutras (blanco ⇄ carbón): el rojo y el dorado de
- * marca NO cambian — la Sección 4 exige que el rojo Rossana siga
- * dominando siempre, en cualquier tema.
+ * las superficies neutras (marfil/blanco cálido ⇄ carbón), con un
+ * matiz borgoña en vez del carbón-marrón anterior para que combine con
+ * el fondo de seda roja del tema oscuro. El rojo, el borgoña, los
+ * dorados y el texto suave de marca NO cambian — deben seguir siendo
+ * reconocibles siempre, en cualquier tema.
  */
 :root[data-theme="dark"] {
-  --rossana-ivory: #2e2521;
-  --rossana-white: #211a18;
-  --rossana-charcoal: #f7f1e8;
-  --rossana-bg-secondary: #1c1613;
-  --rossana-border: #3a2f2a;
+  --rossana-ivory: #3a1418;
+  --rossana-warm-white: #2b0f12;
+  --rossana-charcoal: #f7ede0;
+  --rossana-border: #522028;
 
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.45);
 
@@ -73,13 +85,13 @@
   --color-foreground: var(--foreground);
 
   --color-rossana-red: var(--rossana-red);
-  --color-rossana-red-dark: var(--rossana-red-dark);
+  --color-rossana-burgundy: var(--rossana-burgundy);
   --color-rossana-gold: var(--rossana-gold);
-  --color-rossana-gold-light: var(--rossana-gold-light);
+  --color-rossana-champagne: var(--rossana-champagne);
+  --color-rossana-soft-text: var(--rossana-soft-text);
   --color-rossana-ivory: var(--rossana-ivory);
-  --color-rossana-white: var(--rossana-white);
+  --color-rossana-warm-white: var(--rossana-warm-white);
   --color-rossana-charcoal: var(--rossana-charcoal);
-  --color-rossana-bg-secondary: var(--rossana-bg-secondary);
   --color-rossana-border: var(--rossana-border);
 
   --color-success: var(--state-success);

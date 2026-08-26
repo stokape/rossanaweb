@@ -57,7 +57,7 @@ export function ProduceForm({ products }: ProduceFormProps) {
 
   if (products.length === 0) {
     return (
-      <p className="rounded-card border border-dashed border-rossana-border bg-rossana-white px-6 py-16 text-center text-rossana-charcoal/50">
+      <p className="rounded-card border border-dashed border-rossana-border bg-rossana-warm-white px-6 py-16 text-center text-rossana-charcoal/50">
         Todavía no tienes productos con componentes definidos. Agrega los componentes desde
         &ldquo;Mis productos&rdquo; para poder fabricar.
       </p>
@@ -73,7 +73,7 @@ export function ProduceForm({ products }: ProduceFormProps) {
         <select
           value={productId}
           onChange={(e) => setProductId(e.target.value)}
-          className="h-12 w-full rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal px-4 text-base"
+          className="h-12 w-full rounded-input border border-rossana-border bg-rossana-warm-white text-rossana-charcoal px-4 text-base"
         >
           {products.map((p) => (
             <option key={p.id} value={p.id}>
@@ -87,7 +87,7 @@ export function ProduceForm({ products }: ProduceFormProps) {
         <label className="mb-1.5 block text-sm font-medium text-rossana-charcoal">
           ¿Cuántos hiciste?
         </label>
-        <div className="flex items-center rounded-input border border-rossana-border bg-rossana-white text-rossana-charcoal w-fit">
+        <div className="flex items-center rounded-input border border-rossana-border bg-rossana-warm-white text-rossana-charcoal w-fit">
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}

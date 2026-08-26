@@ -103,7 +103,7 @@ export function ReceiptUploadForm({ orderId }: { orderId: string }) {
   }
 
   return (
-    <div className="mt-6 flex flex-col gap-4 rounded-card border border-rossana-border bg-rossana-white p-6">
+    <div className="mt-6 flex flex-col gap-4 rounded-card border border-rossana-border bg-rossana-warm-white p-6">
       <h2 className="text-sm font-semibold text-rossana-charcoal">Sube tu comprobante</h2>
 
       {previewUrl ? (

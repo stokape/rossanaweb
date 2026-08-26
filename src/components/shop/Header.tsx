@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { Logo } from "@/components/shop/Logo";
@@ -19,6 +20,7 @@ const STATIC_LINKS = [
 export function Header({ categories }: { categories: CategorySummary[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { totalCount } = useCart();
+  const pathname = usePathname();
 
   const navLinks = [
     STATIC_LINKS[0],
@@ -27,7 +29,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rossana-border bg-rossana-white">
+    <header className="sticky top-0 z-40 border-b border-rossana-border bg-rossana-warm-white">
       <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 py-3 md:px-8 md:py-4">
         <button
           type="button"
@@ -79,7 +81,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
           >
             <ShoppingBag className="size-5 md:size-6" />
             {totalCount > 0 && (
-              <span className="absolute right-0 top-0 flex size-4 items-center justify-center rounded-badge bg-rossana-red text-[10px] font-semibold text-white">
+              <span className="absolute right-0 top-0 flex size-4 items-center justify-center rounded-badge bg-rossana-red text-[10px] font-semibold text-rossana-warm-white">
                 {totalCount > 9 ? "9+" : totalCount}
               </span>
             )}
@@ -89,20 +91,31 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
 
       <nav className="hidden md:block border-t border-rossana-border">
         <div className="mx-auto flex max-w-[1440px] gap-6 px-8 py-2.5 text-sm font-medium">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-rossana-charcoal hover:text-rossana-red transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const active = pathname === link.href.split("?")[0];
+            // Activo en rojo (no dorado): sobre el fondo claro del header,
+            // dorado pequeño no da suficiente contraste (regla del propio
+            // sistema de diseño: "no colocar dorado pequeño sobre fondos
+            // claros si el contraste resulta insuficiente").
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={
+                  active
+                    ? "font-semibold text-rossana-red transition-colors"
+                    : "text-rossana-charcoal hover:text-rossana-red transition-colors"
+                }
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden border-t border-rossana-border bg-rossana-white px-4 py-4">
+        <div className="md:hidden border-t border-rossana-border bg-rossana-warm-white px-4 py-4">
           <form action="/productos" className="flex items-center rounded-input border border-rossana-border px-4 h-12 mb-4">
             <Search className="size-4 text-rossana-charcoal/50 shrink-0" aria-hidden />
             <input
