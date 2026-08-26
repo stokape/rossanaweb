@@ -1,3 +1,4 @@
+import { ArrowRight, Heart } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { HeroCarousel } from "@/components/shop/home/HeroCarousel";
 import type { HeroBanner } from "@/lib/queries/banners";
@@ -26,20 +27,23 @@ export function Hero({ banners }: { banners: HeroBanner[] }) {
 
       <div className="relative mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-8 px-6 py-16 md:min-h-[560px] md:grid-cols-2 md:gap-10 md:px-12 md:py-0">
         <div className="flex flex-col items-start gap-5 text-white">
-          <span className="text-sm font-semibold tracking-[0.2em] text-rossana-gold-light">
-            NUEVA COLECCIÓN
-          </span>
           <h1 className="font-display text-4xl font-semibold leading-tight md:text-6xl">
-            Realza tu estilo
+            Detalles que
             <br />
-            cada día
+            <span className="italic text-rossana-gold-light">te hacen brillar</span>
           </h1>
+          <div className="flex items-center gap-3 text-rossana-gold-light/70">
+            <span className="h-px w-10 bg-current" />
+            <Heart className="size-3 fill-current" aria-hidden />
+            <span className="h-px w-10 bg-current" />
+          </div>
           <p className="max-w-md text-base text-white/85 md:text-lg">
-            Bisutería y accesorios que complementan tu esencia.
+            Bisutería y accesorios que combinan elegancia, color y delicadeza
+            para acompañarte todos los días.
           </p>
           <div className="mt-2 flex flex-wrap gap-3">
             <Button href="/productos" variant="gold" size="default">
-              VER PRODUCTOS
+              DESCUBRIR COLECCIÓN <ArrowRight className="size-4" aria-hidden />
             </Button>
           </div>
         </div>
