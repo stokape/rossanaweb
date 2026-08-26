@@ -3,12 +3,9 @@ import { Globe, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/shop/Logo";
 import type { SiteSettings } from "@/lib/queries/site";
 
-const POLICY_LINKS = [
-  { label: "Envíos", href: "/politicas/envios" },
-  { label: "Cambios y devoluciones", href: "/politicas/cambios-devoluciones" },
-  { label: "Privacidad", href: "/politicas/privacidad" },
-  { label: "Términos y condiciones", href: "/politicas/terminos" },
-];
+// Sección "Políticas" oculta a pedido del usuario (de momento no se
+// usa) — el componente PoliciesSection del admin y la ruta
+// /politicas/[slug] siguen existiendo, solo no están enlazadas.
 
 function buildWhatsAppLink(whatsappNumber: string) {
   const digits = whatsappNumber.replace(/\D/g, "");
@@ -22,7 +19,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
     // Fondo fijo (no usa el token --rossana-charcoal): el footer se
     // mantiene siempre oscuro/de marca, independiente del tema claro/oscuro.
     <footer className="bg-[#211a18] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4">
+      <div className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3">
         <div className="flex flex-col gap-3">
           <Logo className="h-16 w-auto sm:h-10" />
           <p className="text-sm text-white/70 max-w-xs">
@@ -36,15 +33,6 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           <Link href="/productos" className="text-white/70 hover:text-white">Productos</Link>
           <Link href="/nosotros" className="text-white/70 hover:text-white">Nosotros</Link>
           <Link href="/contacto" className="text-white/70 hover:text-white">Contacto</Link>
-        </div>
-
-        <div className="flex flex-col gap-2 text-sm">
-          <h3 className="mb-1 font-semibold text-rossana-gold">Políticas</h3>
-          {POLICY_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="text-white/70 hover:text-white">
-              {link.label}
-            </Link>
-          ))}
         </div>
 
         <div className="flex flex-col gap-3 text-sm">

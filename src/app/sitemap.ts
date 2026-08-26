@@ -11,10 +11,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/productos`, changeFrequency: "daily", priority: 0.9 },
     { url: `${siteUrl}/nosotros`, changeFrequency: "monthly", priority: 0.4 },
     { url: `${siteUrl}/contacto`, changeFrequency: "monthly", priority: 0.4 },
-    { url: `${siteUrl}/politicas/envios`, changeFrequency: "yearly", priority: 0.2 },
-    { url: `${siteUrl}/politicas/cambios-devoluciones`, changeFrequency: "yearly", priority: 0.2 },
-    { url: `${siteUrl}/politicas/privacidad`, changeFrequency: "yearly", priority: 0.2 },
-    { url: `${siteUrl}/politicas/terminos`, changeFrequency: "yearly", priority: 0.2 },
+    // Rutas /politicas/* fuera del sitemap a pedido del usuario — de
+    // momento no se usan (siguen existiendo, solo no enlazadas/indexadas).
   ];
 
   const [categories, { products }] = await Promise.all([

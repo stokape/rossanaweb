@@ -1,7 +1,6 @@
 import { BusinessSettingsSection } from "@/components/admin/settings/BusinessSettingsSection";
 import { CategoriesSection } from "@/components/admin/settings/CategoriesSection";
 import { ShippingZonesSection } from "@/components/admin/settings/ShippingZonesSection";
-import { PoliciesSection } from "@/components/admin/settings/PoliciesSection";
 import { SocialLinksSection } from "@/components/admin/settings/SocialLinksSection";
 import { UsersSection } from "@/components/admin/settings/UsersSection";
 import { getSiteSettings } from "@/lib/queries/site";
@@ -28,7 +27,9 @@ export default async function AdminConfiguracionPage() {
       <CategoriesSection categories={categories} />
       <ShippingZonesSection zones={zones} />
       <SocialLinksSection settings={settings} />
-      <PoliciesSection settings={settings} />
+      {/* Políticas oculta a pedido del usuario — de momento no se usa.
+          El componente sigue en src/components/admin/settings/PoliciesSection.tsx,
+          solo no se renderiza. */}
       <UsersSection staff={staff} />
     </div>
   );
