@@ -7,10 +7,10 @@ Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 | Fase | Descripción | Estado | Notas |
 |---|---|---|---|
 | 0 | Auditoría / planificación | COMPLETADO | Ver `ARCHITECTURE.md`. Repo vacío al iniciar: sin código previo, sin assets. |
-| 1 | Design System | EN DESARROLLO | Tokens de color/tipografía/radios en `src/app/globals.css`. Componentes base (`Button`, `Input`, `Card`, `Badge`) creados. Falta: logo real (BLOQUEADO, ver abajo), resto de componentes (header, footer, product card). |
+| 1 | Design System | COMPLETADO | Tokens de color/tipografía/radios en `src/app/globals.css`. Componentes base (`Button`, `Input`, `Card`, `Badge`) creados. Logo oficial y favicon reales cargados y conectados (`src/components/shop/Logo.tsx`, `src/app/icon.png`) — reemplazan el wordmark de texto temporal en Header, Footer, panel admin y login. |
 | 2 | Base de datos | COMPLETADO | Esquema completo (26 tablas + vista `storefront_products`) aplicado y verificado contra el proyecto Supabase real (`cnzbifvnhuqiasgvtskn`) el 2026-08-25 vía `scripts/run-migrations.mjs`. `pg_cron` activo. Tipos TypeScript escritos a mano en `src/types/database.ts` (la generación automática requiere Docker, no disponible en esta máquina). |
 | 3 | Auth + RLS | COMPLETADO | Clientes Supabase (`browser`/`server`/`admin`) y `src/proxy.ts` listos. RLS aplicada y **verificada en vivo**: `anon` no puede leer `products` directamente (0 filas) pero sí `storefront_products` sin ninguna columna de costo — probado insertando y borrando un producto de prueba. Usuario `owner` (`stoka.peru@gmail.com`) creado y verificado con `scripts/create-admin-user.mjs`. Falta construir las pantallas de login/recuperación de `/admin` (parte de la Fase 11). |
-| 4 | Home | EN DESARROLLO | Estructura completa (Sección 13): barra promo, header sticky con búsqueda/cuenta/favoritos/carrito, hero con copy literal del prompt, categorías, favoritos/nuevos ingresos/ofertas (leyendo `storefront_products`, con estado vacío honesto — hoy no hay productos reales cargados), beneficios, redes, footer. Todo data-driven desde `site_settings`/`categories`/`storefront_products`, nada hardcodeado. Falta: logo real (hoy hay un wordmark de texto marcado como temporal), fotos de categoría/producto reales, y páginas stub (`/productos`, `/carrito`, `/cuenta*`) que se completan en sus fases correspondientes. |
+| 4 | Home | COMPLETADO | Estructura completa (Sección 13): barra promo, header sticky con búsqueda/cuenta/favoritos/carrito, hero con copy literal del prompt, categorías, favoritos/nuevos ingresos/ofertas (leyendo `storefront_products`, con estado vacío honesto), beneficios, redes, footer. Todo data-driven desde `site_settings`/`categories`/`storefront_products`, nada hardcodeado. Logo oficial ya conectado. Falta solo: fotos de categoría/producto reales (el usuario las carga desde `/admin`). |
 | 5 | Catálogo | COMPLETADO | `/productos` y `/categorias/[slug]` (comparten `CatalogView`): breadcrumb, H1, conteo, filtros (categoría, precio, color, material, disponibilidad, novedades, ofertas — vía URL, drawer en móvil), orden (destacados/recientes/precio asc/desc), paginación. Búsqueda por nombre/SKU/descripción/tags (se agregó columna `tags` y `on_offer` calculada en BD, no existían). Verificado con datos de prueba reales insertados y borrados: filtros, búsqueda y estado vacío ("No encontramos productos con esa búsqueda") funcionan correctamente. |
 | 6 | Producto + 360° | COMPLETADO | `/productos/[slug]`: breadcrumb, galería 55/45, zoom (lightbox), miniaturas, vista 360° real (arrastrar para rotar, solo se activa con 8+ fotos reales — nunca simulada), nombre/SKU/precio/descuento/stock/descripción/características, cantidad, agregar al carrito, comprar ahora, consultar por WhatsApp (mensaje pre-armado Sección 65), bloque envíos/cambios/cuidados, relacionados. Se creó la infraestructura de carrito (`CartProvider`, localStorage) que también usará la Fase 7. **Bug real encontrado y corregido durante la prueba**: la policy RLS de `product_images` nunca dejaba pasar nada a `anon` (su subconsulta contra `products` quedaba bloqueada por la RLS de esa tabla) — se detectó insertando un producto de prueba con 10 fotos reales y viendo que la API devolvía `[]`; arreglado con una función `security definer` (`is_product_published`), igual patrón que `is_store_staff`. Verificado de nuevo tras el fix: las 10 fotos se leen correctamente. |
 | 7 | Carrito | COMPLETADO | `/carrito`: imagen/nombre/cantidad/precio/subtotal por línea, editar cantidad, eliminar, resumen (subtotal/envío pendiente hasta checkout/total), "Finalizar compra" y "Seguir comprando". Estado vacío con CTA. Como el carrito vive en `localStorage` (Client Component), se ajustó el estado previo a la hidratación para mostrar un skeleton en vez de una pantalla en blanco (Sección 76) — verificado que el skeleton aparece en el HTML del servidor. |
@@ -29,10 +29,9 @@ Leyenda: `COMPLETADO` · `EN DESARROLLO` · `PENDIENTE` · `BLOQUEADO`
 
 ## Bloqueos reales activos (requieren acción del usuario — ver `DEPLOY.md`)
 
-1. **Logo oficial**: no hay archivos de logo (`logo-primary`, `logo-light-background`, `logo-dark/red-background`, `logo-mobile`, `isotipo`, `favicon`) en el repo. Sección 5 prohíbe recrear el logo en HTML. Carpeta lista en `public/brand/` con instrucciones.
-2. **Fotografías reales de producto**: no hay ninguna en el repo. Sección 23 prohíbe inventar productos como definitivos. Se suben desde `/admin/productos` (ya funcional).
-3. **Datos operativos reales**: Yape/WhatsApp reales — la pantalla para cargarlos ya existe y funciona (`/admin/configuracion`), solo falta que el usuario ingrese sus datos reales.
-4. **Cuenta de Vercel + DNS del dominio**: para el despliegue final — pasos exactos en `DEPLOY.md`.
+1. **Fotografías reales de producto**: no hay ninguna en el repo. Sección 23 prohíbe inventar productos como definitivos. Se suben desde `/admin/productos` (ya funcional).
+2. **Datos operativos reales**: Yape/WhatsApp reales — la pantalla para cargarlos ya existe y funciona (`/admin/configuracion`), solo falta que el usuario ingrese sus datos reales.
+3. **DNS del dominio**: `rossana.stoka.pe` agregado en Vercel, pendiente de que el registro CNAME propague en Cloudflare.
 
 Ninguno de estos bloquea código: todo lo que se puede construir sin
 ellos ya está construido y probado. Son, literalmente, las únicas
@@ -42,6 +41,9 @@ tareas que le quedan al usuario.
 
 - ~~Proyecto Supabase~~ → conectado (`cnzbifvnhuqiasgvtskn`, región `us-east-2`), migraciones y seed aplicados el 2026-08-25.
 - ~~Usuario admin~~ → `stoka.peru@gmail.com` creado con rol `owner`, verificado en BD (2026-08-25). Credenciales entregadas al usuario por chat, no se guardan en el repo.
+- ~~Logo oficial~~ → `logo_rossana.png` + `favicon_rossana.png` cargados y conectados (2026-08-26). Ver `public/brand/README.md`.
+- ~~Repositorio GitHub~~ → `https://github.com/stokape/rossanaweb`, rama `main`.
+- ~~Despliegue en Vercel~~ → `https://rossanaweb.vercel.app` en producción, verificado en vivo (Home, `/robots.txt`, `/admin` redirige correctamente).
 
 ## Decisiones de arquitectura registradas
 
@@ -65,9 +67,9 @@ Los cuatro se detectaron construyendo y probando contra la base de datos en vivo
 
 `[x]` construido y probado · `[~]` construido, no verificado visualmente en navegador (ver `QA_CHECKLIST.md`) · `[ ]` pendiente de una acción del usuario
 
-- [~] Identidad Rossana correcta — wordmark temporal, falta el logo oficial del usuario
+- [x] Identidad Rossana correcta — logo oficial conectado (2026-08-26)
 - [x] Rossana Red correcto (`#C00008`, un solo token en todo el sistema)
-- [ ] Logo correcto — pendiente de que el usuario suba los archivos
+- [x] Logo correcto — `logo_rossana.png` + favicon reales, sin recrear en HTML
 - [~] Responsive (mobile-first en todo el CSS, no verificado visualmente en los 10 anchos de la Sección 11)
 - [x] Home
 - [x] Catálogo

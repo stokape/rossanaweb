@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
-import { Wordmark } from "@/components/shop/Wordmark";
+import { Logo } from "@/components/shop/Logo";
 import { useCart } from "@/lib/cart/CartProvider";
 import type { CategorySummary } from "@/lib/queries/catalog";
 
@@ -39,7 +39,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
         </button>
 
         <Link href="/" className="shrink-0" aria-label="Rossana — Bisutería y Más, ir al inicio">
-          <Wordmark className="text-xl md:text-2xl" />
+          <Logo className="h-8 w-auto md:h-10" priority />
         </Link>
 
         <form

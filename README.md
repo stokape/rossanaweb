@@ -141,7 +141,7 @@ falsos (Sección 66).
 
 Objetivo de costo fijo inicial S/0 (Sección 19): Vercel (plan
 gratuito) + Supabase (plan gratuito), mientras el consumo se mantenga
-dentro de esos planes. Dominio inicial: `ventas.stoka.pe`, vía
+dentro de esos planes. Dominio inicial: `rossana.stoka.pe`, vía
 `NEXT_PUBLIC_SITE_URL` — migrar a dominio propio no requiere tocar
 código, solo esa variable y el DNS. Pasos detallados, incluyendo lo que
 solo el usuario puede hacer (crear cuentas, DNS, variables de entorno):

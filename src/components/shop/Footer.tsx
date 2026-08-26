@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Globe, MessageCircle } from "lucide-react";
-import { Wordmark } from "@/components/shop/Wordmark";
+import { Logo } from "@/components/shop/Logo";
 import type { SiteSettings } from "@/lib/queries/site";
 
 const POLICY_LINKS = [
@@ -22,7 +22,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
     <footer className="bg-rossana-charcoal text-white">
       <div className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4">
         <div className="flex flex-col gap-3">
-          <Wordmark tone="white" className="text-xl" />
+          <Logo className="h-8 w-auto" />
           <p className="text-sm text-white/70 max-w-xs">
             Bisutería y accesorios que complementan tu esencia. Elegancia
             que brilla contigo.

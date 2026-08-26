@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Wordmark } from "@/components/shop/Wordmark";
+import { Logo } from "@/components/shop/Logo";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase/client";
@@ -40,8 +40,8 @@ export default function AdminLoginPage() {
         onSubmit={handleSubmit}
         className="flex w-full max-w-sm flex-col gap-5 rounded-card border border-rossana-border bg-white p-8 shadow-soft"
       >
-        <div className="text-center">
-          <Wordmark className="text-xl" />
+        <div className="flex flex-col items-center text-center">
+          <Logo className="h-10 w-auto" priority />
           <p className="mt-2 text-sm text-rossana-charcoal/60">Panel del negocio</p>
         </div>
 

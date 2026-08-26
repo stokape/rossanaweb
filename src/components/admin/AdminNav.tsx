@@ -14,7 +14,7 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import { Wordmark } from "@/components/shop/Wordmark";
+import { Logo } from "@/components/shop/Logo";
 import { createClient } from "@/lib/supabase/client";
 
 // Máximo 5 módulos operativos principales + Configuración aparte
@@ -91,7 +91,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
     <>
       {/* Header móvil */}
       <div className="flex items-center justify-between border-b border-rossana-border bg-white px-4 py-3 md:hidden">
-        <Wordmark className="text-lg" />
+        <Logo className="h-7 w-auto" />
         <button
           type="button"
           onClick={() => setMenuOpen(true)}
@@ -107,7 +107,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
           <div className="flex-1 bg-black/30" onClick={() => setMenuOpen(false)} aria-hidden />
           <div className="flex w-72 flex-col gap-6 bg-white p-5">
             <div className="flex items-center justify-between">
-              <Wordmark className="text-lg" />
+              <Logo className="h-7 w-auto" />
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
@@ -125,7 +125,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
 
       {/* Sidebar desktop */}
       <aside className="hidden w-64 shrink-0 flex-col gap-6 border-r border-rossana-border bg-white p-5 md:flex">
-        <Wordmark className="text-lg" />
+        <Logo className="h-7 w-auto" />
         {fullName && <p className="-mt-3 text-sm text-rossana-charcoal/60">Hola, {fullName}</p>}
         {navContent}
       </aside>
