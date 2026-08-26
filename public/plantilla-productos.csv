@@ -1,2 +1,2 @@
-﻿nombre,categoria,descripcion_corta,descripcion,material,color,medidas,peso_gramos,stock,costo_mano_obra,costo_empaque,costo_otros,margen_porcentaje,incluye_igv,precio,precio_oferta,destacado,titulo_seo,descripcion_seo
+﻿nombre*,categoria,descripcion_corta,descripcion,material,color,medidas,peso_gramos,stock,costo_mano_obra,costo_empaque,costo_otros,margen_porcentaje,incluye_igv,precio*,precio_oferta,destacado,titulo_seo,descripcion_seo
 Pulsera Ejemplo,Pulseras,Pulsera elástica de cuentas rojas,"Descripción más larga y detallada del producto. Si necesitas usar comas dentro del texto, está bien: solo asegúrate de que el texto quede entre comillas.",Cuentas de cristal y cordón elástico,Rojo,18 cm,15,10,5,1,0,50,si,29.90,,no,,

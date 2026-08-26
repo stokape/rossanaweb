@@ -34,14 +34,17 @@ function parseNumber(raw?: string): number | null {
 }
 
 /** Normaliza el nombre de columna del CSV: sin acentos, sin espacios
- * extra, en minúscula — así "Nombre", " nombre ", "NOMBRE" son lo
- * mismo, y no obligamos a Rossana a escribirlo exactamente igual. */
+ * extra, en minúscula, sin el asterisco de "obligatorio" (nombre*) —
+ * así "Nombre*", " nombre ", "NOMBRE" son lo mismo, y no obligamos a
+ * Rossana a escribirlo exactamente igual. */
 function normalizeKey(key: string): string {
   return key
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
     .trim()
-    .toLowerCase();
+    .toLowerCase()
+    .replace(/\*+$/, "")
+    .trim();
 }
 
 export function ImportProductsForm({ categories }: { categories: CategorySummary[] }) {
@@ -176,14 +179,26 @@ export function ImportProductsForm({ categories }: { categories: CategorySummary
           Ábrela en Excel o Google Sheets, complétala (una fila por producto) y guárdala como
           CSV.
         </p>
+
+        <div className="rounded-card border border-rossana-border bg-rossana-ivory p-4 text-sm text-rossana-charcoal/80">
+          <p>
+            Las columnas con <strong className="text-rossana-red">*</strong> en el encabezado
+            (<strong>nombre*</strong> y <strong>precio*</strong>) son obligatorias. Todo lo demás
+            es opcional: si lo dejas vacío, el producto igual se crea, solo que sin ese dato (lo
+            puedes completar después).
+          </p>
+          <p className="mt-2">
+            Excepción: <strong>precio*</strong> puede quedar vacío únicamente si en cambio
+            completas <strong>costo_mano_obra</strong>, <strong>costo_empaque</strong>,{" "}
+            <strong>costo_otros</strong> y <strong>margen_porcentaje</strong> — en ese caso lo
+            calculamos por ti, igual que en la ficha de producto.
+          </p>
+        </div>
+
         <p className="text-sm text-rossana-charcoal/60">
           Dos cosas no van en el archivo, se agregan después en cada producto: las{" "}
           <strong>fotos</strong> y los <strong>&quot;Componentes del producto&quot;</strong>{" "}
           (la receta de materiales para descontar stock automáticamente al fabricar).
-        </p>
-        <p className="text-sm text-rossana-charcoal/60">
-          Si dejas la columna <strong>precio</strong> vacía pero completas los costos y el
-          margen, lo calculamos igual que en la ficha de producto.
         </p>
         <a
           href="/plantilla-productos.csv"
