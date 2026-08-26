@@ -1,27 +1,28 @@
-import { Gift, MessageCircle, ShieldCheck, Smartphone, Truck } from "lucide-react";
+import { Gem, Gift, ShieldCheck, Smartphone, Truck } from "lucide-react";
 
+// Textos confirmados directamente por Rossana (no se afirma nada que
+// el negocio no haga hoy: sin envíos a otras ciudades, sin pasarela de
+// pago en línea ni contraentrega — solo Yape y entrega personal).
 const BENEFITS = [
-  { icon: Truck, title: "Envíos", text: "Rápidos y coordinados" },
-  { icon: Smartphone, title: "Yape", text: "Pago sencillo" },
-  { icon: ShieldCheck, title: "Compra segura", text: "Tus datos protegidos" },
-  { icon: MessageCircle, title: "WhatsApp", text: "Estamos para ayudarte" },
-  { icon: Gift, title: "Regalos", text: "Presentación especial" },
+  { icon: Gem, title: "Diseños exclusivos", text: "Hechos a mano con amor" },
+  { icon: ShieldCheck, title: "Calidad garantizada", text: "Materiales seleccionados" },
+  { icon: Gift, title: "Empaque especial", text: "Listo para regalar" },
+  { icon: Truck, title: "Entrega inmediata", text: "Entrega personal en tu zona" },
+  { icon: Smartphone, title: "Pago fácil", text: "Yape, así de simple" },
 ];
 
-/** Sección 17. Beneficios genéricos del modelo de compra (Yape,
- * checkout de invitado, WhatsApp) — no promesas operativas específicas
- * no confirmadas (p. ej. no se afirma "envío gratis" ni plazos). */
+/** Sección 17. Franja de beneficios (Sección 4: fondo Rossana Red). */
 export function BenefitsSection() {
   return (
-    <section className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 md:py-16">
-      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-5">
+    <section className="bg-rossana-red py-10 md:py-12">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-2 gap-6 px-4 sm:grid-cols-3 md:grid-cols-5 md:px-8">
         {BENEFITS.map(({ icon: Icon, title, text }) => (
           <div key={title} className="flex flex-col items-center gap-2 text-center">
-            <div className="flex size-12 items-center justify-center rounded-full bg-rossana-ivory text-rossana-red">
+            <div className="flex size-12 items-center justify-center rounded-full border border-white/30 text-white">
               <Icon className="size-6" />
             </div>
-            <span className="text-sm font-semibold text-rossana-charcoal">{title}</span>
-            <span className="text-xs text-rossana-charcoal/60">{text}</span>
+            <span className="text-sm font-semibold text-white">{title}</span>
+            <span className="text-xs text-white/75">{text}</span>
           </div>
         ))}
       </div>
