@@ -2,16 +2,28 @@ import { Button } from "@/components/ui/Button";
 import { HeroCarousel } from "@/components/shop/home/HeroCarousel";
 import type { HeroBanner } from "@/lib/queries/banners";
 
-/** Hero (Sección 14). Copy literal del prompt maestro. El lado derecho
- * muestra fotos reales subidas desde /admin/configuracion en cuanto
- * existan (también en móvil, arriba del texto) — mientras tanto usa un
- * motivo decorativo (solo en escritorio) — nunca un producto inventado
- * (Sección 23). */
+/** Hero (Sección 14). Copy literal del prompt maestro. Con fotos
+ * reales cargadas: cubren todo el fondo del hero, con un degradado
+ * rojo Rossana encima (para que el texto se lea bien y el rojo siga
+ * dominando visualmente, Sección 4). Sin fotos todavía: fondo rojo
+ * sólido + motivo decorativo — nunca un producto inventado (Sección 23). */
 export function Hero({ banners }: { banners: HeroBanner[] }) {
+  const hasPhotos = banners.length > 0;
+
   return (
     <section className="relative overflow-hidden bg-rossana-red">
-      <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-8 px-6 py-12 md:min-h-[560px] md:grid-cols-2 md:gap-10 md:px-12 md:py-0">
-        <div className="order-2 flex flex-col items-start gap-5 text-white md:order-none">
+      {hasPhotos && (
+        <>
+          <HeroCarousel banners={banners} fill />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-r from-rossana-red via-rossana-red/75 to-rossana-red/40"
+          />
+        </>
+      )}
+
+      <div className="relative mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-8 px-6 py-16 md:min-h-[560px] md:grid-cols-2 md:gap-10 md:px-12 md:py-0">
+        <div className="flex flex-col items-start gap-5 text-white">
           <span className="text-sm font-semibold tracking-[0.2em] text-rossana-gold-light">
             NUEVA COLECCIÓN
           </span>
@@ -30,11 +42,7 @@ export function Hero({ banners }: { banners: HeroBanner[] }) {
           </div>
         </div>
 
-        {banners.length > 0 ? (
-          <div className="order-1 md:order-none">
-            <HeroCarousel banners={banners} />
-          </div>
-        ) : (
+        {!hasPhotos && (
           <div
             aria-hidden
             className="relative hidden aspect-square items-center justify-center md:flex"
