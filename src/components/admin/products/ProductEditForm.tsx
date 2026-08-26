@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/Badge";
 import { PricingCalculator } from "@/components/admin/products/PricingCalculator";
 import { ComponentsEditor } from "@/components/admin/products/ComponentsEditor";
 import { PhotoUploader } from "@/components/admin/products/PhotoUploader";
+import { StockEditor } from "@/components/admin/products/StockEditor";
 import {
   deleteProductAction,
   setProductStatusAction,
@@ -242,6 +243,21 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
           imageType="360"
           label="Secuencia 360° (opcional)"
           hint="Sube 8 o más fotos en orden, girando el producto, para activar la vista 360°."
+        />
+      </Card>
+
+      <Card className="flex flex-col gap-4 p-5">
+        <h2 className="text-sm font-semibold text-rossana-charcoal">Stock</h2>
+        <p className="-mt-2 text-xs text-rossana-charcoal/50">
+          Usa esto si vendes piezas que ya tienes hechas. Si en vez de eso quieres que el
+          sistema descuente materiales automáticamente, define los &ldquo;Componentes del
+          producto&rdquo; y registra la fabricación desde &ldquo;Hacer productos&rdquo;.
+        </p>
+        <StockEditor
+          productId={product.id}
+          stockOnHand={product.stockOnHand}
+          stockReserved={product.stockReserved}
+          stockAvailable={product.stockAvailable}
         />
       </Card>
 

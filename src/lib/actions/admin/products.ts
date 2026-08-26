@@ -341,3 +341,76 @@ export async function setPrimaryImageAction(imageId: string, productId: string):
   revalidatePath(`/admin/productos/${productId}/editar`);
   return { ok: true };
 }
+
+/**
+ * Ajuste manual de stock (Sección 61/84): para productos sin
+ * componentes definidos (o para corregir un conteo físico) — sin
+ * esto, un producto cargado directamente se queda en 0 unidades para
+ * siempre, porque solo "Hacer productos" sumaba stock. Queda
+ * registrado como movimiento `adjustment` + en `audit_logs`.
+ */
+export async function updateStockAction(productId: string, newStockOnHand: number): Promise<ActionResult> {
+  if (!Number.isInteger(newStockOnHand) || newStockOnHand < 0) {
+    return { ok: false, error: "La cantidad debe ser un número entero de 0 a más." };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Tu sesión expiró. Vuelve a ingresar." };
+
+  const { data: current, error: fetchError } = await supabase
+    .from("products")
+    .select("stock_on_hand, stock_reserved, name")
+    .eq("id", productId)
+    .eq("store_id", ROSSANA_STORE_ID)
+    .maybeSingle();
+
+  if (fetchError || !current) return { ok: false, error: "No encontramos este producto." };
+
+  if (newStockOnHand < current.stock_reserved) {
+    return {
+      ok: false,
+      error: `No puedes bajar de ${current.stock_reserved}: hay pedidos que ya reservaron esa cantidad.`,
+    };
+  }
+
+  const delta = newStockOnHand - current.stock_on_hand;
+  if (delta === 0) return { ok: true };
+
+  const { error: updateError } = await supabase
+    .from("products")
+    .update({ stock_on_hand: newStockOnHand })
+    .eq("id", productId)
+    .eq("store_id", ROSSANA_STORE_ID);
+
+  if (updateError) {
+    console.error("updateStockAction error:", updateError);
+    return { ok: false, error: "No pudimos actualizar el stock. Inténtalo nuevamente." };
+  }
+
+  await supabase.from("inventory_movements").insert({
+    store_id: ROSSANA_STORE_ID,
+    movement_type: "adjustment",
+    product_id: productId,
+    quantity: delta,
+    reference_type: "manual_adjustment",
+    created_by: user.id,
+  });
+
+  await supabase.from("audit_logs").insert({
+    store_id: ROSSANA_STORE_ID,
+    actor_id: user.id,
+    action: "adjust_stock",
+    entity_type: "product",
+    entity_id: productId,
+    old_value: { stock_on_hand: current.stock_on_hand },
+    new_value: { stock_on_hand: newStockOnHand },
+  });
+
+  revalidatePath("/admin/productos");
+  revalidatePath(`/admin/productos/${productId}/editar`);
+  revalidatePath("/productos");
+  return { ok: true };
+}

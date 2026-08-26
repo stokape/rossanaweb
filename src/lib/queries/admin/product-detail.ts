@@ -32,6 +32,7 @@ export interface AdminProductDetail {
   weightGrams: number | null;
   status: "draft" | "published" | "archived";
   stockOnHand: number;
+  stockReserved: number;
   stockAvailable: number;
   laborCost: number;
   packagingCost: number;
@@ -84,6 +85,7 @@ export async function getAdminProductDetail(id: string): Promise<AdminProductDet
     weightGrams: product.weight_grams,
     status: product.status,
     stockOnHand: product.stock_on_hand,
+    stockReserved: product.stock_reserved,
     stockAvailable: product.stock_available,
     laborCost: Number(product.labor_cost),
     packagingCost: Number(product.packaging_cost),
