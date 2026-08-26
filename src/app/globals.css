@@ -104,6 +104,25 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+/* Fondo de seda roja (Sección 4: el rojo Rossana debe dominar) — solo
+ * en tema oscuro, pedido directo de Rossana. El degradado oscuro
+ * encima es para que el rojo no se vea demasiado brillante junto a las
+ * tarjetas/secciones oscuras del resto de la página, no para ocultar
+ * la tela. En tema claro el fondo sigue siendo el de siempre. */
+:root[data-theme="dark"] body {
+  background-image: linear-gradient(rgba(10, 4, 3, 0.45), rgba(10, 4, 3, 0.45)),
+    url("/brand/fondo-rossana-satin.webp");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+  :root[data-theme="dark"] body {
+    background-attachment: fixed;
+  }
+}
+
 /* Tamaño mínimo de texto crítico (labels, precios, botones) */
 .text-critical-min {
   font-size: 14px;
