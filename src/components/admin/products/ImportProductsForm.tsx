@@ -15,6 +15,7 @@ interface PreviewRow {
   data: ProductImportRow;
   error: string | null;
   categoryWarning: string | null;
+  priceWarning: string | null;
 }
 
 const TRUE_VALUES = new Set(["si", "sí", "sí.", "yes", "true", "1", "x"]);
@@ -80,33 +81,57 @@ export function ImportProductsForm({ categories }: { categories: CategorySummary
           const price = parseNumber(raw.precio);
           const compareAtPrice = parseNumber(raw.precio_oferta);
           const stock = parseNumber(raw.stock);
+          const weightGrams = parseNumber(raw.peso_gramos);
+          const laborCost = parseNumber(raw.costo_mano_obra);
+          const packagingCost = parseNumber(raw.costo_empaque);
+          const otherDirectCost = parseNumber(raw.costo_otros);
+          const markupPercentage = parseNumber(raw.margen_porcentaje);
           const categoryName = (raw.categoria ?? "").trim();
           const destacadoRaw = (raw.destacado ?? "").trim().toLowerCase();
+          const incluyeIgvRaw = (raw.incluye_igv ?? "").trim().toLowerCase();
+
+          const hasCostInputs = laborCost != null || packagingCost != null || otherDirectCost != null;
 
           let error: string | null = null;
           if (!name) error = "Falta el nombre.";
-          else if (price == null || price < 0) error = "El precio no es válido.";
+          else if (price != null && price < 0) error = "El precio no es válido.";
 
           let categoryWarning: string | null = null;
           if (categoryName && !categoryNames.has(categoryName.toLowerCase())) {
             categoryWarning = `La categoría "${categoryName}" no existe todavía — se importará sin categoría.`;
+          }
+          let priceWarning: string | null = null;
+          if (price == null && !hasCostInputs) {
+            priceWarning = "Sin precio ni costos: se importará a S/ 0.00, corrígelo después.";
+          } else if (price == null) {
+            priceWarning = "Sin precio: se calculará solo a partir de los costos y el margen.";
           }
 
           return {
             csvRow: i + 2,
             error,
             categoryWarning,
+            priceWarning,
             data: {
               name,
               categoryName: categoryName || undefined,
-              price: price ?? 0,
+              price,
               compareAtPrice: compareAtPrice ?? null,
               color: raw.color?.trim() || undefined,
               material: raw.material?.trim() || undefined,
+              dimensions: raw.medidas?.trim() || undefined,
+              weightGrams: weightGrams ?? null,
               stock: stock ?? undefined,
               shortDescription: raw.descripcion_corta?.trim() || undefined,
               description: raw.descripcion?.trim() || undefined,
+              seoTitle: raw.titulo_seo?.trim() || undefined,
+              seoDescription: raw.descripcion_seo?.trim() || undefined,
               featured: TRUE_VALUES.has(destacadoRaw),
+              laborCost: laborCost ?? undefined,
+              packagingCost: packagingCost ?? undefined,
+              otherDirectCost: otherDirectCost ?? undefined,
+              markupPercentage: markupPercentage ?? undefined,
+              includeTax: incluyeIgvRaw ? TRUE_VALUES.has(incluyeIgvRaw) : undefined,
             },
           };
         });
@@ -146,9 +171,19 @@ export function ImportProductsForm({ categories }: { categories: CategorySummary
       <Card className="flex flex-col gap-3 p-6">
         <h2 className="font-semibold text-rossana-charcoal">1. Descarga la plantilla</h2>
         <p className="text-sm text-rossana-charcoal/60">
-          Ábrela en Excel o Google Sheets, complétala con tus productos (una fila por producto) y
-          guárdala como CSV. Las fotos no van en el archivo — las agregas después en cada
-          producto, igual que ahora.
+          Tiene casi todo lo que ves en la ficha de un producto: nombre, categoría,
+          descripciones, material, color, medidas, peso, stock, costos, margen, precio y SEO.
+          Ábrela en Excel o Google Sheets, complétala (una fila por producto) y guárdala como
+          CSV.
+        </p>
+        <p className="text-sm text-rossana-charcoal/60">
+          Dos cosas no van en el archivo, se agregan después en cada producto: las{" "}
+          <strong>fotos</strong> y los <strong>&quot;Componentes del producto&quot;</strong>{" "}
+          (la receta de materiales para descontar stock automáticamente al fabricar).
+        </p>
+        <p className="text-sm text-rossana-charcoal/60">
+          Si dejas la columna <strong>precio</strong> vacía pero completas los costos y el
+          margen, lo calculamos igual que en la ficha de producto.
         </p>
         <a
           href="/plantilla-productos.csv"
@@ -200,7 +235,7 @@ export function ImportProductsForm({ categories }: { categories: CategorySummary
                     <td className="py-2 pr-3 text-rossana-charcoal/50">{r.csvRow}</td>
                     <td className="py-2 pr-3 text-rossana-charcoal">{r.data.name || "—"}</td>
                     <td className="py-2 pr-3 text-rossana-charcoal">
-                      {r.data.price ? `S/ ${r.data.price.toFixed(2)}` : "—"}
+                      {r.data.price != null ? `S/ ${r.data.price.toFixed(2)}` : "Se calcula"}
                     </td>
                     <td className="py-2 pr-3 text-rossana-charcoal/70">
                       {r.data.categoryName || "Sin categoría"}
@@ -210,6 +245,8 @@ export function ImportProductsForm({ categories }: { categories: CategorySummary
                         <span className="text-danger">{r.error}</span>
                       ) : r.categoryWarning ? (
                         <span className="text-warning">{r.categoryWarning}</span>
+                      ) : r.priceWarning ? (
+                        <span className="text-warning">{r.priceWarning}</span>
                       ) : (
                         <span className="text-success">Lista</span>
                       )}

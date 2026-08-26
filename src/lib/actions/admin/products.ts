@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { ROSSANA_STORE_ID } from "@/lib/queries/site";
+import { ROSSANA_STORE_ID, getSiteSettings } from "@/lib/queries/site";
 import { slugify } from "@/lib/utils";
+import { computeSuggestedPrice } from "@/lib/pricing";
 
 interface ActionResult {
   ok: boolean;
@@ -418,14 +419,26 @@ export async function updateStockAction(productId: string, newStockOnHand: numbe
 export interface ProductImportRow {
   name: string;
   categoryName?: string;
-  price: number;
+  /** Si no se manda, se calcula igual que en la ficha de producto:
+   * costos + margen (+ IGV si corresponde), con materialsCost = 0
+   * porque los "Componentes del producto" no se pueden cargar por CSV. */
+  price?: number | null;
   compareAtPrice?: number | null;
   color?: string;
   material?: string;
+  dimensions?: string;
+  weightGrams?: number | null;
   stock?: number;
   shortDescription?: string;
   description?: string;
+  seoTitle?: string;
+  seoDescription?: string;
   featured?: boolean;
+  laborCost?: number;
+  packagingCost?: number;
+  otherDirectCost?: number;
+  markupPercentage?: number;
+  includeTax?: boolean;
 }
 
 export interface ProductImportResultRow {
@@ -468,10 +481,10 @@ export async function bulkImportProductsAction(rows: ProductImportRow[]): Promis
 
   const supabase = await createClient();
 
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("id, name")
-    .eq("store_id", ROSSANA_STORE_ID);
+  const [{ data: categories }, settings] = await Promise.all([
+    supabase.from("categories").select("id, name").eq("store_id", ROSSANA_STORE_ID),
+    getSiteSettings(),
+  ]);
   const categoryByName = new Map(
     (categories ?? []).map((c) => [c.name.trim().toLowerCase(), c.id]),
   );
@@ -488,7 +501,33 @@ export async function bulkImportProductsAction(rows: ProductImportRow[]): Promis
       results.push({ row: rowNumber, name: "(sin nombre)", ok: false, error: "Falta el nombre." });
       continue;
     }
-    if (!Number.isFinite(row.price) || row.price < 0) {
+
+    const laborCost = row.laborCost ?? 0;
+    const packagingCost = row.packagingCost ?? 0;
+    const otherDirectCost = row.otherDirectCost ?? 0;
+    const markupPercentage = row.markupPercentage ?? 50;
+    const includeTax = row.includeTax ?? true;
+    const taxRate = settings.taxRate;
+
+    // Si no viene "precio", se calcula igual que en la ficha de
+    // producto (costos + margen [+ IGV]) — con materialsCost en 0
+    // porque los "Componentes del producto" no existen todavía para
+    // algo recién importado.
+    let price = row.price;
+    if (price == null) {
+      const breakdown = computeSuggestedPrice({
+        materialsCost: 0,
+        laborCost,
+        packagingCost,
+        otherDirectCost,
+        markupPercentage,
+        includeTax,
+        taxRate,
+      });
+      price = Math.round(breakdown.suggestedFinalPrice * 100) / 100;
+    }
+
+    if (!Number.isFinite(price) || price < 0) {
       results.push({ row: rowNumber, name, ok: false, error: "El precio no es válido." });
       continue;
     }
@@ -500,7 +539,7 @@ export async function bulkImportProductsAction(rows: ProductImportRow[]): Promis
     const [slug, sku] = await Promise.all([uniqueSlug(name), uniqueSku(name.slice(0, 3))]);
 
     const compareAtPrice =
-      row.compareAtPrice != null && row.compareAtPrice > row.price ? row.compareAtPrice : null;
+      row.compareAtPrice != null && row.compareAtPrice > price ? row.compareAtPrice : null;
 
     const { error } = await supabase.from("products").insert({
       store_id: ROSSANA_STORE_ID,
@@ -509,14 +548,24 @@ export async function bulkImportProductsAction(rows: ProductImportRow[]): Promis
       sku,
       category_id: categoryId,
       status: "draft",
-      price: row.price,
+      price,
       compare_at_price: compareAtPrice,
       color: row.color?.trim() || null,
       material: row.material?.trim() || null,
+      dimensions: row.dimensions?.trim() || null,
+      weight_grams: row.weightGrams ?? null,
       stock_on_hand: Number.isFinite(row.stock) && row.stock! >= 0 ? Math.floor(row.stock!) : 0,
       short_description: row.shortDescription?.trim() || null,
       description: row.description?.trim() || null,
+      seo_title: row.seoTitle?.trim() || null,
+      seo_description: row.seoDescription?.trim() || null,
       featured: row.featured ?? false,
+      labor_cost: laborCost,
+      packaging_cost: packagingCost,
+      other_direct_cost: otherDirectCost,
+      markup_percentage: markupPercentage,
+      include_tax: includeTax,
+      tax_rate: taxRate,
     });
 
     if (error) {
