@@ -41,6 +41,12 @@
 
   /* Sombra suave */
   --shadow-soft: 0 4px 20px rgba(33, 26, 24, 0.08);
+
+  /* Le dice al navegador qué paleta usar en controles nativos que
+     nosotros no pintamos con CSS (el popup de <select>, scrollbar,
+     etc.) — sin esto, en tema oscuro esos popups seguían saliendo con
+     fondo blanco del sistema, con texto claro encima = ilegible. */
+  color-scheme: light;
 }
 
 /*
@@ -58,6 +64,8 @@
   --rossana-border: #3a2f2a;
 
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.45);
+
+  color-scheme: dark;
 }
 
 @theme inline {
