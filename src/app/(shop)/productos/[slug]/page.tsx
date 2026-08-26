@@ -4,7 +4,6 @@ import { Breadcrumb } from "@/components/shop/catalog/Breadcrumb";
 import { ProductGallery } from "@/components/shop/product/ProductGallery";
 import { ProductInfoPanel } from "@/components/shop/product/ProductInfoPanel";
 import { ProductActions } from "@/components/shop/product/ProductActions";
-import { ProductPolicyInfo } from "@/components/shop/product/ProductPolicyInfo";
 import { ProductGridSection } from "@/components/shop/home/ProductGridSection";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getProductBySlug, getRelatedProducts } from "@/lib/queries/product-detail";
@@ -121,11 +120,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
               whatsappNumber={settings.whatsappNumber}
             />
           </div>
-
-          <ProductPolicyInfo
-            shippingPolicy={settings.policies.envios ?? null}
-            returnsPolicy={settings.policies["cambios-devoluciones"] ?? null}
-          />
+          {/* Bloque Envíos/Cambios/Cuidados oculto a pedido del usuario
+              — el componente ProductPolicyInfo sigue existiendo por si
+              se reactiva después. */}
         </div>
       </div>
 
