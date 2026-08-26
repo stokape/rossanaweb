@@ -43,6 +43,23 @@
   --shadow-soft: 0 4px 20px rgba(33, 26, 24, 0.08);
 }
 
+/*
+ * Tema oscuro (activado con [data-theme="dark"] en <html>, vía el
+ * selector de tema — ver ThemeToggle.tsx). Es una inversión literal de
+ * las superficies neutras (blanco ⇄ carbón): el rojo y el dorado de
+ * marca NO cambian — la Sección 4 exige que el rojo Rossana siga
+ * dominando siempre, en cualquier tema.
+ */
+:root[data-theme="dark"] {
+  --rossana-ivory: #2e2521;
+  --rossana-white: #211a18;
+  --rossana-charcoal: #f7f1e8;
+  --rossana-bg-secondary: #1c1613;
+  --rossana-border: #3a2f2a;
+
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

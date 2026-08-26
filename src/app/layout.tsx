@@ -27,12 +27,24 @@ export const metadata: Metadata = {
     "Bisutería y accesorios que complementan tu esencia. Elegancia que brilla contigo.",
 };
 
+// Aplica el tema guardado ANTES del primer paint (evita el parpadeo
+// claro→oscuro al cargar). Corre una sola vez, antes de hidratar.
+const themeInitScript = `
+  try {
+    var theme = localStorage.getItem('rossana_theme');
+    if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  } catch (e) {}
+`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
       className={`${montserrat.variable} ${playfair.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="min-h-full flex flex-col bg-rossana-white text-rossana-charcoal">
         {children}
       </body>

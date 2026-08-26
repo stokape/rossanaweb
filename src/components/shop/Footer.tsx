@@ -19,10 +19,12 @@ export function Footer({ settings }: { settings: SiteSettings }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-rossana-charcoal text-white">
+    // Fondo fijo (no usa el token --rossana-charcoal): el footer se
+    // mantiene siempre oscuro/de marca, independiente del tema claro/oscuro.
+    <footer className="bg-[#211a18] text-white">
       <div className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4">
         <div className="flex flex-col gap-3">
-          <Logo className="h-11 w-auto sm:h-8" />
+          <Logo className="h-16 w-auto sm:h-10" />
           <p className="text-sm text-white/70 max-w-xs">
             Bisutería y accesorios que complementan tu esencia. Elegancia
             que brilla contigo.

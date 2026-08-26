@@ -32,7 +32,7 @@ export function MaterialsPageClient({ materials }: { materials: MaterialSummary[
       </div>
 
       {materials.length === 0 ? (
-        <p className="rounded-card border border-dashed border-rossana-border bg-white px-6 py-16 text-center text-rossana-charcoal/50">
+        <p className="rounded-card border border-dashed border-rossana-border bg-rossana-white px-6 py-16 text-center text-rossana-charcoal/50">
           Todavía no tienes materiales registrados.
         </p>
       ) : (

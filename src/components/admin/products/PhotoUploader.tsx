@@ -106,7 +106,7 @@ export function PhotoUploader({ productId, images, imageType, label, hint }: Pho
                     type="button"
                     onClick={() => handleSetPrimary(img.id)}
                     aria-label="Marcar como principal"
-                    className="rounded-full bg-white p-1.5 text-rossana-gold"
+                    className="rounded-full bg-rossana-white p-1.5 text-rossana-gold"
                   >
                     <Star className={img.isPrimary ? "size-4 fill-current" : "size-4"} />
                   </button>
@@ -115,7 +115,7 @@ export function PhotoUploader({ productId, images, imageType, label, hint }: Pho
                   type="button"
                   onClick={() => handleDelete(img.id)}
                   aria-label="Eliminar foto"
-                  className="rounded-full bg-white p-1.5 text-danger"
+                  className="rounded-full bg-rossana-white p-1.5 text-danger"
                 >
                   <Trash2 className="size-4" />
                 </button>

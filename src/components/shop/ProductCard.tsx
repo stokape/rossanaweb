@@ -20,7 +20,7 @@ export function ProductCard({ product }: { product: ProductSummary }) {
       <button
         type="button"
         aria-label="Agregar a favoritos"
-        className="absolute right-4 top-4 z-10 rounded-badge bg-white/90 p-2 text-rossana-charcoal/60 hover:text-rossana-red"
+        className="absolute right-4 top-4 z-10 rounded-badge bg-rossana-white/90 p-2 text-rossana-charcoal/60 hover:text-rossana-red"
       >
         <Heart className="size-4" />
       </button>

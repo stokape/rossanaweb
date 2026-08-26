@@ -39,7 +39,7 @@ export default async function PedidosPage({ searchParams }: PedidosPageProps) {
               "rounded-badge px-4 py-2 text-sm font-medium",
               activeFilter === tab.value
                 ? "bg-rossana-red text-white"
-                : "bg-white text-rossana-charcoal border border-rossana-border",
+                : "bg-rossana-white text-rossana-charcoal border border-rossana-border",
             )}
           >
             {tab.label}
@@ -48,7 +48,7 @@ export default async function PedidosPage({ searchParams }: PedidosPageProps) {
       </div>
 
       {orders.length === 0 ? (
-        <p className="rounded-card border border-dashed border-rossana-border bg-white px-6 py-16 text-center text-rossana-charcoal/50">
+        <p className="rounded-card border border-dashed border-rossana-border bg-rossana-white px-6 py-16 text-center text-rossana-charcoal/50">
           No hay pedidos en esta categoría todavía.
         </p>
       ) : (

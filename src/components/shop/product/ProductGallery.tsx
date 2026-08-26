@@ -77,7 +77,7 @@ export function ProductGallery({ productName, galleryImages, spinImages }: Produ
                 priority
               />
             )}
-            <span className="absolute bottom-3 right-3 flex size-9 items-center justify-center rounded-full bg-white/90 text-rossana-charcoal opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="absolute bottom-3 right-3 flex size-9 items-center justify-center rounded-full bg-rossana-white/90 text-rossana-charcoal opacity-0 transition-opacity group-hover:opacity-100">
               <ZoomIn className="size-4" />
             </span>
           </button>

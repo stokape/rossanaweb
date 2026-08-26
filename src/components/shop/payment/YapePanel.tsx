@@ -22,7 +22,7 @@ export function YapePanel({
   const notConfigured = !yapeNumber && !yapeQrUrl;
 
   return (
-    <div className="rounded-card border border-rossana-border bg-white p-6">
+    <div className="rounded-card border border-rossana-border bg-rossana-white p-6">
       <p className="text-sm font-medium text-rossana-charcoal/60">Total a pagar</p>
       <p className="text-3xl font-semibold text-rossana-red">{formatSoles(total)}</p>
 

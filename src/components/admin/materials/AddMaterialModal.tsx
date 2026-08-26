@@ -47,7 +47,7 @@ export function AddMaterialModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-      <div className="w-full max-w-sm rounded-modal bg-white p-6 shadow-soft">
+      <div className="w-full max-w-sm rounded-modal bg-rossana-white p-6 shadow-soft">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-rossana-charcoal">Nuevo material</h2>
           <button type="button" onClick={onClose} aria-label="Cerrar" className="text-rossana-charcoal/50">

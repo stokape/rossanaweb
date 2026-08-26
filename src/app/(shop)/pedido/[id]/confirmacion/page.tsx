@@ -39,7 +39,7 @@ export default async function ConfirmacionPage({ params }: ConfirmacionPageProps
       </div>
 
       {order.items && order.items.length > 0 && (
-        <div className="mt-8 rounded-card border border-rossana-border bg-white p-5 text-left">
+        <div className="mt-8 rounded-card border border-rossana-border bg-rossana-white p-5 text-left">
           <h2 className="mb-3 text-sm font-semibold text-rossana-charcoal">Resumen</h2>
           <div className="flex flex-col gap-2 text-sm">
             {order.items.map((item, i) => (

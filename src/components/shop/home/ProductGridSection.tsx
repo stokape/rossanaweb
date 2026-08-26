@@ -41,7 +41,7 @@ export function ProductGridSection({
         </div>
 
         {products.length === 0 ? (
-          <p className="rounded-card border border-dashed border-rossana-border bg-white px-6 py-10 text-center text-rossana-charcoal/50">
+          <p className="rounded-card border border-dashed border-rossana-border bg-rossana-white px-6 py-10 text-center text-rossana-charcoal/50">
             {emptyMessage}
           </p>
         ) : (

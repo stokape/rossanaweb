@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { Logo } from "@/components/shop/Logo";
+import { ThemeToggle } from "@/components/shop/ThemeToggle";
 import { useCart } from "@/lib/cart/CartProvider";
 import type { CategorySummary } from "@/lib/queries/catalog";
 
@@ -26,7 +27,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rossana-border bg-white">
+    <header className="sticky top-0 z-40 border-b border-rossana-border bg-rossana-white">
       <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 py-3 md:px-8 md:py-4">
         <button
           type="button"
@@ -56,6 +57,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
         </form>
 
         <nav className="ml-auto flex items-center gap-1 md:gap-2">
+          <ThemeToggle />
           <Link
             href="/cuenta"
             className="p-2 text-rossana-charcoal hover:text-rossana-red"
@@ -100,7 +102,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden border-t border-rossana-border bg-white px-4 py-4">
+        <div className="md:hidden border-t border-rossana-border bg-rossana-white px-4 py-4">
           <form action="/productos" className="flex items-center rounded-input border border-rossana-border px-4 h-12 mb-4">
             <Search className="size-4 text-rossana-charcoal/50 shrink-0" aria-hidden />
             <input

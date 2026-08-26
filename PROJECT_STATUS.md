@@ -46,6 +46,22 @@ tareas que le quedan al usuario.
 - ~~Despliegue en Vercel~~ → `https://rossanaweb.vercel.app` en producción, verificado en vivo (Home, `/robots.txt`, `/admin` redirige correctamente).
 - ~~Redeploy bloqueado~~ → Vercel rechazaba nuevos despliegues con "commit author does not have contributing access" porque los commits quedaron con un correo (`javiercornejoh.devlog@gmail.com`) distinto al de la cuenta de GitHub/Vercel del usuario. Corregido reconfigurando el autor de git a `stoka.peru@gmail.com` para los commits siguientes.
 
+## Tema claro/oscuro (agregado 2026-08-26, post-entrega)
+
+Selector de tema en el header de la tienda y en el panel admin. El
+tema oscuro invierte las superficies neutras (blanco ⇄ carbón) — el
+rojo y el dorado de marca no cambian (Sección 4 exige que el rojo siga
+dominando en cualquier tema). Persistido en `localStorage`, aplicado
+antes del primer paint vía un script inline en `layout.tsx` (sin
+librerías nuevas). Como parte de esto se corrigieron ~27 usos de
+`bg-white` (Tailwind literal, no reactivo al tema) a `bg-rossana-white`
+(el token de diseño), y se dejaron 2 superficies intencionalmente fijas
+en oscuro sin importar el tema (footer, overlay del visor 360°).
+
+Verificado: la CSS compilada trae ambos valores de `--rossana-white`
+(`#fff` claro / `#211a18` oscuro) bajo `[data-theme="dark"]`, y el
+botón de cambio de tema renderiza correctamente en el HTML servido.
+
 ## Decisiones de arquitectura registradas
 
 - Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + Supabase (Postgres, Auth, Storage).

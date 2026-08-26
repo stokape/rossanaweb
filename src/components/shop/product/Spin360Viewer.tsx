@@ -48,7 +48,10 @@ export function Spin360Viewer({ images, alt }: { images: ProductImageItem[]; alt
           sizes="(max-width: 768px) 100vw, 55vw"
           priority
         />
-        <div className="pointer-events-none absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-badge bg-rossana-charcoal/70 px-3 py-1.5 text-xs text-white">
+        {/* Overlay fijo sobre la foto: no usa el token --rossana-charcoal
+            (se invierte en tema oscuro), necesita quedar siempre oscuro
+            para que el texto blanco encima se siga leyendo. */}
+        <div className="pointer-events-none absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-badge bg-[#211a18]/70 px-3 py-1.5 text-xs text-white">
           <RotateCw className="size-3.5" /> Arrastra para rotar
         </div>
       </div>

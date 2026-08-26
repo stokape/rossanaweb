@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ClipboardList,
   Gem,
@@ -10,8 +10,10 @@ import {
   Home,
   LogOut,
   Menu,
+  Moon,
   Package,
   Settings,
+  Sun,
   X,
 } from "lucide-react";
 import { Logo } from "@/components/shop/Logo";
@@ -31,6 +33,23 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsDark(document.documentElement.getAttribute("data-theme") === "dark");
+  }, []);
+
+  function toggleTheme() {
+    const next = isDark ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try {
+      window.localStorage.setItem("rossana_theme", next);
+    } catch {
+      // sin localStorage disponible — el tema igual aplica para esta sesión
+    }
+    setIsDark(next === "dark");
+  }
 
   async function handleLogout() {
     const supabase = createClient();
@@ -77,6 +96,14 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
         </Link>
         <button
           type="button"
+          onClick={toggleTheme}
+          className="flex items-center gap-3 rounded-button px-4 py-3 text-base font-medium text-rossana-charcoal/60 hover:bg-rossana-ivory"
+        >
+          {isDark ? <Sun className="size-5" /> : <Moon className="size-5" />}
+          {isDark ? "Tema claro" : "Tema oscuro"}
+        </button>
+        <button
+          type="button"
           onClick={handleLogout}
           className="flex items-center gap-3 rounded-button px-4 py-3 text-base font-medium text-rossana-charcoal/60 hover:bg-rossana-ivory"
         >
@@ -90,7 +117,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
   return (
     <>
       {/* Header móvil */}
-      <div className="flex items-center justify-between border-b border-rossana-border bg-white px-4 py-3 md:hidden">
+      <div className="flex items-center justify-between border-b border-rossana-border bg-rossana-white px-4 py-3 md:hidden">
         <Logo className="h-7 w-auto" />
         <button
           type="button"
@@ -105,7 +132,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
       {menuOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           <div className="flex-1 bg-black/30" onClick={() => setMenuOpen(false)} aria-hidden />
-          <div className="flex w-72 flex-col gap-6 bg-white p-5">
+          <div className="flex w-72 flex-col gap-6 bg-rossana-white p-5">
             <div className="flex items-center justify-between">
               <Logo className="h-7 w-auto" />
               <button
@@ -124,7 +151,7 @@ export function AdminNav({ fullName }: { fullName: string | null }) {
       )}
 
       {/* Sidebar desktop */}
-      <aside className="hidden w-64 shrink-0 flex-col gap-6 border-r border-rossana-border bg-white p-5 md:flex">
+      <aside className="hidden w-64 shrink-0 flex-col gap-6 border-r border-rossana-border bg-rossana-white p-5 md:flex">
         <Logo className="h-7 w-auto" />
         {fullName && <p className="-mt-3 text-sm text-rossana-charcoal/60">Hola, {fullName}</p>}
         {navContent}
