@@ -44,6 +44,7 @@ tareas que le quedan al usuario.
 - ~~Logo oficial~~ → `logo_rossana.png` + `favicon_rossana.png` cargados y conectados (2026-08-26). Ver `public/brand/README.md`.
 - ~~Repositorio GitHub~~ → `https://github.com/stokape/rossanaweb`, rama `main`.
 - ~~Despliegue en Vercel~~ → `https://rossanaweb.vercel.app` en producción, verificado en vivo (Home, `/robots.txt`, `/admin` redirige correctamente).
+- ~~Redeploy bloqueado~~ → Vercel rechazaba nuevos despliegues con "commit author does not have contributing access" porque los commits quedaron con un correo (`javiercornejoh.devlog@gmail.com`) distinto al de la cuenta de GitHub/Vercel del usuario. Corregido reconfigurando el autor de git a `stoka.peru@gmail.com` para los commits siguientes.
 
 ## Decisiones de arquitectura registradas
 
