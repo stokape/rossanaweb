@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { InlineStockEditor } from "@/components/admin/products/InlineStockEditor";
 import { formatSoles } from "@/lib/utils";
 import type { AdminProductSummary } from "@/lib/queries/admin/products";
 
@@ -27,11 +28,14 @@ export function AdminProductCard({ product }: { product: AdminProductSummary }) 
       <div className="flex-1">
         <p className="font-medium text-rossana-charcoal">{product.name}</p>
         <p className="text-sm text-rossana-charcoal/60">{formatSoles(product.price)}</p>
-        <div className="mt-1 flex flex-wrap gap-2">
+        <div className="mt-1 flex flex-wrap items-center gap-2">
           <Badge tone="neutral">{STATUS_LABEL[product.status] ?? product.status}</Badge>
-          <Badge tone={product.lowStock ? "warning" : "neutral"}>
-            Stock: {product.stockAvailable}
-          </Badge>
+          <InlineStockEditor
+            productId={product.id}
+            stockOnHand={product.stockOnHand}
+            stockReserved={product.stockReserved}
+            lowStock={product.lowStock}
+          />
         </div>
       </div>
 

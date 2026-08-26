@@ -6,6 +6,8 @@ export interface AdminProductSummary {
   id: string;
   name: string;
   price: number;
+  stockOnHand: number;
+  stockReserved: number;
   stockAvailable: number;
   status: ProductStatus;
   imageUrl: string | null;
@@ -18,7 +20,7 @@ export async function getAdminProducts(): Promise<AdminProductSummary[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("products")
-    .select("id, name, price, stock_available, minimum_stock, status")
+    .select("id, name, price, stock_on_hand, stock_reserved, stock_available, minimum_stock, status")
     .eq("store_id", ROSSANA_STORE_ID)
     .order("created_at", { ascending: false });
 
@@ -30,6 +32,8 @@ export async function getAdminProducts(): Promise<AdminProductSummary[]> {
     id: p.id,
     name: p.name,
     price: Number(p.price),
+    stockOnHand: p.stock_on_hand,
+    stockReserved: p.stock_reserved,
     stockAvailable: p.stock_available,
     status: p.status,
     imageUrl: images.get(p.id) ?? null,
