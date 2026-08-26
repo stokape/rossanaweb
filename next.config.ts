@@ -35,6 +35,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // No anunciar la tecnología del framework en cada respuesta
+  // (mínima higiene de seguridad: menos pistas gratis para un atacante).
+  poweredByHeader: false,
   images: {
     remotePatterns: supabaseHost
       ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }]
