@@ -15,7 +15,7 @@ export default async function ContactoPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 md:px-8">
-      <h1 className="font-display text-3xl font-semibold text-rossana-red md:text-4xl">
+      <h1 className="font-display text-3xl font-semibold text-rossana-burgundy md:text-4xl">
         Contacto
       </h1>
       <p className="mt-4 text-base text-rossana-charcoal/70">

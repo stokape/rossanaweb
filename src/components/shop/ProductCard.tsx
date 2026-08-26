@@ -16,7 +16,7 @@ export function ProductCard({ product }: { product: ProductSummary }) {
     : 0;
 
   return (
-    <Card className="group relative flex flex-col overflow-hidden p-3">
+    <Card className="group relative flex flex-col overflow-hidden p-3 transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
       <button
         type="button"
         aria-label="Agregar a favoritos"

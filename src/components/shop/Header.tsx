@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { Logo } from "@/components/shop/Logo";
 import { ThemeToggle } from "@/components/shop/ThemeToggle";
@@ -19,8 +19,21 @@ const STATIC_LINKS = [
 
 export function Header({ categories }: { categories: CategorySummary[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { totalCount } = useCart();
   const pathname = usePathname();
+
+  // Header sticky (Sección 7): floral rojo al tope, borgoña
+  // translúcido + blur al desplazarse — nunca fondo claro, para que
+  // siga sintiéndose "Rossana" en cualquier estado de scroll.
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 24);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const navLinks = [
     STATIC_LINKS[0],
@@ -29,11 +42,14 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rossana-border bg-rossana-warm-white">
+    <header
+      data-scrolled={scrolled}
+      className="header-brand-bg sticky top-0 z-40 border-b border-rossana-gold/20"
+    >
       <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 py-3 md:px-8 md:py-4">
         <button
           type="button"
-          className="md:hidden p-2 -ml-2 text-rossana-charcoal"
+          className="md:hidden p-2 -ml-2 text-rossana-ivory"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
@@ -47,14 +63,14 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
 
         <form
           action="/productos"
-          className="hidden md:flex flex-1 items-center rounded-input border border-rossana-border px-4 h-11 mx-4 max-w-md"
+          className="hidden md:flex flex-1 items-center rounded-input border border-rossana-ivory/25 bg-rossana-warm-white/10 px-4 h-11 mx-4 max-w-md"
         >
-          <Search className="size-4 text-rossana-charcoal/50 shrink-0" aria-hidden />
+          <Search className="size-4 text-rossana-ivory/70 shrink-0" aria-hidden />
           <input
             type="search"
             name="buscar"
             placeholder="Buscar productos..."
-            className="ml-2 flex-1 bg-transparent text-sm outline-none placeholder:text-rossana-charcoal/40"
+            className="ml-2 flex-1 bg-transparent text-sm text-rossana-ivory outline-none placeholder:text-rossana-ivory/50"
           />
         </form>
 
@@ -62,26 +78,26 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
           <ThemeToggle />
           <Link
             href="/cuenta"
-            className="p-2 text-rossana-charcoal hover:text-rossana-red"
+            className="p-2 text-rossana-ivory hover:text-rossana-gold"
             aria-label="Mi cuenta"
           >
             <User className="size-5 md:size-6" />
           </Link>
           <Link
             href="/cuenta/favoritos"
-            className="p-2 text-rossana-charcoal hover:text-rossana-red hidden sm:inline-flex"
+            className="p-2 text-rossana-ivory hover:text-rossana-gold hidden sm:inline-flex"
             aria-label="Favoritos"
           >
             <Heart className="size-5 md:size-6" />
           </Link>
           <Link
             href="/carrito"
-            className="relative p-2 text-rossana-charcoal hover:text-rossana-red"
+            className="relative p-2 text-rossana-ivory hover:text-rossana-gold"
             aria-label={`Carrito${totalCount > 0 ? `, ${totalCount} productos` : ""}`}
           >
             <ShoppingBag className="size-5 md:size-6" />
             {totalCount > 0 && (
-              <span className="absolute right-0 top-0 flex size-4 items-center justify-center rounded-badge bg-rossana-red text-[10px] font-semibold text-rossana-warm-white">
+              <span className="absolute right-0 top-0 flex size-4 items-center justify-center rounded-badge bg-rossana-gold text-[10px] font-semibold text-rossana-burgundy">
                 {totalCount > 9 ? "9+" : totalCount}
               </span>
             )}
@@ -89,22 +105,18 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
         </nav>
       </div>
 
-      <nav className="hidden md:block border-t border-rossana-border">
+      <nav className="hidden md:block border-t border-rossana-gold/20">
         <div className="mx-auto flex max-w-[1440px] gap-6 px-8 py-2.5 text-sm font-medium">
           {navLinks.map((link) => {
             const active = pathname === link.href.split("?")[0];
-            // Activo en rojo (no dorado): sobre el fondo claro del header,
-            // dorado pequeño no da suficiente contraste (regla del propio
-            // sistema de diseño: "no colocar dorado pequeño sobre fondos
-            // claros si el contraste resulta insuficiente").
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 className={
                   active
-                    ? "font-semibold text-rossana-red transition-colors"
-                    : "text-rossana-charcoal hover:text-rossana-red transition-colors"
+                    ? "font-semibold text-rossana-gold transition-colors"
+                    : "text-rossana-ivory hover:text-rossana-gold transition-colors"
                 }
               >
                 {link.label}

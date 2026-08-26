@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import { getOrderPublic } from "@/lib/queries/order-public";
 import { formatSoles } from "@/lib/utils";
+import { CheckoutSteps } from "@/components/shop/checkout/CheckoutSteps";
 
 interface ConfirmacionPageProps {
   params: Promise<{ id: string }>;
@@ -28,6 +29,7 @@ export default async function ConfirmacionPage({ params }: ConfirmacionPageProps
 
   return (
     <div className="mx-auto max-w-xl px-4 py-16 text-center md:px-8">
+      <CheckoutSteps current="confirmacion" />
       <CheckCircle2 className="mx-auto size-14 text-rossana-red" />
       <h1 className="mt-4 font-display text-2xl font-semibold text-rossana-charcoal md:text-3xl">
         ¡Gracias por tu pedido, {order.buyer_first_name}!

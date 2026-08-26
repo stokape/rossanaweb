@@ -139,3 +139,32 @@ body {
 .text-critical-min {
   font-size: 14px;
 }
+
+/* Header global (Sección 4 "CAMBIO PRINCIPAL"): fondo floral rojo con
+ * un overlay sutil para contraste. Si /brand/header-floral.webp
+ * todavía no existe, el navegador simplemente no carga la imagen y se
+ * queda con el background-color rojo sólido de abajo — degrada bien
+ * sin necesitar lógica adicional. Al hacer scroll pasa a borgoña
+ * translúcido + blur (ver Header.tsx), nunca a un fondo claro, para
+ * que el header siga sintiéndose "Rossana" en todo momento. */
+.header-brand-bg {
+  background-color: var(--rossana-red);
+  background-image: linear-gradient(rgba(101, 0, 8, 0.16), rgba(101, 0, 8, 0.16)),
+    url("/brand/header-floral.webp");
+  background-size: cover;
+  /* La imagen es ancha (1717×916) y las flores doradas están
+     concentradas en el tercio inferior de las esquinas — el header es
+     mucho más bajo y ancho, así que anclamos el recorte abajo para
+     que esas flores sigan siendo visibles en vez de perderse con un
+     recorte centrado. */
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  transition: background-color 0.3s ease;
+}
+
+.header-brand-bg[data-scrolled="true"] {
+  background-image: none;
+  background-color: rgba(101, 0, 8, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}

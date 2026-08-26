@@ -28,7 +28,7 @@ export function CartSummary() {
 
       <div className="flex justify-between border-t border-rossana-border pt-4 text-base font-semibold text-rossana-charcoal">
         <span>Total</span>
-        <span className="text-rossana-red">{formatSoles(subtotal)}</span>
+        <span className="text-rossana-burgundy">{formatSoles(subtotal)}</span>
       </div>
 
       <Button href="/checkout" variant="primary" className="w-full">

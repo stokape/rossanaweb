@@ -62,7 +62,7 @@ export function FAQSection() {
         {FAQS.map((faq) => (
           <details
             key={faq.question}
-            className="group rounded-card border border-rossana-border bg-rossana-warm-white p-4 open:pb-4"
+            className="group rounded-card border border-rossana-border bg-rossana-ivory p-4 open:pb-4"
           >
             <summary className="cursor-pointer list-none font-semibold text-rossana-charcoal marker:content-none">
               <span className="flex items-center justify-between gap-4">
