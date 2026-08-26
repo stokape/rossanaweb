@@ -22,6 +22,20 @@ insert into site_settings (store_id, business_name, tax_rate, stock_reservation_
 values ('00000000-0000-0000-0000-000000000001', 'Rossana — Bisutería y Más', 0.18, 45)
 on conflict (store_id) do nothing;
 
+-- Categorías iniciales acordes al rubro (Sección 15) — son datos
+-- normales de la tabla `categories`, 100% editables/eliminables desde
+-- /admin/configuracion en cualquier momento. No es una lista
+-- hardcodeada en el código, solo el punto de partida razonable para
+-- una bisutería en vez de arrancar con el catálogo sin ninguna.
+insert into categories (store_id, name, slug, display_order) values
+  ('00000000-0000-0000-0000-000000000001', 'Pulseras', 'pulseras', 0),
+  ('00000000-0000-0000-0000-000000000001', 'Collares', 'collares', 1),
+  ('00000000-0000-0000-0000-000000000001', 'Aretes', 'aretes', 2),
+  ('00000000-0000-0000-0000-000000000001', 'Anillos', 'anillos', 3),
+  ('00000000-0000-0000-0000-000000000001', 'Sets', 'sets', 4),
+  ('00000000-0000-0000-0000-000000000001', 'Accesorios', 'accesorios', 5)
+on conflict (store_id, slug) do nothing;
+
 -- Después de crear el primer usuario en Supabase Auth (Fase 3), asignar
 -- el rol 'owner' manualmente una vez, por ejemplo desde el SQL editor:
 --

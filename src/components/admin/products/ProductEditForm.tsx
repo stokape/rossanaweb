@@ -131,13 +131,16 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <h1 className="font-display text-2xl font-semibold text-rossana-charcoal md:text-3xl">
-            {product.name}
-          </h1>
-          <Badge tone={product.status === "published" ? "success" : "neutral"}>
-            {STATUS_LABEL[product.status]}
-          </Badge>
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="font-display text-2xl font-semibold text-rossana-charcoal md:text-3xl">
+              {product.name}
+            </h1>
+            <Badge tone={product.status === "published" ? "success" : "neutral"}>
+              {STATUS_LABEL[product.status]}
+            </Badge>
+          </div>
+          <p className="mt-1 text-xs text-rossana-charcoal/40">Código: {product.sku}</p>
         </div>
         <Button variant={product.status === "published" ? "secondary" : "primary"} onClick={handleTogglePublish}>
           {product.status === "published" ? "PASAR A BORRADOR" : "PUBLICAR"}
@@ -169,11 +172,6 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
           </div>
         </div>
 
-        <Input
-          label="SKU"
-          value={fields.sku}
-          onChange={(e) => setFields((f) => ({ ...f, sku: e.target.value }))}
-        />
         <Input
           label="Descripción corta"
           value={fields.shortDescription}
