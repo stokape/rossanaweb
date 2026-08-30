@@ -22,7 +22,10 @@ export function Footer({ settings }: { settings: SiteSettings }) {
     <footer className="bg-rossana-burgundy text-rossana-ivory">
       <div className="mx-auto max-w-[1440px] px-4 py-12 md:px-8 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3">
         <div className="flex flex-col gap-3">
-          <Logo className="h-16 w-auto sm:h-10" />
+          {/* Crece con la pantalla, igual que el logo del header —
+              antes achicaba de h-16 a sm:h-10 al pasar a desktop, algo
+              que se veía mal/asimétrico (pedido directo de Rossana). */}
+          <Logo className="h-12 w-auto sm:h-14" />
           <p className="text-sm text-rossana-ivory/70 max-w-xs">
             Bisutería y accesorios que complementan tu esencia. Elegancia
             que brilla contigo.
