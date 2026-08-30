@@ -708,6 +708,8 @@ export interface Database {
           plin_instructions: string | null;
           tax_rate: number;
           stock_reservation_minutes: number;
+          maintenance_mode: boolean;
+          maintenance_message: string | null;
           promo_bar_messages: Json;
           social_links: Json;
           policies: Json;
@@ -729,6 +731,8 @@ export interface Database {
           plin_instructions?: string | null;
           tax_rate?: number;
           stock_reservation_minutes?: number;
+          maintenance_mode?: boolean;
+          maintenance_message?: string | null;
           promo_bar_messages?: Json;
           social_links?: Json;
           policies?: Json;

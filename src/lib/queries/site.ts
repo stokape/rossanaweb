@@ -14,6 +14,8 @@ export interface SiteSettings {
   plinQrUrl: string | null;
   plinInstructions: string | null;
   taxRate: number;
+  maintenanceMode: boolean;
+  maintenanceMessage: string | null;
   promoBarMessages: string[];
   socialLinks: Record<string, string>;
   policies: Record<string, string>;
@@ -31,6 +33,10 @@ const EMPTY_SETTINGS: SiteSettings = {
   plinQrUrl: null,
   plinInstructions: null,
   taxRate: 0.18,
+  // Si la configuración no carga (error/caída), la tienda debe seguir
+  // mostrándose con normalidad — nunca "en mantenimiento" por defecto.
+  maintenanceMode: false,
+  maintenanceMessage: null,
   promoBarMessages: [],
   socialLinks: {},
   policies: {},
@@ -60,6 +66,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     plinQrUrl: data.plin_qr_url,
     plinInstructions: data.plin_instructions,
     taxRate: Number(data.tax_rate ?? 0.18),
+    maintenanceMode: data.maintenance_mode ?? false,
+    maintenanceMessage: data.maintenance_message,
     promoBarMessages: Array.isArray(data.promo_bar_messages)
       ? (data.promo_bar_messages as string[])
       : [],

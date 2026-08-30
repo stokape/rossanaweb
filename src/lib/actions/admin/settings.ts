@@ -94,6 +94,57 @@ export async function updateBusinessSettingsAction(input: BusinessSettingsInput)
   return { ok: true };
 }
 
+export interface MaintenanceModeInput {
+  maintenanceMode: boolean;
+  maintenanceMessage: string;
+}
+
+/** Modo mantenimiento (pedido de Rossana): activa/desactiva la página
+ * pública que ven los compradores en toda la tienda. El panel /admin
+ * nunca se bloquea por esto — solo afecta las rutas de comprador (ver
+ * ShopLayout). Cambiarlo queda auditado (Sección 84), igual que la
+ * configuración de pagos. */
+export async function updateMaintenanceModeAction(input: MaintenanceModeInput): Promise<ActionResult> {
+  const supabase = await createClient();
+
+  const { data: before } = await supabase
+    .from("site_settings")
+    .select("maintenance_mode")
+    .eq("store_id", ROSSANA_STORE_ID)
+    .maybeSingle();
+
+  const { error } = await supabase
+    .from("site_settings")
+    .update({
+      maintenance_mode: input.maintenanceMode,
+      maintenance_message: input.maintenanceMessage || null,
+    })
+    .eq("store_id", ROSSANA_STORE_ID);
+
+  if (error) {
+    console.error("updateMaintenanceModeAction error:", error);
+    return { ok: false, error: "No pudimos guardar los cambios. Inténtalo nuevamente." };
+  }
+
+  if (before && before.maintenance_mode !== input.maintenanceMode) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    await supabase.from("audit_logs").insert({
+      store_id: ROSSANA_STORE_ID,
+      actor_id: user?.id ?? null,
+      action: input.maintenanceMode ? "enable_maintenance_mode" : "disable_maintenance_mode",
+      entity_type: "site_settings",
+      old_value: before,
+      new_value: { maintenance_mode: input.maintenanceMode },
+    });
+  }
+
+  revalidatePath("/admin/configuracion");
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
 export interface PoliciesInput {
   envios: string;
   cambiosDevoluciones: string;

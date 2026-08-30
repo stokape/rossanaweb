@@ -1,3 +1,4 @@
+import { MaintenanceModeSection } from "@/components/admin/settings/MaintenanceModeSection";
 import { BusinessSettingsSection } from "@/components/admin/settings/BusinessSettingsSection";
 import { BannersSection } from "@/components/admin/settings/BannersSection";
 import { CategoriesSection } from "@/components/admin/settings/CategoriesSection";
@@ -26,6 +27,7 @@ export default async function AdminConfiguracionPage() {
         Configuración
       </h1>
 
+      <MaintenanceModeSection settings={settings} />
       <BusinessSettingsSection settings={settings} />
       <BannersSection banners={banners} />
       <CategoriesSection categories={categories} />
