@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, Gift, MessageCircle } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { ValidateYapeCard } from "@/components/admin/ValidateYapeCard";
+import { CancelOrderCard } from "@/components/admin/pedidos/CancelOrderCard";
 import { getOrderDetailForAdmin } from "@/lib/queries/admin/orders";
 import { getSignedReceiptUrl } from "@/lib/queries/admin/receipt-url";
 import { formatOrderStatus } from "@/lib/orderStatus";
@@ -118,8 +119,9 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           </Card>
         </div>
 
-        <div>
+        <div className="flex flex-col gap-6">
           <ValidateYapeCard order={order} receiptUrl={receiptUrl} />
+          <CancelOrderCard orderId={order.id} status={order.status} />
         </div>
       </div>
     </div>

@@ -62,3 +62,37 @@ export async function rejectPaymentAction(
   revalidatePath(`/admin/pedidos/${orderId}`);
   return { ok: true };
 }
+
+/** "ANULAR PEDIDO" (pedido directo de Rossana). Toda la lógica de
+ * reversa de stock vive en la función de BD `cancel_order`: libera la
+ * reserva si el pago no se había confirmado, o devuelve la mercadería
+ * a stock_on_hand si ya se había confirmado pero el pedido no había
+ * salido todavía. */
+export async function cancelOrderAction(orderId: string, reason?: string): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { ok: false, error: "Tu sesión expiró. Vuelve a ingresar." };
+
+  const { error } = await supabase.rpc("cancel_order", {
+    p_order_id: orderId,
+    p_cancelled_by: user.id,
+    p_reason: reason?.trim() || null,
+  });
+
+  if (error) {
+    console.error("cancelOrderAction error:", error);
+    const alreadyCancelled = error.message?.toLowerCase().includes("ya está anulado");
+    return {
+      ok: false,
+      error: alreadyCancelled ? "Este pedido ya estaba anulado." : "No pudimos anular este pedido. Inténtalo nuevamente.",
+    };
+  }
+
+  revalidatePath("/admin/pedidos");
+  revalidatePath(`/admin/pedidos/${orderId}`);
+  revalidatePath("/admin");
+  return { ok: true };
+}

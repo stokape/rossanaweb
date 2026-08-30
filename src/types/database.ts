@@ -875,6 +875,10 @@ export interface Database {
         Args: { p_payment_id: string; p_rejected_by: string; p_reason?: string | null };
         Returns: undefined;
       };
+      cancel_order: {
+        Args: { p_order_id: string; p_cancelled_by: string; p_reason?: string | null };
+        Returns: undefined;
+      };
     };
     Enums: {
       product_status: ProductStatus;
