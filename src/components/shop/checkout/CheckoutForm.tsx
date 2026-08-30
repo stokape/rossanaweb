@@ -31,7 +31,14 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-export function CheckoutForm() {
+interface CheckoutFormProps {
+  /** Se llama justo antes de vaciar el carrito y navegar al pago —
+   * evita que la página de checkout se confunda y redirija a
+   * /carrito al ver el carrito recién vacío (ver page.tsx). */
+  onSubmitted?: () => void;
+}
+
+export function CheckoutForm({ onSubmitted }: CheckoutFormProps) {
   const router = useRouter();
   const { items, clear } = useCart();
   const [serverError, setServerError] = useState<string | null>(null);
@@ -66,6 +73,7 @@ export function CheckoutForm() {
       return;
     }
 
+    onSubmitted?.();
     clear();
     router.push(`/pedido/${result.orderId}/pago`);
   }
