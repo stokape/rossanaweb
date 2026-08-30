@@ -4,6 +4,7 @@ import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { CartItemRow } from "@/components/shop/cart/CartItemRow";
 import { CartSummary } from "@/components/shop/cart/CartSummary";
+import { BackLink } from "@/components/shop/BackLink";
 import { useCart } from "@/lib/cart/CartProvider";
 
 // Carrito (Sección 25). El carrito de invitado vive en el navegador
@@ -45,6 +46,7 @@ export default function CarritoPage() {
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-10 md:px-8">
+      <BackLink label="Seguir comprando" fallbackHref="/productos" />
       <h1 className="font-display text-2xl font-semibold text-rossana-charcoal md:text-3xl">
         Carrito
       </h1>

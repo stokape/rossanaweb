@@ -4,6 +4,7 @@ import { getSiteSettings } from "@/lib/queries/site";
 import { PaymentMethodsPanel, type PaymentMethodOption } from "@/components/shop/payment/PaymentMethodsPanel";
 import { ReceiptUploadForm } from "@/components/shop/payment/ReceiptUploadForm";
 import { CheckoutSteps } from "@/components/shop/checkout/CheckoutSteps";
+import { BackLink } from "@/components/shop/BackLink";
 
 interface PagoPageProps {
   params: Promise<{ id: string }>;
@@ -45,6 +46,7 @@ export default async function PagoPage({ params }: PagoPageProps) {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-10 md:px-8">
+      <BackLink fallbackHref="/carrito" />
       <CheckoutSteps current="pago" />
       <p className="text-sm text-rossana-charcoal/60">Pedido #{order.order_number}</p>
       <h1 className="mt-1 font-display text-2xl font-semibold text-rossana-charcoal md:text-3xl">

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CheckoutForm } from "@/components/shop/checkout/CheckoutForm";
 import { CheckoutOrderSummary } from "@/components/shop/checkout/CheckoutOrderSummary";
 import { CheckoutSteps } from "@/components/shop/checkout/CheckoutSteps";
+import { BackLink } from "@/components/shop/BackLink";
 import { useCart } from "@/lib/cart/CartProvider";
 
 // Checkout invitado (Sección 26-28): sin pantalla de "¿tienes cuenta?",
@@ -38,6 +39,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-10 md:px-8">
+      <BackLink label="Volver al carrito" fallbackHref="/carrito" />
       <CheckoutSteps current="datos" />
       <div className="grid grid-cols-1 gap-10 md:grid-cols-[1fr_360px]">
         <CheckoutForm onSubmitted={() => { justSubmittedRef.current = true; }} />
