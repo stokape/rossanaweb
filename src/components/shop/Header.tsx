@@ -57,7 +57,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
         </button>
 
         <Link href="/" className="shrink-0" aria-label="Rossana — Bisutería y Más, ir al inicio">
-          <Logo className="h-8 w-auto md:h-10" priority />
+          <Logo className="h-11 w-auto md:h-14" priority />
         </Link>
 
         <form
