@@ -33,11 +33,11 @@ export function PaymentMethodsPanel({ total, methods }: PaymentMethodsPanelProps
           El pago todavía no está configurado. Escríbenos para coordinar tu pago.
         </p>
       ) : (
-        <div className="mt-6 flex flex-col gap-6">
+        <div className="mt-6 flex flex-col gap-8">
           {configured.map((method) => (
-            <div key={method.key} className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+            <div key={method.key} className="flex flex-col items-center gap-4 text-center">
               {method.qrUrl && (
-                <div className="relative size-40 shrink-0 overflow-hidden rounded-card border border-rossana-border">
+                <div className="relative size-48 shrink-0 overflow-hidden rounded-card border border-rossana-border">
                   <Image
                     src={method.qrUrl}
                     alt={`Código QR de ${method.label}`}
