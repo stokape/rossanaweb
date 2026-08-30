@@ -25,6 +25,12 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      // 'self' blob: — el OCR de comprobantes (Sección 30) corre
+      // Tesseract.js en un Worker propio, creado a partir de un
+      // blob: URL con el worker.min.js que servimos nosotros mismos
+      // en /tesseract (nunca desde el CDN por defecto de la
+      // librería, que quedaría bloqueado por este mismo CSP).
+      "worker-src 'self' blob:",
       "style-src 'self' 'unsafe-inline'",
       `img-src 'self' data: blob:${supabaseHost ? ` https://${supabaseHost}` : ""}`,
       `connect-src 'self'${supabaseHost ? ` https://${supabaseHost} wss://${supabaseHost}` : ""}`,

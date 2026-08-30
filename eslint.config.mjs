@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Assets de Tesseract.js (worker/motor WASM) copiados tal cual de
+    // node_modules a public/tesseract para servirlos desde el propio
+    // sitio (ver runReceiptOcr.ts) — no es código nuestro, no se lintea.
+    "public/tesseract/**",
   ]),
 ]);
 
