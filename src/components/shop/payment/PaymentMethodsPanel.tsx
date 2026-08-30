@@ -37,13 +37,23 @@ export function PaymentMethodsPanel({ total, methods }: PaymentMethodsPanelProps
           {configured.map((method) => (
             <div key={method.key} className="flex flex-col items-center gap-4 text-center">
               {method.qrUrl && (
-                <div className="relative size-[250px] shrink-0 overflow-hidden rounded-card border border-rossana-border">
-                  <Image
-                    src={method.qrUrl}
-                    alt={`Código QR de ${method.label}`}
-                    fill
-                    className="object-contain p-2"
-                  />
+                <div className="flex flex-col items-center gap-1.5">
+                  <a
+                    href={method.qrUrl}
+                    download={`qr-${method.key}.jpg`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Descargar código QR de ${method.label}`}
+                    className="relative size-[350px] shrink-0 overflow-hidden rounded-card border border-rossana-border"
+                  >
+                    <Image
+                      src={method.qrUrl}
+                      alt={`Código QR de ${method.label}`}
+                      fill
+                      className="object-contain p-2"
+                    />
+                  </a>
+                  <p className="text-xs text-rossana-charcoal/50">Toca la imagen para guardarla</p>
                 </div>
               )}
               <div className="flex flex-col gap-1 text-sm">
