@@ -17,19 +17,23 @@ export function BusinessSettingsSection({ settings }: { settings: SiteSettings }
   const [yapeNumber, setYapeNumber] = useState(settings.yapeNumber ?? "");
   const [yapeQrUrl, setYapeQrUrl] = useState(settings.yapeQrUrl);
   const [yapeInstructions, setYapeInstructions] = useState(settings.yapeInstructions ?? "");
+  const [plinHolderName, setPlinHolderName] = useState(settings.plinHolderName ?? "");
+  const [plinNumber, setPlinNumber] = useState(settings.plinNumber ?? "");
+  const [plinQrUrl, setPlinQrUrl] = useState(settings.plinQrUrl);
+  const [plinInstructions, setPlinInstructions] = useState(settings.plinInstructions ?? "");
   const [taxRate, setTaxRate] = useState(Math.round(settings.taxRate * 100));
-  const [uploadingQr, setUploadingQr] = useState(false);
+  const [uploadingQr, setUploadingQr] = useState<"yape" | "plin" | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleQrUpload(file: File) {
-    setUploadingQr(true);
+  async function handleQrUpload(method: "yape" | "plin", file: File) {
+    setUploadingQr(method);
     setError(null);
     try {
       const supabase = createClient();
       const ext = file.name.split(".").pop() || "png";
-      const path = `yape-qr-${Date.now()}.${ext}`;
+      const path = `${method}-qr-${Date.now()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from("branding")
         .upload(path, file, { contentType: file.type, upsert: true });
@@ -37,12 +41,13 @@ export function BusinessSettingsSection({ settings }: { settings: SiteSettings }
       const {
         data: { publicUrl },
       } = supabase.storage.from("branding").getPublicUrl(path);
-      setYapeQrUrl(publicUrl);
+      if (method === "yape") setYapeQrUrl(publicUrl);
+      else setPlinQrUrl(publicUrl);
     } catch (err) {
       console.error(err);
       setError("No pudimos subir el QR. Inténtalo nuevamente.");
     } finally {
-      setUploadingQr(false);
+      setUploadingQr(null);
     }
   }
 
@@ -58,6 +63,10 @@ export function BusinessSettingsSection({ settings }: { settings: SiteSettings }
       yapeNumber,
       yapeQrUrl,
       yapeInstructions,
+      plinHolderName,
+      plinNumber,
+      plinQrUrl,
+      plinInstructions,
       taxRate: taxRate / 100,
       stockReservationMinutes: 45,
     });
@@ -84,6 +93,9 @@ export function BusinessSettingsSection({ settings }: { settings: SiteSettings }
         hint="Se usa en el botón de WhatsApp de la tienda y en el checkout."
       />
 
+      {/* Yape y Plin (Sección 28/64): ambos son opcionales de forma
+          independiente — la tienda muestra al comprador solo los que
+          Rossana complete aquí, nunca uno fijo por código. */}
       <h2 className="mt-2 text-lg font-semibold text-rossana-charcoal">Yape</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Input label="Nombre del titular" value={yapeHolderName} onChange={(e) => setYapeHolderName(e.target.value)} />
@@ -100,13 +112,13 @@ export function BusinessSettingsSection({ settings }: { settings: SiteSettings }
           )}
           <label className="flex cursor-pointer items-center gap-2 rounded-button border border-dashed border-rossana-border px-4 py-2.5 text-sm text-rossana-charcoal/60 hover:border-rossana-red">
             <UploadCloud className="size-4" />
-            {uploadingQr ? "Subiendo..." : "Subir QR"}
+            {uploadingQr === "yape" ? "Subiendo..." : "Subir QR"}
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
               className="hidden"
-              disabled={uploadingQr}
-              onChange={(e) => e.target.files?.[0] && handleQrUpload(e.target.files[0])}
+              disabled={uploadingQr !== null}
+              onChange={(e) => e.target.files?.[0] && handleQrUpload("yape", e.target.files[0])}
             />
           </label>
         </div>
@@ -117,6 +129,41 @@ export function BusinessSettingsSection({ settings }: { settings: SiteSettings }
         value={yapeInstructions}
         onChange={(e) => setYapeInstructions(e.target.value)}
         placeholder="Realiza el Yape por el monto exacto y luego sube tu comprobante."
+      />
+
+      <h2 className="mt-2 text-lg font-semibold text-rossana-charcoal">Plin</h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Input label="Nombre del titular" value={plinHolderName} onChange={(e) => setPlinHolderName(e.target.value)} />
+        <Input label="Número Plin" value={plinNumber} onChange={(e) => setPlinNumber(e.target.value)} />
+      </div>
+
+      <div>
+        <p className="mb-1.5 text-sm font-medium text-rossana-charcoal">Código QR de Plin</p>
+        <div className="flex items-center gap-4">
+          {plinQrUrl && (
+            <div className="relative size-20 overflow-hidden rounded-card border border-rossana-border">
+              <Image src={plinQrUrl} alt="QR de Plin" fill className="object-contain p-1" />
+            </div>
+          )}
+          <label className="flex cursor-pointer items-center gap-2 rounded-button border border-dashed border-rossana-border px-4 py-2.5 text-sm text-rossana-charcoal/60 hover:border-rossana-red">
+            <UploadCloud className="size-4" />
+            {uploadingQr === "plin" ? "Subiendo..." : "Subir QR"}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              disabled={uploadingQr !== null}
+              onChange={(e) => e.target.files?.[0] && handleQrUpload("plin", e.target.files[0])}
+            />
+          </label>
+        </div>
+      </div>
+
+      <Input
+        label="Instrucciones para el comprador"
+        value={plinInstructions}
+        onChange={(e) => setPlinInstructions(e.target.value)}
+        placeholder="Realiza el Plin por el monto exacto y luego sube tu comprobante."
       />
 
       <div className="w-32">

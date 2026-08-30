@@ -13,7 +13,13 @@ interface ValidateYapeCardProps {
   receiptUrl: string | null;
 }
 
-/** "Validar Yape" (Sección 41). Confirmar pago es la acción más
+const METHOD_LABEL: Record<string, string> = {
+  yape: "Yape",
+  plin: "Plin",
+};
+
+/** "Validar pago" (Sección 41): Yape o Plin, según con cuál pagó el
+ * comprador (payments.method). Confirmar pago es la acción más
  * sensible del panel — siempre pide confirmación explícita
  * (Sección 87) antes de ejecutar `confirm_payment`. */
 export function ValidateYapeCard({ order, receiptUrl }: ValidateYapeCardProps) {
@@ -27,6 +33,8 @@ export function ValidateYapeCard({ order, receiptUrl }: ValidateYapeCardProps) {
   const receipt = order.receipt;
 
   if (!payment) return null;
+
+  const methodLabel = METHOD_LABEL[payment.method] ?? payment.method;
 
   async function handleConfirm() {
     if (!payment) return;
@@ -78,7 +86,7 @@ export function ValidateYapeCard({ order, receiptUrl }: ValidateYapeCardProps) {
 
   return (
     <Card className="flex flex-col gap-4 p-5">
-      <h2 className="text-lg font-semibold text-rossana-charcoal">Validar Yape</h2>
+      <h2 className="text-lg font-semibold text-rossana-charcoal">Validar {methodLabel}</h2>
 
       <div className="flex justify-between text-sm">
         <span className="text-rossana-charcoal/60">Total esperado</span>
@@ -89,7 +97,7 @@ export function ValidateYapeCard({ order, receiptUrl }: ValidateYapeCardProps) {
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={receiptUrl}
-          alt="Comprobante de Yape"
+          alt={`Comprobante de ${methodLabel}`}
           className="mx-auto max-h-80 rounded-card border border-rossana-border object-contain"
         />
       ) : (
@@ -125,7 +133,7 @@ export function ValidateYapeCard({ order, receiptUrl }: ValidateYapeCardProps) {
       {confirming ? (
         <div className="flex flex-col gap-3 rounded-card border border-rossana-border bg-rossana-ivory p-4">
           <p className="text-sm font-medium text-rossana-charcoal">
-            ¿Confirmas que recibiste {formatSoles(payment.amountExpected)} por Yape?
+            ¿Confirmas que recibiste {formatSoles(payment.amountExpected)} por {methodLabel}?
           </p>
           <div className="flex gap-3">
             <Button variant="secondary" className="flex-1" onClick={() => setConfirming(false)}>

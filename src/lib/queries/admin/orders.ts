@@ -81,6 +81,7 @@ export interface AdminOrderDetail {
   items: { productName: string; sku: string | null; quantity: number; unitPrice: number; subtotal: number }[];
   payment: {
     id: string;
+    method: string;
     status: string;
     amountExpected: number;
   } | null;
@@ -110,7 +111,7 @@ export async function getOrderDetailForAdmin(orderId: string): Promise<AdminOrde
        is_gift, gift_recipient_name, gift_recipient_phone, gift_message,
        subtotal, shipping_cost, discount, total,
        order_items (product_name, sku, quantity, unit_price, subtotal),
-       payments (id, status, amount_expected, payment_receipts (id, file_url, operation_number, operation_number_source, amount_detected, operation_date_detected, is_possible_duplicate, created_at))`,
+       payments (id, method, status, amount_expected, payment_receipts (id, file_url, operation_number, operation_number_source, amount_detected, operation_date_detected, is_possible_duplicate, created_at))`,
     )
     .eq("id", orderId)
     .eq("store_id", ROSSANA_STORE_ID)
@@ -153,7 +154,12 @@ export async function getOrderDetailForAdmin(orderId: string): Promise<AdminOrde
       subtotal: Number(i.subtotal),
     })),
     payment: payment
-      ? { id: payment.id, status: payment.status, amountExpected: Number(payment.amount_expected) }
+      ? {
+          id: payment.id,
+          method: payment.method,
+          status: payment.status,
+          amountExpected: Number(payment.amount_expected),
+        }
       : null,
     receipt: latestReceipt
       ? {

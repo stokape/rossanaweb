@@ -17,11 +17,11 @@ import { getHeroBanners } from "@/lib/queries/banners";
 // Metadata propia de la Home (Sección 66/SEO): título sin el template
 // "%s | Rossana" del layout raíz (aquí sí queremos el nombre completo
 // primero) y una descripción real basada en lo que se vende hoy
-// (pulseras artesanales hechas a mano, pago por Yape).
+// (pulseras artesanales hechas a mano, pago por Yape o Plin).
 export const metadata: Metadata = {
   title: "Rossana — Bisutería y Más | Pulseras artesanales en Perú",
   description:
-    "Pulseras artesanales hechas a mano, con materiales seleccionados y empaque listo para regalar. Compra como invitado y paga fácil por Yape.",
+    "Pulseras artesanales hechas a mano, con materiales seleccionados y empaque listo para regalar. Compra como invitado y paga fácil por Yape o Plin.",
   keywords: [
     "pulseras artesanales",
     "bisutería",

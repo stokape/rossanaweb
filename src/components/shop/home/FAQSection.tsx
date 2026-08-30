@@ -15,7 +15,7 @@ const FAQS: FAQItem[] = [
   {
     question: "¿Cómo puedo pagar mi pedido?",
     answer:
-      "Solo por Yape. Al finalizar tu compra te mostramos los datos para pagar; en cuanto envías tu comprobante, confirmamos tu pedido.",
+      "Por Yape o Plin. Al finalizar tu compra te mostramos los datos para pagar; en cuanto envías tu comprobante, confirmamos tu pedido.",
   },
   {
     question: "¿Necesito crear una cuenta para comprar?",

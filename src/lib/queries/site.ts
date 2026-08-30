@@ -9,6 +9,10 @@ export interface SiteSettings {
   yapeNumber: string | null;
   yapeQrUrl: string | null;
   yapeInstructions: string | null;
+  plinHolderName: string | null;
+  plinNumber: string | null;
+  plinQrUrl: string | null;
+  plinInstructions: string | null;
   taxRate: number;
   promoBarMessages: string[];
   socialLinks: Record<string, string>;
@@ -22,6 +26,10 @@ const EMPTY_SETTINGS: SiteSettings = {
   yapeNumber: null,
   yapeQrUrl: null,
   yapeInstructions: null,
+  plinHolderName: null,
+  plinNumber: null,
+  plinQrUrl: null,
+  plinInstructions: null,
   taxRate: 0.18,
   promoBarMessages: [],
   socialLinks: {},
@@ -47,6 +55,10 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     yapeNumber: data.yape_number,
     yapeQrUrl: data.yape_qr_url,
     yapeInstructions: data.yape_instructions,
+    plinHolderName: data.plin_holder_name,
+    plinNumber: data.plin_number,
+    plinQrUrl: data.plin_qr_url,
+    plinInstructions: data.plin_instructions,
     taxRate: Number(data.tax_rate ?? 0.18),
     promoBarMessages: Array.isArray(data.promo_bar_messages)
       ? (data.promo_bar_messages as string[])

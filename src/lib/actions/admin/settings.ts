@@ -16,19 +16,23 @@ export interface BusinessSettingsInput {
   yapeNumber: string;
   yapeQrUrl: string | null;
   yapeInstructions: string;
+  plinHolderName: string;
+  plinNumber: string;
+  plinQrUrl: string | null;
+  plinInstructions: string;
   taxRate: number;
   stockReservationMinutes: number;
 }
 
 /** Configuración del negocio (Sección 63-65). Un solo guardado para
- * negocio + Yape + WhatsApp — nada de esto se hardcodea en el código.
- * Cambiar la configuración de Yape queda auditado (Sección 84). */
+ * negocio + Yape + Plin + WhatsApp — nada de esto se hardcodea en el
+ * código. Cambiar la configuración de pagos queda auditado (Sección 84). */
 export async function updateBusinessSettingsAction(input: BusinessSettingsInput): Promise<ActionResult> {
   const supabase = await createClient();
 
   const { data: before } = await supabase
     .from("site_settings")
-    .select("yape_holder_name, yape_number, yape_qr_url")
+    .select("yape_holder_name, yape_number, yape_qr_url, plin_holder_name, plin_number, plin_qr_url")
     .eq("store_id", ROSSANA_STORE_ID)
     .maybeSingle();
 
@@ -41,6 +45,10 @@ export async function updateBusinessSettingsAction(input: BusinessSettingsInput)
       yape_number: input.yapeNumber || null,
       yape_qr_url: input.yapeQrUrl,
       yape_instructions: input.yapeInstructions || null,
+      plin_holder_name: input.plinHolderName || null,
+      plin_number: input.plinNumber || null,
+      plin_qr_url: input.plinQrUrl,
+      plin_instructions: input.plinInstructions || null,
       tax_rate: input.taxRate,
       stock_reservation_minutes: input.stockReservationMinutes,
     })
@@ -51,26 +59,32 @@ export async function updateBusinessSettingsAction(input: BusinessSettingsInput)
     return { ok: false, error: "No pudimos guardar los cambios. Inténtalo nuevamente." };
   }
 
-  const yapeChanged =
+  const paymentConfigChanged =
     before &&
     (before.yape_holder_name !== (input.yapeHolderName || null) ||
       before.yape_number !== (input.yapeNumber || null) ||
-      before.yape_qr_url !== input.yapeQrUrl);
+      before.yape_qr_url !== input.yapeQrUrl ||
+      before.plin_holder_name !== (input.plinHolderName || null) ||
+      before.plin_number !== (input.plinNumber || null) ||
+      before.plin_qr_url !== input.plinQrUrl);
 
-  if (yapeChanged) {
+  if (paymentConfigChanged) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
     await supabase.from("audit_logs").insert({
       store_id: ROSSANA_STORE_ID,
       actor_id: user?.id ?? null,
-      action: "update_yape_config",
+      action: "update_payment_config",
       entity_type: "site_settings",
       old_value: before,
       new_value: {
         yape_holder_name: input.yapeHolderName || null,
         yape_number: input.yapeNumber || null,
         yape_qr_url: input.yapeQrUrl,
+        plin_holder_name: input.plinHolderName || null,
+        plin_number: input.plinNumber || null,
+        plin_qr_url: input.plinQrUrl,
       },
     });
   }

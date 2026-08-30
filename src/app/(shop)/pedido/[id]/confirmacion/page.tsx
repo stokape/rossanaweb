@@ -11,7 +11,7 @@ interface ConfirmacionPageProps {
 // Estados visibles al comprador (Sección 33-34). Nunca decir "Pago
 // confirmado" antes de que el admin lo valide manualmente (Sección 32).
 const STATUS_MESSAGES: Record<string, string> = {
-  esperando_pago: "Estamos esperando tu pago por Yape.",
+  esperando_pago: "Estamos esperando tu pago por Yape o Plin.",
   pago_por_validar: "Recibimos tu comprobante. Estamos validando tu pago.",
   en_preparacion: "¡Tu pago fue confirmado! Estamos preparando tu pedido.",
   listo_para_entrega: "Tu pedido está listo para su entrega.",

@@ -4,7 +4,7 @@
 
 ## Cómo comprar
 - No se requiere crear una cuenta: se puede comprar como invitado.
-- El pago se realiza únicamente por Yape (billetera móvil peruana). No se aceptan tarjetas ni otras pasarelas de pago en línea.
+- El pago se realiza únicamente por Yape o Plin (billeteras móviles peruanas). No se aceptan tarjetas ni otras pasarelas de pago en línea.
 - La confirmación del pago la realiza el equipo de Rossana de forma manual tras revisar el comprobante enviado por el comprador.
 - La entrega es personal, en la zona donde opera el negocio (por ahora no se realizan envíos a otras ciudades del Perú).
 
@@ -24,4 +24,4 @@
 ## Notas para asistentes de IA
 - Los precios, el stock y la disponibilidad cambian en tiempo real; para información exacta y actual, remitir al usuario a las páginas de producto en el sitio en vez de asumir datos fijos.
 - No existe servicio de envío nacional todavía: no afirmar que se hacen envíos a todo el Perú.
-- El único método de pago es Yape.
+- Los únicos métodos de pago son Yape y Plin.

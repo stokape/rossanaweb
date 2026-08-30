@@ -702,6 +702,10 @@ export interface Database {
           yape_number: string | null;
           yape_qr_url: string | null;
           yape_instructions: string | null;
+          plin_holder_name: string | null;
+          plin_number: string | null;
+          plin_qr_url: string | null;
+          plin_instructions: string | null;
           tax_rate: number;
           stock_reservation_minutes: number;
           promo_bar_messages: Json;
@@ -719,6 +723,10 @@ export interface Database {
           yape_number?: string | null;
           yape_qr_url?: string | null;
           yape_instructions?: string | null;
+          plin_holder_name?: string | null;
+          plin_number?: string | null;
+          plin_qr_url?: string | null;
+          plin_instructions?: string | null;
           tax_rate?: number;
           stock_reservation_minutes?: number;
           promo_bar_messages?: Json;
@@ -855,6 +863,7 @@ export interface Database {
           p_operation_date_detected?: string | null;
           p_ocr_confidence?: number | null;
           p_ocr_raw_data?: Json | null;
+          p_payment_method?: string | null;
         };
         Returns: string;
       };

@@ -11,7 +11,15 @@ import { runReceiptOcr, type OcrResult } from "@/lib/ocr/runReceiptOcr";
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 const MAX_SIZE_BYTES = 8 * 1024 * 1024;
 
-export function ReceiptUploadForm({ orderId }: { orderId: string }) {
+interface ReceiptUploadFormProps {
+  orderId: string;
+  /** Con qué billeteras puede haber pagado (Yape y/o Plin, según lo
+   * que Rossana tenga configurado) — si hay más de una, se le pregunta
+   * al comprador cuál usó, para que Rossana sepa dónde validar. */
+  availableMethods: { key: "yape" | "plin"; label: string }[];
+}
+
+export function ReceiptUploadForm({ orderId, availableMethods }: ReceiptUploadFormProps) {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -19,6 +27,9 @@ export function ReceiptUploadForm({ orderId }: { orderId: string }) {
   const [ocrResult, setOcrResult] = useState<OcrResult | null>(null);
   const [operationNumber, setOperationNumber] = useState("");
   const [operationSource, setOperationSource] = useState<"ocr" | "manual">("manual");
+  const [paymentMethod, setPaymentMethod] = useState<string | null>(
+    availableMethods.length === 1 ? availableMethods[0].key : null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -65,6 +76,10 @@ export function ReceiptUploadForm({ orderId }: { orderId: string }) {
       setError("Sube tu comprobante para continuar.");
       return;
     }
+    if (availableMethods.length > 1 && !paymentMethod) {
+      setError("Indica con cuál pagaste, Yape o Plin.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
 
@@ -90,6 +105,7 @@ export function ReceiptUploadForm({ orderId }: { orderId: string }) {
         p_operation_date_detected: null,
         p_ocr_confidence: ocrResult?.confidence ?? null,
         p_ocr_raw_data: ocrResult ? { text: ocrResult.rawText } : null,
+        p_payment_method: paymentMethod,
       });
 
       if (rpcError) throw rpcError;
@@ -118,7 +134,7 @@ export function ReceiptUploadForm({ orderId }: { orderId: string }) {
       ) : (
         <label className="flex cursor-pointer flex-col items-center gap-2 rounded-card border border-dashed border-rossana-border px-6 py-10 text-center text-sm text-rossana-charcoal/60 hover:border-rossana-red">
           <UploadCloud className="size-8 text-rossana-charcoal/30" />
-          Toca para elegir tu captura de Yape (JPG, PNG o WEBP)
+          Toca para elegir tu captura de pago (JPG, PNG o WEBP)
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"
@@ -146,6 +162,28 @@ export function ReceiptUploadForm({ orderId }: { orderId: string }) {
         </p>
       )}
 
+      {file && !ocrRunning && availableMethods.length > 1 && (
+        <div>
+          <p className="mb-1.5 text-sm font-medium text-rossana-charcoal">¿Con cuál pagaste?</p>
+          <div className="flex gap-2">
+            {availableMethods.map((m) => (
+              <button
+                key={m.key}
+                type="button"
+                onClick={() => setPaymentMethod(m.key)}
+                className={`flex-1 rounded-input border px-4 py-2.5 text-sm font-semibold ${
+                  paymentMethod === m.key
+                    ? "border-rossana-red bg-rossana-red text-rossana-warm-white"
+                    : "border-rossana-border text-rossana-charcoal"
+                }`}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {file && !ocrRunning && (
         <div>
           <Input
@@ -166,8 +204,13 @@ export function ReceiptUploadForm({ orderId }: { orderId: string }) {
 
       {error && <p className="text-sm text-danger">{error}</p>}
 
-      <Button variant="primary" onClick={handleSubmit} loading={submitting} disabled={!file}>
-        YA REALICÉ MI YAPE
+      <Button
+        variant="primary"
+        onClick={handleSubmit}
+        loading={submitting}
+        disabled={!file || (availableMethods.length > 1 && !paymentMethod)}
+      >
+        YA REALICÉ MI PAGO
       </Button>
     </div>
   );

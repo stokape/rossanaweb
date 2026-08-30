@@ -2,13 +2,13 @@ import { Gem, Gift, ShieldCheck, Smartphone, Truck } from "lucide-react";
 
 // Textos confirmados directamente por Rossana (no se afirma nada que
 // el negocio no haga hoy: sin envíos a otras ciudades, sin pasarela de
-// pago en línea ni contraentrega — solo Yape y entrega personal).
+// pago en línea ni contraentrega — solo Yape/Plin y entrega personal).
 const BENEFITS = [
   { icon: Gem, title: "Diseños exclusivos", text: "Hechos a mano con amor" },
   { icon: ShieldCheck, title: "Calidad garantizada", text: "Materiales seleccionados" },
   { icon: Gift, title: "Empaque especial", text: "Listo para regalar" },
   { icon: Truck, title: "Entrega inmediata", text: "Entrega personal en tu zona" },
-  { icon: Smartphone, title: "Pago fácil", text: "Yape, así de simple" },
+  { icon: Smartphone, title: "Pago fácil", text: "Yape o Plin, así de simple" },
 ];
 
 /** Sección 17. Franja de beneficios — fondo borgoña (sistema de diseño
