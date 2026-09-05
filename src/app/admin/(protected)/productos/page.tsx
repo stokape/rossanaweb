@@ -1,6 +1,7 @@
 import { Plus, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { AdminProductCard } from "@/components/admin/products/AdminProductCard";
+import { DeleteAllProductsSection } from "@/components/admin/products/DeleteAllProductsSection";
 import { getAdminProducts } from "@/lib/queries/admin/products";
 
 // "Mis productos" (Sección 42).
@@ -34,6 +35,8 @@ export default async function AdminProductosPage() {
           ))}
         </div>
       )}
+
+      <DeleteAllProductsSection totalProducts={products.length} />
     </div>
   );
 }

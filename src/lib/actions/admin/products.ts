@@ -252,6 +252,91 @@ export async function deleteProductAction(productId: string, productName: string
   return { ok: true };
 }
 
+export interface DeleteAllProductsResult {
+  ok: boolean;
+  error?: string;
+  deletedCount: number;
+  archivedCount: number;
+}
+
+/**
+ * Elimina TODOS los productos de la tienda de una sola vez (acción muy
+ * sensible — Sección 84, queda auditada). Se procesa uno por uno (no
+ * en una sola sentencia) para que un producto con historial no
+ * bloquee el borrado del resto: igual que en deleteProductAction, si
+ * un producto ya tiene pedidos/movimientos de inventario asociados, la
+ * base de datos rechaza su borrado por integridad referencial — en
+ * ese caso se archiva en su lugar (nunca se pierde el historial de una
+ * venta real).
+ */
+export async function deleteAllProductsAction(): Promise<DeleteAllProductsResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: products, error: fetchError } = await supabase
+    .from("products")
+    .select("id, status")
+    .eq("store_id", ROSSANA_STORE_ID);
+
+  if (fetchError) {
+    console.error("deleteAllProductsAction fetch error:", fetchError);
+    return {
+      ok: false,
+      error: "No pudimos leer tus productos. Inténtalo nuevamente.",
+      deletedCount: 0,
+      archivedCount: 0,
+    };
+  }
+  if (!products || products.length === 0) {
+    return { ok: true, deletedCount: 0, archivedCount: 0 };
+  }
+
+  let deletedCount = 0;
+  let archivedCount = 0;
+
+  for (const product of products) {
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("id", product.id)
+      .eq("store_id", ROSSANA_STORE_ID);
+
+    if (!error) {
+      deletedCount += 1;
+      continue;
+    }
+
+    if (error.code === "23503") {
+      if (product.status !== "archived") {
+        await supabase
+          .from("products")
+          .update({ status: "archived" })
+          .eq("id", product.id)
+          .eq("store_id", ROSSANA_STORE_ID);
+      }
+      archivedCount += 1;
+      continue;
+    }
+
+    console.error(`deleteAllProductsAction error en producto ${product.id}:`, error);
+  }
+
+  await supabase.from("audit_logs").insert({
+    store_id: ROSSANA_STORE_ID,
+    actor_id: user?.id ?? null,
+    action: "delete_all_products",
+    entity_type: "product",
+    old_value: { totalProducts: products.length },
+    new_value: { deletedCount, archivedCount },
+  });
+
+  revalidatePath("/admin/productos");
+  revalidatePath("/productos");
+  return { ok: true, deletedCount, archivedCount };
+}
+
 /** Componentes del producto = receta/BOM interno (Sección 51). */
 export async function upsertProductComponentAction(
   productId: string,
