@@ -58,12 +58,16 @@ export function DeleteAllProductsSection({ totalProducts }: { totalProducts: num
       </div>
 
       {result && (
-        <p className="text-sm text-success">
+        <p className="text-sm text-success transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
           Listo: se eliminaron {result.deletedCount} producto(s)
           {result.failedCount > 0 && ` (${result.failedCount} no se pudieron eliminar)`}.
         </p>
       )}
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && (
+        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          {error}
+        </p>
+      )}
 
       {!open ? (
         <Button
@@ -79,7 +83,7 @@ export function DeleteAllProductsSection({ totalProducts }: { totalProducts: num
           ELIMINAR TODOS LOS PRODUCTOS
         </Button>
       ) : (
-        <div className="flex flex-col gap-3 rounded-card border border-danger/30 bg-danger/5 p-4">
+        <div className="flex flex-col gap-3 rounded-card border border-danger/30 bg-danger/5 p-4 origin-left transition-[opacity,transform] duration-200 ease-[var(--ease-out)] starting:scale-95 starting:opacity-0 motion-reduce:transition-none">
           <p className="text-sm text-rossana-charcoal">
             Para confirmar, escribe <span className="font-semibold">{CONFIRM_WORD}</span> abajo:
           </p>

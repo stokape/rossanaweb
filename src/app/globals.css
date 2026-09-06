@@ -53,6 +53,14 @@
   /* Sombra suave */
   --shadow-soft: 0 4px 20px rgba(33, 26, 24, 0.08);
 
+  /* Curvas de motion para UI: más marcadas que las curvas por defecto
+   * de Tailwind (que se sienten planas en animaciones de menos de
+   * 300ms). Toda entrada/salida del sitio debe usar estas dos curvas
+   * — nunca inventar un cubic-bezier nuevo por componente — vía
+   * `ease-[var(--ease-out)]` / `ease-[var(--ease-in-out)]`. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
   /* Le dice al navegador qué paleta usar en controles nativos que
      nosotros no pintamos con CSS (el popup de <select>, scrollbar,
      etc.) — sin esto, en tema oscuro esos popups seguían saliendo con

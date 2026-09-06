@@ -288,8 +288,16 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
         />
       </Card>
 
-      {error && <p className="text-sm text-danger">{error}</p>}
-      {saved && <p className="text-sm text-success">Cambios guardados.</p>}
+      {error && (
+        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          {error}
+        </p>
+      )}
+      {saved && (
+        <p className="text-sm text-success transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          Cambios guardados.
+        </p>
+      )}
 
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="primary" onClick={handleSave} loading={saving} className="w-full sm:w-auto">
@@ -297,7 +305,7 @@ export function ProductEditForm({ product, categories, materials, maxProducible 
         </Button>
 
         {confirmingDelete ? (
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex origin-left items-center gap-2 text-sm transition-[opacity,transform] duration-200 ease-[var(--ease-out)] starting:scale-95 starting:opacity-0 motion-reduce:transition-none">
             <span className="text-rossana-charcoal">¿Eliminar este producto?</span>
             <Button variant="secondary" size="sm" onClick={() => setConfirmingDelete(false)}>
               Cancelar

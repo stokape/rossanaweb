@@ -202,7 +202,11 @@ export function ReceiptUploadForm({ orderId, availableMethods }: ReceiptUploadFo
         </div>
       )}
 
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && (
+        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          {error}
+        </p>
+      )}
       {file && availableMethods.length > 1 && !paymentMethod && (
         <p className="text-sm text-rossana-charcoal/50">
           Selecciona con cuál pagaste arriba para poder continuar.

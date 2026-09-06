@@ -177,8 +177,16 @@ export function BusinessSettingsSection({ settings }: { settings: SiteSettings }
         />
       </div>
 
-      {error && <p className="text-sm text-danger">{error}</p>}
-      {saved && <p className="text-sm text-success">Cambios guardados.</p>}
+      {error && (
+        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          {error}
+        </p>
+      )}
+      {saved && (
+        <p className="text-sm text-success transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          Cambios guardados.
+        </p>
+      )}
 
       <Button variant="primary" onClick={handleSave} loading={saving} className="w-fit">
         GUARDAR CAMBIOS

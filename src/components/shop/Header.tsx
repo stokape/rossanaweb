@@ -126,8 +126,19 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
         </div>
       </nav>
 
-      {menuOpen && (
-        <div className="border-t border-rossana-gold/20 bg-rossana-warm-white px-4 py-4 shadow-soft xl:hidden">
+      {/* Siempre montado (nunca `{menuOpen && ...}`) para poder animar la
+          apertura/cierre con el truco de grid-rows: en 0fr colapsa a
+          altura cero sin necesitar medir el alto real en JS. `inert`
+          saca el buscador/enlaces del tabulado y de lectores de
+          pantalla mientras está cerrado — si no, seguían siendo
+          alcanzables con Tab aunque no se vieran. */}
+      <div
+        inert={!menuOpen}
+        className={`grid border-t bg-rossana-warm-white shadow-soft transition-[grid-template-rows,border-color] duration-200 ease-[var(--ease-out)] motion-reduce:transition-none xl:hidden ${
+          menuOpen ? "grid-rows-[1fr] border-rossana-gold/20" : "grid-rows-[0fr] border-transparent"
+        }`}
+      >
+        <div className="overflow-hidden px-4 py-4">
           <form action="/productos" role="search" className="mb-4 flex h-12 items-center rounded-input border border-rossana-border px-4">
             <Search className="size-4 text-rossana-charcoal/50 shrink-0" aria-hidden />
             <input
@@ -151,7 +162,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
             ))}
           </ul>
         </div>
-      )}
+      </div>
     </header>
   );
 }

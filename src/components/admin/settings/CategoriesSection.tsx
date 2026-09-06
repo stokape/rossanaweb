@@ -90,7 +90,11 @@ export function CategoriesSection({ categories }: { categories: AdminCategory[] 
           + AGREGAR
         </Button>
       </div>
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && (
+        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          {error}
+        </p>
+      )}
     </Card>
   );
 }

@@ -2,16 +2,36 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { formatSoles } from "@/lib/utils";
 import { useCart } from "@/lib/cart/CartProvider";
 import type { CartItem } from "@/lib/cart/types";
 
+// Duración del fundido de salida al borrar (ver handleRemove) — se
+// reusa como el retraso antes de sacar el ítem del array de verdad.
+const REMOVE_DURATION_MS = 200;
+
 export function CartItemRow({ item }: { item: CartItem }) {
   const { updateQuantity, removeItem } = useCart();
+  const [removing, setRemoving] = useState(false);
+
+  // El array del carrito quita el ítem al instante si no hacemos este
+  // paso intermedio: no hay forma de animar una salida sobre un
+  // elemento que React ya desmontó en el mismo tick. `removing`
+  // mantiene el renglón montado el tiempo justo para que se vea el
+  // fundido antes de desaparecer de verdad.
+  function handleRemove() {
+    setRemoving(true);
+    setTimeout(() => removeItem(item.productId), REMOVE_DURATION_MS);
+  }
 
   return (
-    <div className="flex gap-4 border-b border-rossana-border py-5 last:border-b-0">
+    <div
+      className={`flex gap-4 border-b border-rossana-border py-5 last:border-b-0 transition-[opacity,transform] duration-200 ease-[var(--ease-out)] motion-reduce:transition-none ${
+        removing ? "opacity-0 scale-95" : "opacity-100 scale-100"
+      }`}
+    >
       <Link
         href={`/productos/${item.slug}`}
         className="relative size-20 shrink-0 overflow-hidden rounded-[10px] bg-rossana-ivory sm:size-24"
@@ -35,9 +55,10 @@ export function CartItemRow({ item }: { item: CartItem }) {
           </Link>
           <button
             type="button"
-            onClick={() => removeItem(item.productId)}
+            onClick={handleRemove}
+            disabled={removing}
             aria-label={`Eliminar ${item.name} del carrito`}
-            className="text-rossana-charcoal/40 hover:text-rossana-red"
+            className="text-rossana-charcoal/40 hover:text-rossana-red disabled:opacity-50"
           >
             <Trash2 className="size-4" />
           </button>

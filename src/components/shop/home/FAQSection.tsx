@@ -62,7 +62,7 @@ export function FAQSection() {
         {FAQS.map((faq) => (
           <details
             key={faq.question}
-            className="group rounded-card border border-rossana-border bg-rossana-warm-white p-4 open:pb-4"
+            className="group rounded-card border border-rossana-border bg-rossana-warm-white p-4"
           >
             <summary className="cursor-pointer list-none font-semibold text-rossana-charcoal marker:content-none">
               <span className="flex items-center justify-between gap-4">
@@ -72,7 +72,14 @@ export function FAQSection() {
                 </span>
               </span>
             </summary>
-            <p className="mt-2 text-sm text-rossana-charcoal/70">{faq.answer}</p>
+            {/* Truco grid-rows (sin JS, sin medir alto): 0fr colapsa a
+                cero, 1fr se abre a la altura real del contenido. El
+                overflow-hidden del <p> es imprescindible — sin él, el
+                grid-item sigue reportando su alto natural aunque la
+                fila mida 0fr. */}
+            <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-200 ease-[var(--ease-out)] motion-reduce:transition-none group-open:grid-rows-[1fr]">
+              <p className="overflow-hidden pt-2 text-sm text-rossana-charcoal/70">{faq.answer}</p>
+            </div>
           </details>
         ))}
       </div>

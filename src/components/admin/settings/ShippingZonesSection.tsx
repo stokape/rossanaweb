@@ -86,7 +86,11 @@ export function ShippingZonesSection({ zones }: { zones: AdminShippingZone[] }) 
       <Button variant="secondary" onClick={handleAdd} loading={saving} className="w-fit">
         + AGREGAR ZONA
       </Button>
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && (
+        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          {error}
+        </p>
+      )}
     </Card>
   );
 }

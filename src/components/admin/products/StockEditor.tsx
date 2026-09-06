@@ -70,8 +70,16 @@ export function StockEditor({ productId, stockOnHand, stockReserved, stockAvaila
         <p>Disponible para la venta: {stockAvailable}</p>
       </div>
 
-      {error && <p className="text-sm text-danger sm:ml-2">{error}</p>}
-      {saved && <p className="text-sm text-success sm:ml-2">Stock actualizado.</p>}
+      {error && (
+        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none sm:ml-2">
+          {error}
+        </p>
+      )}
+      {saved && (
+        <p className="text-sm text-success transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none sm:ml-2">
+          Stock actualizado.
+        </p>
+      )}
     </div>
   );
 }

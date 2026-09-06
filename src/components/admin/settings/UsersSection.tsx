@@ -57,7 +57,11 @@ export function UsersSection({ staff }: { staff: StaffMember[] }) {
         + AGREGAR COLABORADOR
       </Button>
 
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && (
+        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          {error}
+        </p>
+      )}
       {tempPassword && (
         <p className="rounded-card bg-rossana-ivory px-4 py-3 text-sm text-rossana-charcoal">
           Cuenta creada. Contraseña temporal: <strong>{tempPassword}</strong> — compártela de forma

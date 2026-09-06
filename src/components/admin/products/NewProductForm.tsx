@@ -62,7 +62,11 @@ export function NewProductForm({ categories }: { categories: CategorySummary[] }
         </div>
       )}
 
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && (
+        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          {error}
+        </p>
+      )}
 
       <Button variant="primary" onClick={handleContinue} loading={saving} className="w-full">
         CONTINUAR

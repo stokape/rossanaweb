@@ -26,7 +26,11 @@ export function SocialLinksSection({ settings }: { settings: SiteSettings }) {
       <h2 className="text-lg font-semibold text-rossana-charcoal">Redes sociales</h2>
       <Input label="Instagram (link completo)" value={instagram} onChange={(e) => setInstagram(e.target.value)} />
       <Input label="Facebook (link completo)" value={facebook} onChange={(e) => setFacebook(e.target.value)} />
-      {saved && <p className="text-sm text-success">Cambios guardados.</p>}
+      {saved && (
+        <p className="text-sm text-success transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          Cambios guardados.
+        </p>
+      )}
       <Button variant="primary" onClick={handleSave} loading={saving} className="w-fit">
         GUARDAR CAMBIOS
       </Button>

@@ -181,7 +181,7 @@ export function CheckoutForm({ onSubmitted, onShippingChange }: CheckoutFormProp
       </section>
 
       {serverError && (
-        <p className="rounded-card border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+        <p className="rounded-card border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
           {serverError}
         </p>
       )}

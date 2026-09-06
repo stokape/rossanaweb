@@ -21,7 +21,9 @@ interface LinkButtonProps
 
 const base =
   "inline-flex items-center justify-center gap-2 rounded-button font-semibold " +
-  "transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 " +
+  "transition-[color,background-color,border-color,transform] duration-150 ease-[var(--ease-out)] " +
+  "motion-safe:active:scale-[0.97] motion-reduce:transition-colors " +
+  "focus-visible:outline-none focus-visible:ring-2 " +
   "focus-visible:ring-rossana-red focus-visible:ring-offset-2 disabled:opacity-50 " +
   "disabled:pointer-events-none";
 

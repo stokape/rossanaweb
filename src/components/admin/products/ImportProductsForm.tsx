@@ -216,7 +216,11 @@ export function ImportProductsForm({ categories }: { categories: CategorySummary
           {fileName ?? "Elegir archivo CSV"}
           <input type="file" accept=".csv" className="hidden" onChange={handleFile} />
         </label>
-        {parseError && <p className="text-sm text-danger">{parseError}</p>}
+        {parseError && (
+          <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+            {parseError}
+          </p>
+        )}
       </Card>
 
       {rows.length > 0 && (
@@ -285,7 +289,7 @@ export function ImportProductsForm({ categories }: { categories: CategorySummary
       )}
 
       {importSummary && (
-        <Card className="flex flex-col gap-2 p-6">
+        <Card className="flex flex-col gap-2 p-6 transition-[opacity,transform] duration-200 ease-[var(--ease-out)] starting:scale-[0.98] starting:opacity-0 motion-reduce:transition-none">
           <p className="font-semibold text-success">
             {importSummary.created} producto{importSummary.created === 1 ? "" : "s"}{" "}
             importado{importSummary.created === 1 ? "" : "s"} como borrador.

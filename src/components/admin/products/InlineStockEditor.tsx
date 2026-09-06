@@ -89,8 +89,16 @@ export function InlineStockEditor({
         </button>
       )}
 
-      {saved && !dirty && <span className="text-xs text-success">Guardado</span>}
-      {error && <span className="text-xs text-danger">{error}</span>}
+      {saved && !dirty && (
+        <span className="text-xs text-success transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          Guardado
+        </span>
+      )}
+      {error && (
+        <span className="text-xs text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+          {error}
+        </span>
+      )}
       {stockReserved > 0 && (
         <span className="text-xs text-rossana-charcoal/40">
           ({stockReserved} reservado{stockReserved > 1 ? "s" : ""})
