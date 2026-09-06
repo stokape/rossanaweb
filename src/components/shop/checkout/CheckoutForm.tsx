@@ -58,6 +58,11 @@ export function CheckoutForm({ onSubmitted, onShippingChange }: CheckoutFormProp
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
+    // "onBlur" (Sección UX — validación en formularios): sin esto,
+    // react-hook-form solo valida al enviar y el comprador se
+    // encuentra con todos los campos en rojo de golpe al primer
+    // intento, en vez de ir viendo cada error apenas sale del campo.
+    mode: "onBlur",
     defaultValues: { isGift: false, giftSpecialPackaging: false },
   });
 
@@ -181,7 +186,10 @@ export function CheckoutForm({ onSubmitted, onShippingChange }: CheckoutFormProp
       </section>
 
       {serverError && (
-        <p className="rounded-card border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+        <p
+          role="alert"
+          className="rounded-card border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none"
+        >
           {serverError}
         </p>
       )}

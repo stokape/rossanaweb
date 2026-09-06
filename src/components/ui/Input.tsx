@@ -35,7 +35,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error ? (
-          <p id={`${inputId}-error`} className="text-sm text-danger">
+          // role="alert" (Sección UX — accesibilidad de formularios):
+          // sin esto, un lector de pantalla nunca anuncia el error —
+          // solo lo ve quien mira la pantalla y nota el borde rojo.
+          <p id={`${inputId}-error`} role="alert" className="text-sm text-danger">
             {error}
           </p>
         ) : hint ? (

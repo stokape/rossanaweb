@@ -203,7 +203,10 @@ export function ReceiptUploadForm({ orderId, availableMethods }: ReceiptUploadFo
       )}
 
       {error && (
-        <p className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none">
+        <p
+          role="alert"
+          className="text-sm text-danger transition-opacity duration-200 ease-[var(--ease-out)] starting:opacity-0 motion-reduce:transition-none"
+        >
           {error}
         </p>
       )}
