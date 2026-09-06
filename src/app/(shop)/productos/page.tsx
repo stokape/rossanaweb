@@ -1,9 +1,24 @@
 import type { Metadata } from "next";
 import { CatalogView } from "@/components/shop/catalog/CatalogView";
 
+const PAGE_TITLE = "Productos";
+const PAGE_DESCRIPTION = "Explora toda la bisutería y accesorios de Rossana.";
+
 export const metadata: Metadata = {
-  title: "Productos",
-  description: "Explora toda la bisutería y accesorios de Rossana.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  alternates: { canonical: "/productos" },
+  openGraph: {
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: "/productos",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  },
 };
 
 interface ProductosPageProps {

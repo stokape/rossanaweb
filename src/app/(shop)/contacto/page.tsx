@@ -2,9 +2,24 @@ import type { Metadata } from "next";
 import { MessageCircle } from "lucide-react";
 import { getSiteSettings } from "@/lib/queries/site";
 
+const PAGE_TITLE = "Contacto";
+const PAGE_DESCRIPTION = "Escríbenos a Rossana — Bisutería y Más.";
+
 export const metadata: Metadata = {
-  title: "Contacto",
-  description: "Escríbenos a Rossana — Bisutería y Más.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  alternates: { canonical: "/contacto" },
+  openGraph: {
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: "/contacto",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  },
 };
 
 export default async function ContactoPage() {

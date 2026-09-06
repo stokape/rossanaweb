@@ -48,6 +48,13 @@ export const metadata: Metadata = {
       "Bisutería y accesorios que complementan tu esencia. Elegancia que brilla contigo.",
     images: ["/og-image.png"],
   },
+  // Verificación de Google Search Console (método "etiqueta HTML"): el
+  // código lo genera Google al agregar la propiedad, nunca se hardcodea
+  // (Sección 78) — se pega en NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION.
+  // Si no está configurada, Next.js simplemente no imprime la etiqueta.
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

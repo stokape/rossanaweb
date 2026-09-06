@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getSiteSettings } from "@/lib/queries/site";
 
 const KNOWN_SLUGS: Record<string, string> = {
@@ -8,9 +9,20 @@ const KNOWN_SLUGS: Record<string, string> = {
   terminos: "Términos y condiciones",
 };
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
-  return { title: KNOWN_SLUGS[slug] ?? "Políticas" };
+  const title = KNOWN_SLUGS[slug] ?? "Políticas";
+  return {
+    title,
+    alternates: { canonical: `/politicas/${slug}` },
+    // Fuera del sitemap a pedido del usuario (ver sitemap.ts): páginas
+    // de referencia, no pensadas para atraer búsquedas por sí solas.
+    robots: { index: false, follow: true },
+  };
 }
 
 // Contenido editable desde /admin/configuracion → Políticas

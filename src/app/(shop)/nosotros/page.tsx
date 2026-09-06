@@ -1,9 +1,24 @@
 import type { Metadata } from "next";
 import { Gem, Gift, ShieldCheck } from "lucide-react";
 
+const PAGE_TITLE = "Nosotros";
+const PAGE_DESCRIPTION = "Conoce a Rossana — Bisutería y Más.";
+
 export const metadata: Metadata = {
-  title: "Nosotros",
-  description: "Conoce a Rossana — Bisutería y Más.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  alternates: { canonical: "/nosotros" },
+  openGraph: {
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: "/nosotros",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  },
 };
 
 // Mismos 3 hechos confirmados que se usan en BenefitsSection (Sección
