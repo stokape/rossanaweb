@@ -10,11 +10,14 @@ const CONFIRM_WORD = "ELIMINAR";
 
 /**
  * Zona de peligro (Sección 84 — acción muy sensible, queda auditada):
- * borra TODOS los productos de una sola vez. Por lo destructivo e
- * irreversible que es, pide escribir la palabra "ELIMINAR" antes de
- * habilitar el botón final — un solo clic de confirmación no alcanza
- * para algo que afecta todo el catálogo (a diferencia de eliminar un
- * producto individual, que solo pide un "¿seguro?").
+ * borra TODOS los productos de una sola vez, sin excepción — incluidos
+ * los que ya tengan pedidos, movimientos de inventario o carritos
+ * asociados (pedido explícito de Rossana: "SE DEBEN ELIMINAR TODO" /
+ * "elimina todo", tras ver que la versión anterior archivaba esos
+ * casos en vez de borrarlos). Por lo destructivo e irreversible que
+ * es, pide escribir la palabra "ELIMINAR" antes de habilitar el botón
+ * final — un solo clic de confirmación no alcanza para algo que afecta
+ * todo el catálogo y el historial de pedidos que lo referencia.
  */
 export function DeleteAllProductsSection({ totalProducts }: { totalProducts: number }) {
   const router = useRouter();
@@ -22,7 +25,7 @@ export function DeleteAllProductsSection({ totalProducts }: { totalProducts: num
   const [confirmText, setConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<{ deletedCount: number; archivedCount: number } | null>(null);
+  const [result, setResult] = useState<{ deletedCount: number; failedCount: number } | null>(null);
 
   if (totalProducts === 0) return null;
 
@@ -36,7 +39,7 @@ export function DeleteAllProductsSection({ totalProducts }: { totalProducts: num
       setError(res.error ?? "No pudimos eliminar los productos.");
       return;
     }
-    setResult({ deletedCount: res.deletedCount, archivedCount: res.archivedCount });
+    setResult({ deletedCount: res.deletedCount, failedCount: res.failedCount });
     setOpen(false);
     setConfirmText("");
     router.refresh();
@@ -47,19 +50,17 @@ export function DeleteAllProductsSection({ totalProducts }: { totalProducts: num
       <div>
         <h2 className="text-lg font-semibold text-danger">Zona de peligro</h2>
         <p className="mt-1 text-sm text-rossana-charcoal/60">
-          Elimina de una sola vez los {totalProducts} producto(s) de tu tienda. Los que ya
-          tengan pedidos o movimientos de inventario asociados no se pueden borrar por
-          seguridad — se archivan en su lugar, para no perder el historial de esas ventas.
-          Esta acción no se puede deshacer.
+          Elimina de una sola vez los {totalProducts} producto(s) de tu tienda — todos, sin
+          excepción. Si alguno ya tiene pedidos, movimientos de inventario o carritos
+          asociados, esas filas también se eliminan para poder borrar el producto. Esta acción
+          no se puede deshacer.
         </p>
       </div>
 
       {result && (
         <p className="text-sm text-success">
           Listo: se eliminaron {result.deletedCount} producto(s)
-          {result.archivedCount > 0 &&
-            ` y se archivaron ${result.archivedCount} (ya tenían pedidos o movimientos asociados)`}
-          .
+          {result.failedCount > 0 && ` (${result.failedCount} no se pudieron eliminar)`}.
         </p>
       )}
       {error && <p className="text-sm text-danger">{error}</p>}

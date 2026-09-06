@@ -256,18 +256,23 @@ export interface DeleteAllProductsResult {
   ok: boolean;
   error?: string;
   deletedCount: number;
-  archivedCount: number;
+  failedCount: number;
 }
 
 /**
- * Elimina TODOS los productos de la tienda de una sola vez (acción muy
- * sensible — Sección 84, queda auditada). Se procesa uno por uno (no
- * en una sola sentencia) para que un producto con historial no
- * bloquee el borrado del resto: igual que en deleteProductAction, si
- * un producto ya tiene pedidos/movimientos de inventario asociados, la
- * base de datos rechaza su borrado por integridad referencial — en
- * ese caso se archiva en su lugar (nunca se pierde el historial de una
- * venta real).
+ * Elimina TODOS los productos de la tienda de una sola vez, sin
+ * excepción (acción muy sensible — Sección 84, queda auditada).
+ * Pedido explícito de Rossana ("SE DEBEN ELIMINAR TODO" / "elimina
+ * todo") tras ver que la versión anterior archivaba en vez de borrar
+ * los productos con historial asociado.
+ *
+ * A diferencia de deleteProductAction (borrado de UNO, donde sí
+ * conviene archivar y avisar "tiene pedidos asociados"), acá el borrado
+ * de un producto se completa de verdad: si la base de datos lo
+ * rechaza por integridad referencial (23503), se borran primero las
+ * filas que lo bloquean (líneas de pedido, movimientos de inventario,
+ * corridas de producción, carritos) y se reintenta. Es irreversible —
+ * la UI exige escribir "ELIMINAR" antes de llamar a esto.
  */
 export async function deleteAllProductsAction(): Promise<DeleteAllProductsResult> {
   const supabase = await createClient();
@@ -277,7 +282,7 @@ export async function deleteAllProductsAction(): Promise<DeleteAllProductsResult
 
   const { data: products, error: fetchError } = await supabase
     .from("products")
-    .select("id, status")
+    .select("id")
     .eq("store_id", ROSSANA_STORE_ID);
 
   if (fetchError) {
@@ -286,41 +291,44 @@ export async function deleteAllProductsAction(): Promise<DeleteAllProductsResult
       ok: false,
       error: "No pudimos leer tus productos. Inténtalo nuevamente.",
       deletedCount: 0,
-      archivedCount: 0,
+      failedCount: 0,
     };
   }
   if (!products || products.length === 0) {
-    return { ok: true, deletedCount: 0, archivedCount: 0 };
+    return { ok: true, deletedCount: 0, failedCount: 0 };
   }
 
   let deletedCount = 0;
-  let archivedCount = 0;
+  let failedCount = 0;
 
   for (const product of products) {
-    const { error } = await supabase
+    let { error } = await supabase
       .from("products")
       .delete()
       .eq("id", product.id)
       .eq("store_id", ROSSANA_STORE_ID);
 
+    if (error?.code === "23503") {
+      // Se borran primero las filas que bloquean por FK — sin cascada
+      // automática en el esquema para estas tablas — y se reintenta.
+      await supabase.from("order_items").delete().eq("product_id", product.id);
+      await supabase.from("production_runs").delete().eq("product_id", product.id);
+      await supabase.from("inventory_movements").delete().eq("product_id", product.id);
+      await supabase.from("cart_items").delete().eq("product_id", product.id);
+
+      ({ error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", product.id)
+        .eq("store_id", ROSSANA_STORE_ID));
+    }
+
     if (!error) {
       deletedCount += 1;
-      continue;
+    } else {
+      failedCount += 1;
+      console.error(`deleteAllProductsAction error en producto ${product.id}:`, error);
     }
-
-    if (error.code === "23503") {
-      if (product.status !== "archived") {
-        await supabase
-          .from("products")
-          .update({ status: "archived" })
-          .eq("id", product.id)
-          .eq("store_id", ROSSANA_STORE_ID);
-      }
-      archivedCount += 1;
-      continue;
-    }
-
-    console.error(`deleteAllProductsAction error en producto ${product.id}:`, error);
   }
 
   await supabase.from("audit_logs").insert({
@@ -329,12 +337,12 @@ export async function deleteAllProductsAction(): Promise<DeleteAllProductsResult
     action: "delete_all_products",
     entity_type: "product",
     old_value: { totalProducts: products.length },
-    new_value: { deletedCount, archivedCount },
+    new_value: { deletedCount, failedCount },
   });
 
   revalidatePath("/admin/productos");
   revalidatePath("/productos");
-  return { ok: true, deletedCount, archivedCount };
+  return { ok: true, deletedCount, failedCount };
 }
 
 /** Componentes del producto = receta/BOM interno (Sección 51). */
