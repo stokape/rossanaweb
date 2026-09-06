@@ -171,7 +171,7 @@ export function ReceiptUploadForm({ orderId, availableMethods }: ReceiptUploadFo
                 key={m.key}
                 type="button"
                 onClick={() => setPaymentMethod(m.key)}
-                className={`flex-1 rounded-input border px-4 py-2.5 text-sm font-semibold ${
+                className={`flex-1 rounded-input border px-4 py-3 text-sm font-semibold ${
                   paymentMethod === m.key
                     ? "border-rossana-red bg-rossana-red text-rossana-warm-white"
                     : "border-rossana-border text-rossana-charcoal"
@@ -203,6 +203,11 @@ export function ReceiptUploadForm({ orderId, availableMethods }: ReceiptUploadFo
       )}
 
       {error && <p className="text-sm text-danger">{error}</p>}
+      {file && availableMethods.length > 1 && !paymentMethod && (
+        <p className="text-sm text-rossana-charcoal/50">
+          Selecciona con cuál pagaste arriba para poder continuar.
+        </p>
+      )}
 
       <Button
         variant="primary"

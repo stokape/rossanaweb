@@ -70,7 +70,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
             type="search"
             name="buscar"
             placeholder="Buscar productos..."
-            className="header-search-field ml-2 flex-1 bg-transparent text-sm outline-none"
+            className="header-search-field ml-2 flex-1 bg-transparent text-sm"
           />
         </form>
 
@@ -134,7 +134,7 @@ export function Header({ categories }: { categories: CategorySummary[] }) {
               type="search"
               name="buscar"
               placeholder="Buscar productos..."
-              className="ml-2 flex-1 bg-transparent text-base outline-none placeholder:text-rossana-charcoal/40"
+              className="ml-2 flex-1 bg-transparent text-base placeholder:text-rossana-charcoal/40"
             />
           </form>
           <ul className="flex flex-col gap-1">
