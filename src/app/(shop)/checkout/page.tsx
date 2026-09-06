@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckoutForm } from "@/components/shop/checkout/CheckoutForm";
 import { CheckoutOrderSummary } from "@/components/shop/checkout/CheckoutOrderSummary";
@@ -13,6 +13,11 @@ import { useCart } from "@/lib/cart/CartProvider";
 export default function CheckoutPage() {
   const { items, hydrated } = useCart();
   const router = useRouter();
+  const [shipping, setShipping] = useState<{ cost: number | null; loading: boolean; attempted: boolean }>({
+    cost: null,
+    loading: false,
+    attempted: false,
+  });
   // Al terminar el checkout con éxito, CheckoutForm vacía el carrito
   // ANTES de que termine de navegar a /pedido/[id]/pago (Next.js
   // navega de forma asíncrona). Sin esta bandera, ese vaciado hacía
@@ -42,9 +47,16 @@ export default function CheckoutPage() {
       <BackLink label="Volver al carrito" fallbackHref="/carrito" />
       <CheckoutSteps current="datos" />
       <div className="grid grid-cols-1 gap-10 md:grid-cols-[1fr_360px]">
-        <CheckoutForm onSubmitted={() => { justSubmittedRef.current = true; }} />
+        <CheckoutForm
+          onSubmitted={() => { justSubmittedRef.current = true; }}
+          onShippingChange={setShipping}
+        />
         <div className="md:order-last">
-          <CheckoutOrderSummary />
+          <CheckoutOrderSummary
+            shippingCost={shipping.cost}
+            shippingLoading={shipping.loading}
+            shippingAttempted={shipping.attempted}
+          />
         </div>
       </div>
     </div>

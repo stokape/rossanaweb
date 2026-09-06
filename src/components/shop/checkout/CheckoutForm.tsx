@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useCart } from "@/lib/cart/CartProvider";
-import { submitCheckout } from "@/lib/actions/checkout";
+import { submitCheckout, getShippingCostAction } from "@/lib/actions/checkout";
 
 const schema = z.object({
   firstName: z.string().trim().min(1, "Ingresa tus nombres"),
@@ -36,9 +36,17 @@ interface CheckoutFormProps {
    * evita que la página de checkout se confunda y redirija a
    * /carrito al ver el carrito recién vacío (ver page.tsx). */
   onSubmitted?: () => void;
+  /** Costo de envío en vivo (Sección 27/28): se levanta al padre para
+   * que CheckoutOrderSummary lo muestre junto al total, en vez de que
+   * el comprador lo descubra recién en la página de pago. `attempted`
+   * distingue "todavía no escribió su dirección" (cost: null,
+   * attempted: false) de "ya la escribió pero no hay zona configurada
+   * para ella" (cost: null, attempted: true) — este segundo caso se
+   * muestra como "a coordinar", nunca como si faltara algo por llenar. */
+  onShippingChange?: (shipping: { cost: number | null; loading: boolean; attempted: boolean }) => void;
 }
 
-export function CheckoutForm({ onSubmitted }: CheckoutFormProps) {
+export function CheckoutForm({ onSubmitted, onShippingChange }: CheckoutFormProps) {
   const router = useRouter();
   const { items, clear } = useCart();
   const [serverError, setServerError] = useState<string | null>(null);
@@ -54,6 +62,35 @@ export function CheckoutForm({ onSubmitted }: CheckoutFormProps) {
   });
 
   const isGift = useWatch({ control, name: "isGift" });
+  const department = useWatch({ control, name: "department" });
+  const province = useWatch({ control, name: "province" });
+  const district = useWatch({ control, name: "district" });
+
+  // Referencia al callback más reciente: así el effect de abajo no
+  // necesita re-suscribirse solo porque el padre pasó una función
+  // nueva en este render (evita romper el debounce a cada tecla).
+  const onShippingChangeRef = useRef(onShippingChange);
+  useEffect(() => {
+    onShippingChangeRef.current = onShippingChange;
+  }, [onShippingChange]);
+
+  // Consulta el costo de envío apenas el comprador termina de escribir
+  // su dirección (con un pequeño debounce para no llamar al servidor
+  // en cada tecla). Sin departamento todavía, ni se consulta.
+  useEffect(() => {
+    if (!department?.trim()) {
+      onShippingChangeRef.current?.({ cost: null, loading: false, attempted: false });
+      return;
+    }
+
+    onShippingChangeRef.current?.({ cost: null, loading: true, attempted: false });
+    const timer = setTimeout(async () => {
+      const cost = await getShippingCostAction(department, province, district);
+      onShippingChangeRef.current?.({ cost, loading: false, attempted: true });
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [department, province, district]);
 
   async function onSubmit(values: FormValues) {
     setServerError(null);

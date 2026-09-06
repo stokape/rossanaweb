@@ -5,8 +5,31 @@ import { Card } from "@/components/ui/Card";
 import { formatSoles } from "@/lib/utils";
 import { useCart } from "@/lib/cart/CartProvider";
 
-export function CheckoutOrderSummary() {
+interface CheckoutOrderSummaryProps {
+  /** Costo de envío en vivo (Sección 27/28), calculado en CheckoutForm
+   * a medida que el comprador llena su dirección. `cost: null` con
+   * `attempted: true` significa que ya escribió su dirección pero no
+   * hay ninguna zona configurada para ella — nunca se inventa un
+   * monto, se muestra "a coordinar contigo". */
+  shippingCost?: number | null;
+  shippingLoading?: boolean;
+  shippingAttempted?: boolean;
+}
+
+export function CheckoutOrderSummary({
+  shippingCost = null,
+  shippingLoading = false,
+  shippingAttempted = false,
+}: CheckoutOrderSummaryProps) {
   const { items, subtotal } = useCart();
+
+  const shippingLabel = shippingLoading
+    ? "Calculando..."
+    : shippingCost != null
+      ? formatSoles(shippingCost)
+      : shippingAttempted
+        ? "A coordinar contigo"
+        : "Ingresa tu dirección";
 
   return (
     <Card className="flex flex-col gap-4 p-5">
@@ -29,11 +52,27 @@ export function CheckoutOrderSummary() {
           </div>
         ))}
       </div>
-      <div className="flex justify-between border-t border-rossana-border pt-4 text-base font-semibold">
-        <span>Subtotal</span>
-        <span className="text-rossana-red">{formatSoles(subtotal)}</span>
+
+      <div className="flex flex-col gap-2 border-t border-rossana-border pt-4 text-sm">
+        <div className="flex justify-between text-rossana-charcoal/70">
+          <span>Subtotal</span>
+          <span>{formatSoles(subtotal)}</span>
+        </div>
+        <div className="flex justify-between text-rossana-charcoal/70">
+          <span>Envío</span>
+          <span>{shippingLabel}</span>
+        </div>
       </div>
-      <p className="text-xs text-rossana-charcoal/50">El envío se calcula al confirmar tu pedido.</p>
+
+      <div className="flex justify-between border-t border-rossana-border pt-4 text-base font-semibold">
+        <span>Total</span>
+        <span className="text-rossana-red">{formatSoles(subtotal + (shippingCost ?? 0))}</span>
+      </div>
+      {shippingAttempted && shippingCost == null && !shippingLoading && (
+        <p className="-mt-2 text-xs text-rossana-charcoal/50">
+          Aún no tenemos una tarifa para tu zona — te la confirmamos por WhatsApp antes de tu envío.
+        </p>
+      )}
     </Card>
   );
 }

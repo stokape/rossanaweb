@@ -7,6 +7,23 @@ import { ROSSANA_STORE_ID } from "@/lib/queries/site";
 import { getShippingCost } from "@/lib/queries/shipping";
 import { checkRateLimit } from "@/lib/rate-limit";
 
+/**
+ * Costo de envío en vivo mientras el comprador llena su dirección en
+ * el checkout (Sección 27/28) — antes esto se calculaba recién al
+ * confirmar el pedido, así que el comprador no sabía cuánto iba a
+ * pagar en total hasta después de enviar el formulario. `null` cuando
+ * no hay ninguna zona configurada para esa dirección: el checkout
+ * debe mostrar "a coordinar", nunca inventar un monto.
+ */
+export async function getShippingCostAction(
+  department: string,
+  province?: string,
+  district?: string,
+): Promise<number | null> {
+  if (!department.trim()) return null;
+  return getShippingCost(department.trim(), province?.trim(), district?.trim());
+}
+
 const checkoutSchema = z.object({
   firstName: z.string().trim().min(1, "Ingresa tus nombres"),
   lastName: z.string().trim().min(1, "Ingresa tus apellidos"),
